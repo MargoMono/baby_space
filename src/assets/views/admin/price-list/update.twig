@@ -1,0 +1,60 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Обновить прайс-лист</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/admin/price-list/">Прайс-лист</a></li>
+            <li class="active">Обновить прайс-лист</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        {% if errors is not empty %}
+            <div class="col-lg-12 mistake">
+                <p>Ошибка:</p>
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="col-lg-12 correct">
+            <div class="login-form">
+                <form action="/admin/price-list/update/{{ price.id }}" enctype="multipart/form-data" method="post">
+
+                    <input type="hidden" name="id" placeholder="" value="{{ price.id }}">
+
+                    <p class="title-name">Название</p>
+                    <p class="required">*обязательное поле</p>
+                    <input type="text" name="name" placeholder="" value="{{ price.name }}" required>
+
+
+                    <input type="hidden" name="file_id" placeholder="" value="{{ price.file_id }}">
+                    <input type="hidden" name="file_alias" placeholder="" value="{{ price.file_alias }}">
+
+                    <p class="title-name">Вложение к письму</p>
+                    <p class="required">*обязательное поле</p>
+                    <p class="note">документ в формате pdf</p>
+                    <a href="/upload/images/price-list/{{ price.file_alias }}" target="_blank">Просмотр актуального</a>
+                    <p></p>
+                    <input type="file" name="file" value="">
+
+                    <br><br>
+                    <input type="submit" name="button" class="btn btn-default" value="Обновить"/>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
+
+<script>
+
+    console.log($('input[type="file"]').prop('files'))
+</script>

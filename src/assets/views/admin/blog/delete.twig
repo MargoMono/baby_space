@@ -1,0 +1,44 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Удаление статьи</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/admin/blog/">Статьи</a></li>
+            <li class="active">Удаление статьи</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        {% if errors is not empty %}
+            <div class="col-lg-12 mistake">
+                <p>Ошибка:</p>
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="col-lg-12 correct">
+            <div class="login-form">
+                <h4>Удалить статью "{{ new.name }}"</h4>
+
+                <p>Вы действительно хотите удалить эту статью?</p>
+
+                <form action="#" method="post">
+                    <input type="hidden" name="id" value="{{ new.id }}">
+                    <input type="submit" name="submit" class="btn btn-default" value="Удалить"/>
+                </form>
+            </div>
+        </div>
+
+    </section>
+    <!-- /.content -->
+</div>
+
+{% include 'admin/includes/footer.twig' %}

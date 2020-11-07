@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html" prefix="og: http://ogp.me/ns#">
+<head>
+    <title>KDF trading</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    {% include 'site/includes/head.twig' %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
+</head>
+<body>
+
+{% include 'site/includes/header.twig' %}
+
+<div class="catalog-page">
+    <div class="breadcrumbs">
+        {% include 'site/includes/breadcrumbs.twig' %}
+    </div>
+    <div class="content index-catalog">
+        <div class="title">
+            <h2>{{ product.name }}</h2>
+        </div>
+        <div class="product-description">
+            <div class="product-image">
+                <img src="/upload/images/product/{{ product.file_alias }}" alt="" class="main-image">
+
+            </div>
+            <div class="product-text">
+                {{ product.content|raw }}
+            </div>
+
+            <div class="comparsion-buttons-block">
+                {% if IsProductInComparsion %}
+                    <form id="delete-from-comparison">
+                        <input type="submit" class="button comparison" value="Удалить из избранных"/>
+                    </form>
+                {% else %}
+                    <form id="add-to-comparison">
+                        <input type="submit" class="button comparison" value="Добавить в избранное"/>
+                    </form>
+                {% endif %}
+            </div>
+
+            {% if product.designList is not empty %}
+                <div class="product-design">
+                    <h3>Варианты исполнений:</h3>
+                    {% for design in product.designList %}
+                        <div class="design-block">
+                            <div class="design-text">
+                                <h4> {{ design.design_name }}</h4>
+                                <p>{{ design.design_description }}</p>
+                            </div>
+                            <div class="design-images">
+                                {% for file in design.fileList %}
+                                    <img src="/upload/images/design/{{ file.file_alias }}">
+                                    <p>{{ file.file_name }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if product.recommendationList is not empty %}
+                <div class="product-recomendation">
+                    <h3>С этим товаром часто смотрят:</h3>
+                    {% for recommendation in product.recommendationList %}
+                        <div class="block">
+                            <div class="content-container container-product"
+                                 style="background-image:url('/upload/images/product/{{ recommendation.file_alias }}')">
+                                <div class="content">
+                                    <h4>{{ recommendation.name }}</h4>
+                                    <p class="text">{{ recommendation.description }}</p>
+                                    <a href="/product/{{ recommendation.alias }}/{{ recommendation.id }}"
+                                       class="button">Посмотреть</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="hr"></div>
+    {% include 'site/includes/callbackform.twig' %}
+</div>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/site/catalog.css">
+{% include 'site/includes/footer.twig' %}
+
+<script>
+    $(document).ready(function () {
+        $('.design-images img').click(function () {
+            $('.main-image').attr('src', $(this).attr('src'));
+        });
+    });
+</script>
+
+<script>
+
+    function startLoadingAnimation() {
+        var imgObj = $("#loadImg");
+        imgObj.show();
+    }
+
+    function stopLoadingAnimation() {
+        $("#loadImg").hide();
+    }
+
+    $(document).on('submit','#add-to-comparison',function(event) {
+        event.preventDefault();
+        let data = {
+            'id': {{ product.id }},
+        };
+        $.ajax({
+            url: '/product/add-to-comparison',
+            type: 'POST',
+            data: data,
+            success: function (res) {
+                let response = JSON.parse(res);
+                if (response.result) {
+                    //инфа о количестве продуктов в избранном
+                    if($('body').is('.comparsion-info-box')) {
+                        $('.comparsion-info-box').innerHTML('<img src="/assets/images/site/icons/favorite.png" alt=""> <p> ' + response.comparison_product_count + ' </p>');
+                    } else {
+                        if (response.comparison_product_count > 0) {
+                            $('body').append('<a title="Перейти к избранному" href="/catalog/comparison-products"><div class="comparsion-info-box"><img src="/assets/images/site/icons/favorite.png" alt=""> <p> ' + response.comparison_product_count + ' </p></div></a>');
+                        } else {
+                            $('body .comparsion-info-box').remove();
+                        }                    }
+                    $('.message-box .text').text("Добавлено в избранное");
+                    $('.comparsion-buttons-block #add-to-comparison').remove();
+                    $('.comparsion-buttons-block').append('<form id="delete-from-comparison"><input type="submit" class="button comparison" value="Удалить из избранных"/></form>');
+
+                } else {
+                    $('.message-box .text').text('Произошла ошибка при попытке добавления в избранное. Пожалуйста, попробуйте повторить запрос позднее.');
+                }
+                $('.message-box').show('slow');
+                stopLoadingAnimation();
+            },
+            error: function () {
+                $('.message-box .text').text('Произошла ошибка при попытке добавления в избранное. Пожалуйста, попробуйте повторить запрос позднее.');
+                $('.message-box').show('slow');
+                stopLoadingAnimation();
+            },
+        });
+
+        startLoadingAnimation();
+    });
+
+    $(document).on('submit','#delete-from-comparison',function(event) {
+        event.preventDefault();
+        let data = {
+            'id': {{ product.id }},
+        };
+        $.ajax({
+            url: '/product/delete-from-comparison',
+            type: 'POST',
+            data: data,
+            success: function (res) {
+                let response = JSON.parse(res);
+                //инфа о количестве продуктов в избранном
+
+                if (response.result) {
+                    if($('body').is('.comparsion-info-box')) {
+                        $('.comparsion-info-box').innerHTML('<img src="/assets/images/site/icons/favorite.png" alt=""> <p> ' + response.comparison_product_count + ' </p>');
+                    } else {
+                        if (response.comparison_product_count > 0) {
+                            $('body').append('<a title="Перейти к избранному" href="/catalog/comparison-products"><div class="comparsion-info-box"><img src="/assets/images/site/icons/favorite.png" alt=""> <p> ' + response.comparison_product_count + ' </p></div></a>');
+                        } else {
+                            $('body .comparsion-info-box').remove();
+                        }
+                    }
+                    $('.message-box .text').text("Удалено из избранного");
+                    $('.comparsion-buttons-block #delete-from-comparison').remove();
+                    $('.comparsion-buttons-block').append('<form id="add-to-comparison"><input type="submit" class="button comparison" value="Добавить в избранное"/></form>');
+                } else {
+                    $('.message-box .text').text('Произошла ошибка при попытке добавления в избранное. Пожалуйста, попробуйте повторить запрос позднее.');
+                }
+                $('.message-box').show('slow');
+                stopLoadingAnimation();
+            },
+            error: function () {
+                $('.message-box .text').text('Произошла ошибка при попытке добавления в избранное. Пожалуйста, попробуйте повторить запрос позднее.');
+                $('.message-box').show('slow');
+                stopLoadingAnimation();
+            },
+        });
+
+        startLoadingAnimation();
+    });
+</script>

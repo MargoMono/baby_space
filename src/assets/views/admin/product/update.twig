@@ -1,0 +1,135 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Обновить продукт</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/admin/product/">Продукты</a></li>
+            <li class="active">Обновить продукт</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        {% if errors is not empty %}
+            <div class="col-lg-12 mistake">
+                <p>Ошибка:</p>
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="col-lg-12 correct">
+            <div class="login-form">
+                <form action="/admin/product/update/{{ product.id }}" enctype="multipart/form-data" method="post">
+
+                    <input type="hidden" name="id" placeholder="" value="{{ product.id }}">
+
+                    <p class="title-name">Категория</p>
+                    <p class="note">* можно добавить продукт только в категорию, не имеющую родительской</p>
+                    <select name="category_id" required>
+                        <option value="{{ product.category_id }}" selected="selected">{{ product.category_name }}</option>
+                        {% for category in categoryList %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="required">*обязательное поле</p>
+
+                    <p class="title-name">Название продукта</p>
+                    <p class="required">*обязательное поле</p>
+                    <p class="note">*максимальная длина 100 символов</p>
+                    <input type="text" name="name" placeholder="" value="{{ product.name }}" required>
+                    <p class="required">*обязательное поле</p>
+
+                    <p class="title-name">Краткое описание продукта</p>
+                    <p class="required">*обязательное поле</p>
+                    <p class="note">*максимальная длина 250 символов</p>
+                    <textarea name="description" rows="4" cols="150">{{ product.description }}</textarea>
+
+                    <p class="title-name">Полное описание продукта</p>
+                    <p>В данном поле вы можете работать с тегами. Для этого поместите свой текст между тегами,</p>
+                    <p>сами теги не будут отображены при выводе текста на сайте</p>
+                    <p><b>Список тегов:</b></p>
+                    <p>&lt;p&gt; Какой-то текст &lt;/p&gt; - абзац</p>
+                    <p>&lt;b&gt; <b>Какой-то текст </b> &lt;/b&gt; - жирный шрифт</p>
+                    <p>&lt;i&gt; <i>Какой-то текст </i>&lt;/i&gt; - курсив</p>
+                    <p>&lt;u&gt; <u>Какой-то текст </u> &lt;/u&gt; - подчеркнутый шрифт</p>
+                    <p><b>Пример:</b></p>
+                    <p>&lt;p&gt; &lt;b&gt; <b>Жирный шрифт в азаце </b> &lt;/b&gt;&lt;/p&gt;</p>
+                    <p>&lt;b&gt; &lt;i&gt; <i>Немного курсива </i>&lt;/i&gt; обычный текст &lt;/b&gt;</p>
+                    <textarea id="editor1" name="content" rows="4" cols="150">{{ product.content }}</textarea>
+
+                    <input type="hidden" name="file_id" placeholder="" value="{{ product.file_id }}">
+                    <input type="hidden" name="file_alias" placeholder="" value="{{ product.file_alias }}">
+
+                    <p class="title-name">Главное изображение продукта</p>
+                    <img src="/upload/images/product/{{ product.file_alias }}" width="150" alt=""/>
+                    <input type="file" name="file" value="">
+
+                    <p class="title-name">Изображения для галереи</p>
+                    {% for photo in productFilesList %}
+                        <img src="/upload/images/product/{{ photo.file_alias }}" width="150" alt=""/>
+                        <a href="/admin/product/photo/delete/{{ product.id }}/{{ photo.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
+                        <br><br>
+                    {% endfor %}
+                    <input type='file' name='files[]' multiple >
+
+                    <p class="title-name">Рекомендованные продукты</p>
+                    <p class="note">* можно выбрать несколько продуктов</p>
+                    <select multiple name="recommendation_ids[]">';
+                        {% for product in productList %}
+                            <option value="{{ product.id }}" {% if product.selected == true %} selected {% endif %}>{{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <p class="title-name">Коллекции пленок</p>
+                    <p class="note">* можно выбрать несколько коллекции</p>
+                    <select multiple name="coating_ids[]">';
+                        {% for coating in coatingList %}
+                            <option value="{{ coating.id }}" {% if coating.selected == true %} selected {% endif %}>{{ coating.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <p class="title-name">Коллекции дизайнов</p>
+                    <p class="note">* можно выбрать несколько дизайнов</p>
+                    <select multiple name="design_ids[]">';
+                        {% for design in designList %}
+                            <option value="{{ design.id }}" {% if design.selected == true %} selected {% endif %}>{{ design.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <p class="title-name">Статус</p>
+                    <select name="enabled">
+                        <option value="1" {% if product.enabled == 1 %}selected{% endif %}>Отображается</option>
+                        <option value="0" {% if product.enabled == 0 %}selected{% endif %}>Скрыт</option>
+                    </select>
+
+                    <p class="title-name">Порядковый номер</p>
+                    <input type="text" name="position" placeholder="" value="{{ product.position }}">
+
+                    <p class="title-name">Тэг title</p>
+                    <textarea name="tag_title" rows="4" cols="150">{{ product.tag_title }}</textarea>
+
+                    <p class="title-name">Тэг description</p>
+                    <textarea name="tag_description" rows="4" cols="150">{{ product.tag_description }}</textarea>
+
+                    <p class="title-name">Тэг keywords</p>
+                    <textarea name="tag_keywords" rows="4" cols="150">{{ product.tag_keywords }}</textarea>
+                    <br><br>
+                    <input type="submit" name="button" class="btn btn-default" value="Обновить"/>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
+
+<script>
+
+    console.log($('input[type="file"]').prop('files'))
+</script>

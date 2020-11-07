@@ -1,0 +1,52 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Коллекции пленок</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li class="active">Коллекции пленок</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <a href="/admin/design/create" class="btn btn-default back"><i class="fa fa-plus"></i> Добавить коллекцию пленок</a>
+
+        <h4>Список коллекций пленок</h4>
+
+        <table class="table-bordered table-striped table">
+            <tr>
+                <th>Номер
+                    <form action="/admin/design" method="post">
+                        <input type="hidden" name="order" value="id">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th>Название коллекции пленок
+                    <form action="/admin/design" method="post">
+                        <input type="hidden" name="order" value="name">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th>Краткое описание коллекции</th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for design in designList %}
+                <tr>
+                    <td>{{ design.id }}</td>
+                    <td>{{ design.name }}</td>
+                    <td>{{ design.description }}</td>
+                    <td><a href="/admin/design/update/{{ design.id }}" title="Редактировать"><i
+                                    class="fa fa-pencil-square-o"></i></a></td>
+                    <td><a href="/admin/design/delete/{{ design.id }}" title="Удалить"><i
+                                    class="fa fa-times"></i></a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}

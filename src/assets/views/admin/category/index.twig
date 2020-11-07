@@ -1,0 +1,71 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Категории товаров</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li class="active">Категории товаров</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <a href="/admin/category/create" class="btn btn-default back"><i class="fa fa-plus"></i> Добавить категорию</a>
+
+        <h4>Список категорий</h4>
+
+        <table class="table-bordered table-striped table">
+            <tr>
+                <th>Номер
+                    <form action="/admin/category" method="post">
+                        <input type="hidden" name="order" value="id">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th>Название категории
+                    <form action="/admin/category" method="post">
+                        <input type="hidden" name="order" value="name">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th>Родительская категории
+                    <form action="/admin/category" method="post">
+                        <input type="hidden" name="order" value="parent_name">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th>Очередность</th>
+                <th>Статус
+                    <form action="/admin/category" method="post">
+                        <input type="hidden" name="order" value="position">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for category in categoryList %}
+                <tr>
+                    <td>{{ category.id }}</td>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.parent_name }}</td>
+                    <td>{{ category.position }}</td>
+                    <td> {% if category.enabled == 0 %} Скрыта {% else %} Отображается {% endif %}</td>
+                    <td><a href="/admin/category/update/{{ category.id }}" title="Редактировать"><i
+                                    class="fa fa-pencil-square-o"></i></a></td>
+                    {% if category.parent_name is not empty %}
+                        <td><a href="/admin/category/delete/{{ category.id }}" title="Удалить"><i
+                                        class="fa fa-times"></i></a></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
+

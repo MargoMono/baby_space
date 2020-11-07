@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
+<head>
+    <title>KDF trading</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    {% include 'site/includes/head.twig' %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
+</head>
+<body>
+
+{% include 'site/includes/header.twig' %}
+
+<div class="catalog-page category-products">
+    <div class="breadcrumbs">
+        {% include 'site/includes/breadcrumbs.twig' %}
+    </div>
+    <div class="content">
+        <div class="title">
+            <h2>{{ category.name }}</h2>
+        </div>
+
+        <div class="tab">
+            <button class="tablinks {% if childCategory.alias == childCategoryActive %} active{% endif %}">
+                <a href="/catalog/{{ category.alias }}/{{ category.id }}"> Все подкатегории </a>
+            </button>
+            {% for childCategory in childCategoryList %}
+                <button class="tablinks {% if childCategory.alias == childCategoryActive %} active{% endif %}">
+                    <a href="/catalog/{{ childCategory.alias }}/{{ childCategory.id }}">{{ childCategory.name }} </a>
+                </button>
+            {% endfor %}
+        </div>
+        <div class="tabcontent">
+            <div class="category-tab-title">
+                <a href="/catalog/{{ category.alias }}/{{ category.id }}">
+                    <img src="/upload/images/category/{{ category.file_alias }}" alt="" class="image"/>
+                </a>
+                <div class="category-description">
+                    <div class="text"> {{ category.description|raw }}</div>
+                </div>
+            </div>
+            <div class="category-tab-products index-catalog">
+                {% for product in productList %}
+                    <div class="block">
+                        <div class="content-container container-product"
+                             style="background-image:url('/upload/images/product/{{ product.file_alias }}')">
+                            <div class="content">
+                                <h4>{{ product.name }}</h4>
+                                <p class="text">{{ product.description }}</p>
+                                <a href="/product/{{ product.alias }}/{{ product.id }}"
+                                   class="button">Посмотреть</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <a class="button show_more">Показать еще</a>
+        </div>
+    </div>
+    <div class="hr"></div>
+    {% include 'site/includes/callbackform.twig' %}
+</div>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/site/catalog.css">
+{% include 'site/includes/footer.twig' %}
+
+{# Show more products #}
+<script>
+    $(function () {
+        $('.show_more').click(function (e) {
+            let productCount = $('.content-container').length;
+            let categoryId = {{ categoryId }};
+            $.ajax({
+                url: '/catalog/show-more/' + categoryId + '/' + productCount,
+                type: 'GET',
+                success: function (res) {
+                    $('.category-tab-products').append(res);
+                },
+                error: function () {
+                },
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        let lastPage = {{ lastPage }};
+        if (lastPage) {
+            $('.show_more').hide();
+        }
+    });
+</script>
+

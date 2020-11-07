@@ -1,0 +1,66 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Пользователи</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li class="active">Пользователи</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <a href="/admin/user/create" class="btn btn-default back"><i class="fa fa-plus"></i> Добавить пользователя</a>
+
+        <h4>Список пользователей</h4>
+
+        <table class="table-bordered table-striped table">
+            <tr>
+                <th>Имя пользователя
+                    <form action="/admin/user" method="post">
+                        <input type="hidden" name="order" value="name">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th>Почта пользователя
+                    <form action="/admin/user" method="post">
+                        <input type="hidden" name="order" value="email">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th>Роль пользователя
+                    <form action="/admin/user" method="post">
+                        <input type="hidden" name="order" value="role_name">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                {% if is_admin == true %}
+                    <th></th>
+                    <th></th>
+                {% endif %}
+            </tr>
+            {% for user in userList %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role_name }}</td>
+                    {% if is_admin == true %}
+                        <td><a href="/admin/user/update/{{ user.id }}" title="Редактировать"><i
+                                        class="fa fa-pencil-square-o"></i></a></td>
+                        {% if user_id != user.id %}
+                            <td><a href="/admin/user/delete/{{ user.id }}" title="Удалить"><i
+                                            class="fa fa-times"></i></a></td>
+                        {% else %}
+                            <th></th>
+                        {% endif %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
+

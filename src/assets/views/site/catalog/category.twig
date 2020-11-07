@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
+<head>
+    <title>KDF trading</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    {% include 'site/includes/head.twig' %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/slick.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/slick-theme.css">
+</head>
+<body>
+
+{% include 'site/includes/header.twig' %}
+
+<div class="catalog-page category">
+    <div class="breadcrumbs">
+        {% include 'site/includes/breadcrumbs.twig' %}
+    </div>
+    <div class="content">
+        <div class="title">
+            <h2>{{ category.name }}</h2>
+        </div>
+        <div class="slider">
+            <div class="slider-content">
+                {% for photo in categoryFilesList %}
+                    <img src="/upload/images/category/{{ photo.file_alias }}" alt="" class="image">
+                {% endfor %}
+            </div>
+        </div>
+        <div class="text">
+            <div class="description">
+                {{ category.description|raw }}
+            </div>
+        </div>
+    </div>
+
+    <div class="hr"></div>
+    {% include 'site/includes/callbackform.twig' %}
+</div>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/site/catalog.css">
+{% include 'site/includes/footer.twig' %}
+<script src="/assets/js/site/slick.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.slider-content').slick({
+            centerMode: true,
+            centerPadding: '60px',
+            slidesToShow: 3,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        arrows: false,
+                        centerMode: true,
+                        centerPadding: '40px',
+                        slidesToShow: 3
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        arrows: false,
+                        centerMode: true,
+                        centerPadding: '40px',
+                        slidesToShow: 1
+                    }
+                }
+            ]
+        });
+    });
+</script>
+

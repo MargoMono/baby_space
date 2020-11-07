@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
+<head>
+    <title>KDF trading</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    {% include 'site/includes/head.twig' %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
+</head>
+<body>
+
+{% include 'site/includes/header.twig' %}
+
+<div class="index-main-block">
+    <div class="content-container">
+        <div class="content">
+            <h2>Мебельные фасады и декоративные элементы <br>в Казани</h2>
+            <p>Мебельные фасады по ценам января 2020 и более 200 видов <br>декора от ведущих российских и европейских
+                фабрик</p>
+            <br><br>
+        </div>
+    </div>
+</div>
+
+<div class="index-points">
+    <div class="block">
+        <h3>2000 +</h3>
+        <p>Успешно реализованных <br>заказов</p>
+    </div>
+    <div class="block">
+        <h3>2-3&nbsp;часа</h3>
+        <p>Отгрузка и доставка заказа <br>по Казани</p>
+    </div>
+    <div class="block">
+        <h3>1000 +</h3>
+        <p>Оттенков пленки ПВХ для <br>фасадов</p>
+    </div>
+</div>
+
+
+<div class="index-catalog">
+    {% for mainCategory in mainCategoryList %}
+        <div class="block">
+            <div class="content-container"
+                 style="background-image:url('/upload/images/category/{{ mainCategory.file_alias }}')">
+                <div class="content">
+                    {% if mainCategory.id ==  1 %}<h4>Мебельные <br> фасады</h4>{% endif %}
+                    {% if mainCategory.id ==  2 %}<h4>Декоративные <br> элементы </h4>{% endif %}
+                    {% if mainCategory.id ==  3 %}<h4>Мебель <br> на заказ</h4>{% endif %}
+                    <a href="/catalog/{{ mainCategory.alias }}/{{ mainCategory.id }}" class="button">Посмотреть</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+<div class="index-form">
+    <h2>Заказать прайс-лист</h2>
+    <h3>Пришлем Вам на почту полный прайс-лист с актуальными ценами</h3>
+    <form id="send-catalog-form">
+        <input type="text" id="send-catalog-name" name="name" placeholder="Имя" required>
+        <input type="text" id="send-catalog-company" name="company" placeholder="* Название комании">
+        <input type="email" id="send-catalog-email" name="email" placeholder="Email" required>
+        <button class="button">Получить</button>
+    </form>
+    <p class="additional">Поля помеченные * не обязательны для заполнения</p>
+</div>
+
+
+<div class="index-usefull">
+    <div class="block">
+        <div class="header">
+            <h2>Полезные статьи</h2>
+        </div>
+        <div class="content-container column-2">
+            {% for key, new in news %}
+
+                {% if key == 0 %}
+                    <div class="column">
+                        <div class="block big-image">
+                            <img src="/upload/images/blog/{{ new.file_alias }}">
+                            <h3><a href="/blog/{{ article.alias|e }}/{{ article.id|e }}">{{ new.name }}</a></h3>
+                            <p>{{ new.description }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <div class="column">
+                {% for key, new in news %}
+                    {% if key != 0 %}
+                        <div class="block">
+                            <h3><a href="/blog/{{ article.alias|e }}/{{ article.id|e }}">{{ new.name }}</a></h3>
+                            <p>{{ new.description }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="button-block">
+            <a href="/blog" class="button">Читать все статьи</a>
+        </div>
+    </div>
+
+    <div class="block">
+        <div class="header">
+            <h2>Отзывы клиентов</h2>
+        </div>
+        <div class="content-container column-1">
+            {% for comment in comments %}
+                <div class="block">
+                    <div class="image"
+                            {% if comment.photos.file_alias is not empty %}
+                                style="background-image:url('/upload/images/comment/{{ comment.photos.file_alias }}')"
+                            {% endif %}
+                    ></div>
+                    <div class="content">
+                        <h3>{{ comment.description }}</h3>
+                        <p>{{ comment.content }}</p>
+                        <p class="author">
+                            <span class="name">{{ comment.user_name }}</span>
+                            <span class="date">{{ comment.created_at }}</span>
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="button-block">
+            <a href="/comments" class="button">Читать все отзывы</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="index-portfolio">
+    <h2>Портфолио</h2>
+    <h3>Примеры готовых кухонь и шкафов-купе <br> изготовленных из наших фасадов</h3>
+
+    <div class="table">
+        {% for photo in photos %}
+            <div class="block" style="background-image:url('/upload/images/portfolio/{{ photo.file_alias }}')"></div>
+        {% endfor %}
+    </div>
+
+    <a href="/portfolio" class="button">Перейти в портфолио</a>
+</div>
+
+<div class="interval"></div>
+
+{% include 'site/includes/footer.twig' %}
+</body>
+</html>

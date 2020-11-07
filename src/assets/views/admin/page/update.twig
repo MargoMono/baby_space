@@ -1,0 +1,74 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Обновить статью</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/admin/page/">Страницы</a></li>
+            <li class="active">Обновить статью</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        {% if errors is not empty %}
+            <div class="col-lg-12 mistake">
+                <p>Ошибка:</p>
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="col-lg-12 correct">
+            <div class="login-form">
+                <form action="/admin/page/update/{{ page.id }}" enctype="multipart/form-data" method="post">
+
+                    <input type="hidden" name="id" placeholder="" value="{{ page.id }}">
+
+                    <p class="title-name">Название</p>
+                    <input type="text" name="name" placeholder="" value="{{ page.name }}" readonly>
+
+                    <p class="title-name">Контент страницы</p>
+                    <p>В данном поле вы можете работать с тегами. Для этого поместите свой текст между тегами,</p>
+                    <p>сами теги не будут отображены при выводе текста на сайте</p>
+                    <p><b>Список тегов:</b></p>
+                    <p>&lt;p&gt; Какой-то текст &lt;/p&gt; - абзац</p>
+                    <p>&lt;b&gt; <b>Какой-то текст </b> &lt;/b&gt; - жирный шрифт</p>
+                    <p>&lt;i&gt; <i>Какой-то текст </i>&lt;/i&gt; - курсив</p>
+                    <p>&lt;u&gt; <u>Какой-то текст </u> &lt;/u&gt; - подчеркнутый шрифт</p>
+                    <p><b>Пример:</b></p>
+                    <p>&lt;p&gt; &lt;b&gt; <b>Жирный шрифт в азаце </b> &lt;/b&gt;&lt;/p&gt;</p>
+                    <p>&lt;b&gt; &lt;i&gt; <i>Немного курсива </i>&lt;/i&gt; обычный текст &lt;/b&gt;</p>
+                    <textarea id="editor1" name="content" rows="4" cols="150">{{ page.content }}</textarea>
+
+                    <input type="hidden" name="file_id" placeholder="" value="{{ page.file_id }}">
+                    <p class="title-name">Изображение</p>
+                    <img src="/upload/images/page/{{ page.file_alias }}" width="150" alt=""/>
+                    <input type="file" name="file" value="">
+
+                    <p class="title-name">Тэг title</p>
+                    <textarea name="tag_title" rows="4" cols="150">{{ page.tag_title }}</textarea>
+
+                    <p class="title-name">Тэг description</p>
+                    <textarea name="tag_description" rows="4" cols="150">{{ page.tag_description }}</textarea>
+
+                    <p class="title-name">Тэг keywords</p>
+                    <textarea name="tag_keywords" rows="4" cols="150">{{ page.tag_keywords }}</textarea>
+                    <br><br>
+                    <input type="submit" name="button" class="btn btn-default" value="Обновить"/>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
+
+<script>
+
+    console.log($('input[type="file"]').prop('files'))
+</script>

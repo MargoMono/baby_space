@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
+<head>
+    <title>KDF trading</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    {% include 'site/includes/head.twig' %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
+</head>
+<body>
+
+{% include 'site/includes/header.twig' %}
+
+
+<div class="simple-page contact">
+    <div class="title">
+        <h2>Контакты</h2>
+    </div>
+
+    <div class="content">
+        <div class="block">
+            <div class="map">
+                <img src="/assets/images/site/map-kazan.png" alt="карта Казани" class="map-image">
+            </div>
+            <div class="text">
+                <p><b>Адрес:</b> Республика Татарстан, г. Казань, ул. Беломорская, д.69а</p>
+                <p><b>Тел./факс:</b> <a href="tel:+78435700826">8 (843) 570-08-26</a>, <a href="tel:+78435700826">8 (843) 570-08-26</a></p>
+                <p><b>WhatsApp:</b> <a href="#">8 9600 89-88-44</a></p>
+                <p><b>E-mail:</b> <a href="mailto:kdf_16@mail.ru">kdf_16@mail.ru</a></p>
+            </div>
+
+        </div>
+
+        <div class="block">
+            <div class="map">
+                <img src="/assets/images/site/map-yoshka.png" alt="карта Йошкар-Олы" class="map-image">
+            </div>
+            <div class="text">
+                <p><b>Адрес:</b> Республика Марий Эл, г. Йошкар-Ола, ул. Чехова, д.14 (ООО "ТЭБИР")</p>
+                <p><b>Телефон:</b> <a href="tel:+78362420388">8 (8362) 42-03-88</a></p>
+                <p><b>E-mail:</b> <a href="mailto:tebir14@mail.ru">tebir14@mail.ru</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="big-image">
+    <div class="shadow">
+        <div class="content">
+            <img src="#" alt="" class="big-image-image">
+            <div class="close">&#10006;</div>
+        </div>
+    </div>
+</div>
+
+{% include 'site/includes/callbackform.twig' %}
+{% include 'site/includes/footer.twig' %}
+
+<script>
+    $(document).ready(function () {
+        $('.block').on('click', '.map-image', function(e){
+            $('.big-image-image').attr('src', $(this).attr('src'));
+            $('body').css({"overflow":"hidden"});
+            $('.big-image').show('slow');
+        });
+
+        $('.big-image .close').click(function () {
+            $('.big-image').hide('slow');
+            $('body').css({"overflow":"auto"});
+        });
+
+        $(document).mouseup(function (e){
+            var div = $(".big-image .content");
+            if (!div.is(e.target)
+                && div.has(e.target).length === 0) {
+                $('.big-image').hide('slow');
+                $('body').css({"overflow":"auto"});
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
+

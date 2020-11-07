@@ -1,0 +1,60 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Статьи</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li class="active">Статьи</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <a href="/admin/blog/create" class="btn btn-default back"><i class="fa fa-plus"></i> Добавить статью</a>
+
+        <h4>Список статей</h4>
+
+        <table class="table-bordered table-striped table">
+            <tr>
+                <th>Номер
+                    <form action="/admin/blog" method="post">
+                        <input type="hidden" name="order" value="id">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th>Название статьи
+                    <form action="/admin/blog" method="post">
+                        <input type="hidden" name="order" value="name">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th>Краткое описание</th>
+                <th>Дата публикации
+                    <form action="/admin/blog" method="post">
+                        <input type="hidden" name="order" value="created_at">
+                        <input type="submit" class="btn btn-filter" value="&darr;">
+                    </form>
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for new in newList %}
+                <tr>
+                    <td>{{ new.id }}</td>
+                    <td>{{ new.name }}</td>
+                    <td>{{ new.description }}</td>
+                    <td>{{ new.created_at }}</td>
+                    <td><a href="/admin/blog/update/{{ new.id }}" title="Редактировать"><i
+                                    class="fa fa-pencil-square-o"></i></a></td>
+                    <td><a href="/admin/blog/delete/{{ new.id }}" title="Удалить"><i
+                                    class="fa fa-times"></i></a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
+

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
+<head>
+    <title>KDF trading</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    {% include 'site/includes/head.twig' %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
+</head>
+<body>
+
+{% include 'site/includes/header.twig' %}
+
+
+<div class="simple-page login">
+    <div class="title">
+        <h2>Вход на сайт</h2>
+    </div>
+
+    <div class="content">
+
+        {% if errors is not empty %}
+        <div class="errors-block">
+            <h4>Возникли ошибки:</h4>
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+
+        <form action="#" method="post">
+            <input type="email" name="email" placeholder="E-mail" value="{{ email }}"/>
+            <input type="password" name="password" placeholder="Пароль" value="{{ password }}"/>
+            <button type="submit" name="submit" class="button">Вход</button>
+        </form>
+        <a href="/user/restore-password" class="forgot-password">Забыли пароль?</a>
+    </div>
+</div>
+
+
+{% include 'site/includes/footer.twig' %}

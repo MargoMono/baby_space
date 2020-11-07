@@ -1,0 +1,94 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Добавить категорию</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/admin/category/">Категории товаров</a></li>
+            <li class="active">Добавить категорию</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        {% if errors is not empty %}
+            <div class="col-lg-12 mistake">
+                <p>Ошибка:</p>
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="col-lg-12 correct">
+            <div class="login-form">
+                <form action="/admin/category/update/{{ category.id }}" enctype="multipart/form-data" method="post">
+
+                    <input type="hidden" name="id" placeholder="" value="{{ category.id }}">
+
+                    <p class="title-name">Родительская категория</p>
+                    <select name="parent">
+                        <option value="{{ category.parent_id }}" selected="selected">{{ category.parent_name }}</option>
+                        {% for category in categoryList %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <p class="title-name">Название</p>
+                    <input type="text" name="name" placeholder="" value="{{ category.name }}" required>
+                    <p class="required">*обязательное поле</p>
+
+                    <p class="title-name">Описание</p>
+                    <p>В данном поле вы можете работать с тегами. Для этого поместите свой текст между тегами,</p>
+                    <p>сами теги не будут отображены при выводе текста на сайте</p>
+                    <p><b>Список тегов:</b></p>
+                    <p>&lt;p&gt; Какой-то текст &lt;/p&gt; - абзац</p>
+                    <p>&lt;b&gt; <b>Какой-то текст </b> &lt;/b&gt; - жирный шрифт</p>
+                    <p>&lt;i&gt; <i>Какой-то текст </i>&lt;/i&gt; - курсив</p>
+                    <p>&lt;u&gt; <u>Какой-то текст </u> &lt;/u&gt; - подчеркнутый шрифт</p>
+                    <p><b>Пример:</b></p>
+                    <p>&lt;p&gt; &lt;b&gt; <b>Жирный шрифт в азаце </b> &lt;/b&gt;&lt;/p&gt;</p>
+                    <p>&lt;b&gt; &lt;i&gt; <i>Немного курсива </i>&lt;/i&gt; обычный текст &lt;/b&gt;</p>
+                    <textarea id="editor1" name="description" rows="4" cols="150">{{ category.description }}</textarea>
+
+                    <input type="hidden" name="file_id" placeholder="" value="{{ category.file_id }}">
+                    <input type="hidden" name="file_alias" placeholder="" value="{{ category.file_alias }}">
+
+                    <p class="title-name">Изображение</p>
+                    <img src="/upload/images/category/{{ category.file_alias }}" width="150" alt=""/>
+                    <input type="file" name="file" value="">
+
+                    <p class="title-name">Статус</p>
+                    <select name="enabled">
+                        <option value="1" selected="selected">Отображается</option>
+                        <option value="0">Скрыта</option>
+                    </select>
+
+                    <p class="title-name">Порядковый номер</p>
+                    <input type="text" name="position" placeholder="" value="{{ category.position }}">
+
+                    <p class="title-name">Тэг title</p>
+                    <textarea name="tag_title" rows="4" cols="150">{{ category.tag_title }}</textarea>
+
+                    <p class="title-name">Тэг description</p>
+                    <textarea name="tag_description" rows="4" cols="150">{{ category.tag_description }}</textarea>
+
+                    <p class="title-name">Тэг keywords</p>
+                    <textarea name="tag_keywords" rows="4" cols="150">{{ category.tag_keywords }}</textarea>
+                    <br><br>
+                    <input type="submit" name="button" class="btn btn-default" value="Обновить"/>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
+
+<script>
+
+    console.log($('input[type="file"]').prop('files'))
+</script>

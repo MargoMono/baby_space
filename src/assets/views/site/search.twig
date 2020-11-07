@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
+<head>
+    <title>KDF trading</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    {% include 'site/includes/head.twig' %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
+</head>
+<body>
+
+{% include 'site/includes/header.twig' %}
+
+<div class="simple-page catalog-page search-page">
+    <div class="title">
+        <h2>Результаты поиска</h2>
+    </div>
+
+    <div class="content search-content">
+        <h3>Результаты поиска по ключевой фразе "{{ search }}"</h3>
+    </div>
+
+    <div class="content index-catalog">
+        {% for product in productList %}
+            <div class="block">
+                <div class="content-container" style="background-image:url('/upload/images/product/{{ product.file_alias }}')">
+                    <div class="content product-description">
+                        <h4>{{ product.name }}</h4>
+                        <p class="text">{{ product.description|raw }}</p>
+                        <a href="/product/{{ product.alias }}/{{ product.id }}" class="button">Посмотреть</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if productList is empty %}
+            <p>По вашему запросу ничего не найдено. Попробуйте изменить запрос.</p>
+        {% endif %}
+    </div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/site/catalog.css">
+{% include 'site/includes/callbackform.twig' %}
+{% include 'site/includes/footer.twig' %}
+</body>
+</html>

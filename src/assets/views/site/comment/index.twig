@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
+<head>
+    <title>KDF trading</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    {% include 'site/includes/head.twig' %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/comment.css">
+</head>
+<body>
+
+{% include 'site/includes/header.twig' %}
+
+
+<div class="simple-page article">
+    <div class="title">
+        <h2>Отзывы</h2>
+    </div>
+
+    <div class="content articles">
+        <div class="articles-list comments">
+            {% for comment in commentList %}
+                <div class="block one-comment">
+                    <div class="image">
+                        {% for photo in comment.photos %}
+                            <div class="image-box">
+                                <img src="/upload/images/comment/{{ photo.file_alias|e }}" alt=""
+                                     class="article-image"/>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="text">
+                        <div class="title">
+                            <h3>{{ comment.description|e }}</h3>
+                            <p>{{ comment.created_at|e }}</p>
+                        </div>
+                        <div class="description">{{ comment.content|e }}</div>
+                        <div class="author">
+                            {{ comment.user_name|e }} <span>({{ comment.created_at|e }})</span>
+                        </div>
+                    </div>
+
+                    <div class="comment-answers">
+                        {% for children in comment.children %}
+                            <div class="block">
+                                <div class="image">
+                                    {% for photo in children.photos %}
+                                        <div class="image-box">
+                                            <img src="/upload/images/comment/{{ photo.file_alias|e }}" alt=""
+                                                 class="article-image"/>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="text">
+                                    <div class="title">
+                                        <h4>RE: {{ children.description }}</h4>
+                                    </div>
+                                    <div class="description">{{ children.content }}</div>
+                                    <div class="author">
+                                        {{ children.user_name }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+            <a class="button show_more" href="#">Показать еще</a>
+        </div>
+    </div>
+
+    <div class="big-image">
+        <div class="shadow">
+            <div class="content">
+                <img src="#" alt="" class="big-image-image">
+                <div class="close">&#10006;</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="simple-page article create-comment">
+    <div class="title">
+        <h2>Оставить комментарий</h2>
+    </div>
+
+    <div class="content articles">
+        <form id="send-comment" method='post' action="#" enctype="multipart/form-data">
+            <div class="row">
+                <input id="send-comment-user" name="user" type="text" placeholder="Ваше имя" required/>
+                <input id="send-comment-email" name="email" type="email" placeholder="Ваша почта" required/>
+                <input id="send-comment-description" name="description" type="text" placeholder="Тема отзыва" required/>
+            </div>
+            <div class="row">
+                <textarea id="send-comment-content" cols="32" name="content" rows="5" placeholder="Текст отзыва"
+                          required></textarea>
+                <div class="file-input">
+                    <div class="file-upload">
+                        <label>
+                            <input id="upload-files" type="file" name="file[]" multiple/>
+                            <span>Выберите файлы</span>
+                        </label>
+                    </div>
+                    <div id="file-preview-table">
+
+                    </div>
+                </div>
+            </div>
+            <div class="row button-row">
+                <button type="submit" class="button">Загрузить</button>
+            </div>
+        </form>
+
+        <div class='message-div message-div_hidden' id='message-div'></div>
+    </div>
+</div>
+
+
+{% include 'site/includes/footer.twig' %}
+
+<script>
+    $(function () {
+        $('.show_more').click(function (e) {
+            e.preventDefault();
+            let commentCount = $('.one-comment').length;
+            $.ajax({
+                url: '/comments/show-more/' + commentCount,
+                type: 'GET',
+                success: function (res) {
+                    $('.comments').append(res);
+                },
+                error: function () {
+                },
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        let lastPage = {{ lastPage }};
+        if (lastPage) {
+            $('.show_more').hide();
+        }
+    });
+
+
+    function handleFileSelectMulti(evt) {
+        var files = evt.target.files; // FileList object
+        document.getElementById('file-preview-table').innerHTML = "";
+        for (var i = 0, f; f = files[i]; i++) {
+
+            // Only process image files.
+            if (!f.type.match('image.*')) {
+                alert("Только изображения....");
+            }
+
+            var reader = new FileReader();
+
+            // Closure to capture the file information.
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    var span = document.createElement('span');
+                    span.innerHTML = ['<img class="img-thumbnail" src="', e.target.result,
+                        '" title="', escape(theFile.name), '"/>'].join('');
+                    document.getElementById('file-preview-table').insertBefore(span, null);
+                };
+            })(f);
+
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(f);
+        }
+    }
+
+
+    document.getElementById('upload-files').addEventListener('change', handleFileSelectMulti, false);
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('.article-image').click(function () {
+            $('.big-image-image').attr('src', $(this).attr('src'));
+            $('body').css({"overflow": "hidden"});
+            $('.big-image').show('slow');
+
+
+        });
+
+        $('.big-image .close').click(function () {
+            $('.big-image').hide('slow');
+            $('body').css({"overflow": "auto"});
+        });
+
+        $(document).mouseup(function (e) {
+            var div = $(".big-image .content");
+            if (!div.is(e.target)
+                && div.has(e.target).length === 0) {
+                $('.big-image').hide('slow');
+                $('body').css({"overflow": "auto"});
+            }
+        });
+    });
+</script>
+
+<script>
+
+    function startLoadingAnimation() {
+        var imgObj = $("#loadImg");
+        imgObj.show();
+    }
+
+    function stopLoadingAnimation() {
+        $("#loadImg").hide();
+    }
+
+    $("#send-comment").submit(function (event) {
+        event.preventDefault();
+
+        var input = $("#uploaded-file1").prop('files');
+
+        var form_data = new FormData();
+        $.each(input, function (index, value) {
+            console.log(value)
+            form_data.append("files[]", value);
+        });
+
+        form_data.append("user_name", $('#send-comment-user').val());
+        form_data.append("user_email", $('#send-comment-email').val());
+        form_data.append("description",  $('#send-comment-description').val());
+        form_data.append("content", $('#send-comment-content').val());
+
+        $.ajax({
+            url: '/comments/create-comment',
+            processData: false,
+            contentType: false,
+            data: form_data,
+            type: 'POST',
+            success: function (res) {
+                let response = JSON.parse(res)
+                if (response.result) {
+                    $('.message-box .text').text("Отзыв успешно отправлен и находится на модерации");
+                } else {
+                    $('.message-box .text').text(response.errors);
+                }
+                $('.message-box').show('slow');
+                stopLoadingAnimation();
+            },
+            error: function () {
+                $('.message-box .text').text("Произошла ошибка при попытке отправления отзыва. Пожалуйста, попробуйте повторить запрос.");
+                $('.message-box').show('slow');
+                stopLoadingAnimation();
+            },
+        });
+
+        startLoadingAnimation();
+    });
+
+    $(document).ready(function () {
+        $('.message-box .close').click(function () {
+            $('.message-box').hide('slow');
+        });
+
+        $(document).mouseup(function (e) {
+            var div = $(".message-box");
+            if (!div.is(e.target)
+                && div.has(e.target).length === 0) {
+                $('.message-box').hide('slow');
+            }
+        });
+    });
+</script>

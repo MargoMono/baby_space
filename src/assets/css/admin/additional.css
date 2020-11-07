@@ -1,0 +1,29 @@
+.required {
+    color: #b6032b;
+    font-weight: bold;
+}
+
+.note {
+    color: #337ab7;
+    font-weight: bold;
+}
+
+.mistake {
+    color: red;
+    font-weight: bold;
+}
+
+.comment_img {
+    max-height: 100px;
+    max-width: 100px;
+}
+
+.login-form textarea, input[type=text], select {
+    width: 100%;
+    padding: 10px;
+}
+
+.correct {
+    padding: 0;
+    margin: 0 0 20px 0;
+}

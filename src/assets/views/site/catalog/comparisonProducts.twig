@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
+<head>
+    <title>KDF trading</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    {% include 'site/includes/head.twig' %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
+</head>
+<body>
+
+{% include 'site/includes/header.twig' %}
+
+<div class="catalog-page simple-page">
+    <div class="content index-catalog">
+        <div class="title">
+            <h2>Избранное</h2>
+        </div>
+        {% if productList is empty %}<h4>В избранное не было добавлено товаров</h4>{% endif %}
+        {% for product in productList %}
+            <div class="block one-product">
+                <div class="content-container container-product" style="background-image:url('/upload/images/product/{{ product.file_alias }}')">
+                    <div class="content">
+                        <h4>{{ product.name }}</h4>
+                        <p>{{ product.description }}</p>
+                        <a href="/product/{{ product.alias }}/{{ product.id }}" class="button">Посмотреть</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="more-button-block">
+        <a href="#" class="button show_more">Показать еще</a>
+    </div>
+
+    <div class="hr"></div>
+    {% include 'site/includes/callbackform.twig' %}
+</div>
+
+
+<link rel="stylesheet" type="text/css" href="/assets/css/site/catalog.css">
+{% include 'site/includes/footer.twig' %}
+
+{# Show more products #}
+<script>
+    $(function () {
+        $('.show_more').click(function (e) {
+            e.preventDefault();
+            let productCount = $('.one-product').length;
+            $.ajax({
+                url: '/catalog/show-more/' + {{ category.id }} + '/' + productCount,
+                type: 'GET',
+                success: function (res) {
+                    $('.index-catalog').append(res);
+                },
+                error: function () {
+                },
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        let lastPage = {{ lastPage }};
+        if (lastPage) {
+            $('.show_more').hide();
+        }
+    });
+</script>
+

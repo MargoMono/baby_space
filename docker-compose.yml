@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+
+  web:
+    container_name: web
+    build:
+      context: .
+    volumes:
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+    ports:
+      - 8082:80
+    working_dir: ${APP_PATH_CONTAINER}
+    restart: always
+    depends_on:
+      - db
+    links:
+      - db
+
+  db:
+    container_name: db
+    build:
+      context: ./MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+    ports:
+      - "3306:3306"
+    tty: true

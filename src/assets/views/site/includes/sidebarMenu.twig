@@ -1,0 +1,26 @@
+<div class="katalog_block_menu">
+    <h2 class="katalog_menu_title title_katalog">Каталог</h2>
+    <div class="katalog_kategory_menu sidebar">
+        <ul class="topnav">
+            {% import _self as macro %}
+
+            {{ macro.menu(categoryMenu) }}
+
+            {% macro menu(categoryMenu) %}
+                {% import _self as macro %}
+                <ul>
+                    {% for category in categoryMenu %}
+                        <li>
+                            <a href="/catalog/{{ category['alias'] }}/{{ category.id }}">{{ category['name'] }}</a>
+                            {% if category['children'] is not empty %}
+                                {{ macro.menu(category['children']) }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endmacro %}
+        </ul>
+    </div>
+</div>
+<link href="/assets/css/sidebar-menu.css" rel="stylesheet">
+<link href="/assets/css/katalog_menu.css" rel="stylesheet"/>

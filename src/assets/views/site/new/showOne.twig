@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
+<head>
+    <title>KDF trading</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    {% include 'site/includes/head.twig' %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
+</head>
+<body>
+
+{% include 'site/includes/header.twig' %}
+
+<div class="simple-page article-single">
+    <div class="title">
+        <h2>{{ new.name|e }}</h2>
+    </div>
+
+    <div class="content">
+        <div class="text">
+            <img class="main-image" src="/upload/images/new/{{ new.file_alias|e }}" alt=""/>
+            <p>{{ new.content|raw }}</p>
+        </div>
+        <div class="clear"></div>
+        <a class="button" href="/new">Все новости</a>
+    </div>
+</div>
+
+{% include 'site/includes/footer.twig' %}
