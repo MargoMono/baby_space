@@ -338,3 +338,9 @@ create table product_file
     constraint product_file_product_id_fk
         foreign key (product_id) references product (id)
 );
+
+INSERT INTO `role` (`id`, `name`, `permission`) VALUES (NULL, 'Администратор', '100');
+
+INSERT INTO `user` (`id`, `name`, `email`, `password`, `salt`, `active_hex`, `role_id`)
+VALUES (NULL, 'Маргарита Моногарова', 'margomonogarova@gmail.com', '4f03866f3db72e717c88541d53da2af1', '94231654',
+        'de88a3763b1636bec5474c277ee48c7d', '1')
