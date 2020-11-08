@@ -43,7 +43,7 @@ class BlogModel extends Model
     public function getShowOneData($id)
     {
         $newsRepository = new BlogRepository();
-        $new = $newsRepository->getNewById($id);
+        $new = $newsRepository->getById($id);
 
         $params = [
             'article' => $new,

@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class PriceListOrderRepository extends Repository
+class PriceListOrderRepository extends AbstractRepository
 {
     public function getClientList($order = null)
     {

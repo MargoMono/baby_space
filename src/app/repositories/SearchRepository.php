@@ -2,10 +2,10 @@
 
 namespace App\Model;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class SearchRepository extends Repository
+class SearchRepository extends AbstractRepository
 {
     public  function getIndexData($search)
     {

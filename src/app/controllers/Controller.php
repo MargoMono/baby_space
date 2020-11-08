@@ -9,6 +9,7 @@ abstract class Controller
 {
     public $model;
     public $view;
+    public $context;
 
     function __construct()
     {

@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class PriceListRepository extends Repository
+class PriceListRepository extends AbstractRepository
 {
     public function getPriceById($id)
     {

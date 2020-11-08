@@ -2,28 +2,11 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
 use PDO;
 
-class BlogRepository extends Repository
+class BlogRepository extends AbstractRepository implements Repository
 {
-    public function getNewById($id)
-    {
-        $sql = '
-        SELECT b.*, f.alias AS file_alias
-        FROM blog b
-        LEFT JOIN file f ON b.file_id = f.id
-        WHERE b.id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetch();
-    }
-
-    public function getNewList($order = null)
+    public function getAll($order = null)
     {
         if (empty($order)) {
             $order = 'id';
@@ -43,7 +26,23 @@ class BlogRepository extends Repository
         return $result->fetchAll();
     }
 
-    public function createNew($data)
+    public function getById($id)
+    {
+        $sql = '
+        SELECT b.*, f.alias AS file_alias
+        FROM blog b
+        LEFT JOIN file f ON b.file_id = f.id
+        WHERE b.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
+
+    public function create($data)
     {
         $sql = '
 INSERT INTO blog
@@ -68,7 +67,7 @@ VALUES
         return null;
     }
 
-    public function updateNew($data)
+    public function updateById($data)
     {
         $sql = '
 UPDATE blog
@@ -97,7 +96,7 @@ WHERE id = :id';
         return $result->execute();
     }
 
-    public function deleteCategoryById($id)
+    public function deleteById($id)
     {
         $sql = 'DELETE FROM blog WHERE id = :id';
 

@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class FileRepository extends Repository
+class FileRepository extends AbstractRepository
 {
     public function createFile($image)
     {

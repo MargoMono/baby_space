@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class MediaRepository extends Repository
+class MediaRepository extends AbstractRepository
 {
     public function getGalleryImages($galleryId)
     {

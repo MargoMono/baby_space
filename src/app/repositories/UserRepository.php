@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class UserRepository extends Repository
+class UserRepository extends AbstractRepository
 {
     const ADMIN = 100;
 

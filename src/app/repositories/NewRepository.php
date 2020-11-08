@@ -2,28 +2,12 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class NewRepository extends Repository
+class NewRepository extends AbstractRepository implements Repository
 {
-    public function getNewById($id)
-    {
-        $sql = '
-        SELECT n.*, f.alias AS file_alias
-        FROM new n
-        LEFT JOIN file f ON n.file_id = f.id
-        WHERE n.id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetch();
-    }
-
-    public function getNewList($order = null)
+    public function getAll($order = null)
     {
         if (empty($order)) {
             $order = 'id';
@@ -43,7 +27,23 @@ class NewRepository extends Repository
         return $result->fetchAll();
     }
 
-    public function createNew($data)
+    public function getById($id)
+    {
+        $sql = '
+        SELECT n.*, f.alias AS file_alias
+        FROM new n
+        LEFT JOIN file f ON n.file_id = f.id
+        WHERE n.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
+
+    public function create($data)
     {
         $sql = '
 INSERT INTO new
@@ -68,7 +68,7 @@ VALUES
         return null;
     }
 
-    public function updateNew($data)
+    public function updateById($data)
     {
         $sql = '
 UPDATE new
@@ -97,7 +97,7 @@ WHERE id = :id';
         return $result->execute();
     }
 
-    public function deleteCategoryById($id)
+    public function deleteById($id)
     {
         $sql = 'DELETE FROM new WHERE id = :id';
 

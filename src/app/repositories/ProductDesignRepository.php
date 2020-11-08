@@ -2,10 +2,10 @@
 
 namespace App\Repository\Site;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class ProductDesignRepository extends Repository
+class ProductDesignRepository extends AbstractRepository
 {
     public function getProductDesignListByProductId($id)
     {

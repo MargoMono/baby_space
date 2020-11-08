@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class OrderRepository extends Repository
+class OrderRepository extends AbstractRepository
 {
     public function getOrderById($id)
     {

@@ -43,7 +43,7 @@ class NewModel extends Model
     public function getShowOneData($id)
     {
         $newsRepository = new NewRepository();
-        $new = $newsRepository->getNewById($id);
+        $new = $newsRepository->getById($id);
 
         $params = [
             'new' => $new,

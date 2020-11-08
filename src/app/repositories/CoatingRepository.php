@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class CoatingRepository extends Repository
+class CoatingRepository extends AbstractRepository
 {
     public function getCoatingById($id)
     {

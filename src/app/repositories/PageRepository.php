@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class PageRepository extends Repository
+class PageRepository extends AbstractRepository
 {
     const COMPANY_PAGE_ID = 1;
     const DELIVERY_PAGE_ID = 2;

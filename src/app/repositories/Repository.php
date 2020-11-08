@@ -2,24 +2,15 @@
 
 namespace App\Repository;
 
-use App\Components\Db;
-
-abstract class Repository
+interface Repository
 {
-    protected $db;
+    public function getAll($order = null);
 
-    public function __construct()
-    {
-        $this->db = Db::getConnection();
-    }
+    public function getById($id);
 
-    public function getArrayWithIdAsKey($array)
-    {
-        $newArray = [];
-        foreach ($array as $id => $item) {
-            $newArray[$item['id']] = $item;
-        }
+    public function create($data);
 
-        return $newArray;
-    }
+    public function updateById($id);
+
+    public function deleteById($id);
 }

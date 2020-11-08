@@ -2,10 +2,10 @@
 
 namespace App\Repository\Site;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class ProductPageKindRepository extends Repository
+class ProductPageKindRepository extends AbstractRepository
 {
     const COATING_PAGE_ID = 1;
     const DESIGN_PAGE_ID = 2;

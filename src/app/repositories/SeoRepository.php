@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class SeoRepository extends Repository
+class SeoRepository extends AbstractRepository
 {
     public function getSeoTags($route)
     {

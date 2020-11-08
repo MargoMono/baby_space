@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class CommentRepository extends Repository
+class CommentRepository extends AbstractRepository
 {
     public function getCommentById($id)
     {

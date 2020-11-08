@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Repository\Repository;
+use App\Repository\AbstractRepository;
 use PDO;
 
-class CategoryRepository extends Repository
+class CategoryRepository extends AbstractRepository
 {
     public function getCategoryById($id)
     {
