@@ -2,8 +2,8 @@
 
 namespace App\Model\Site;
 
-use DateTime;
-use Exception;
+use App\Model\Model;
+
 
 class DefaultModel extends Model
 {

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Components\Model;
+use App\Model\Model;
 use App\Components\View;
 
 abstract class Controller

@@ -2,7 +2,7 @@
 
 namespace App\Model\Site;
 
-use App\Components\Model;
+use App\Model\Model;
 use App\Controller\Site\MailController;
 use App\Modules\MailerHelper;
 use App\Repository\UserRepository;

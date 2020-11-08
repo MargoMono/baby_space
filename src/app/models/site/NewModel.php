@@ -2,7 +2,7 @@
 
 namespace App\Model\Site;
 
-use App\Components\Model;
+use App\Model\Model;
 use App\Repository\NewRepository;
 use DateTime;
 use Exception;

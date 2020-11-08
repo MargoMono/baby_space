@@ -2,7 +2,7 @@
 
 namespace App\Model\Site;
 
-use App\Components\Model;
+use App\Model\Model;
 use App\Model\SearchRepository;
 
 class SearchModel extends Model

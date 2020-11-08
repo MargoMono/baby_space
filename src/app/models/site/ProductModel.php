@@ -2,7 +2,7 @@
 
 namespace App\Model\Site;
 
-use App\Components\Model;
+use App\Model\Model;
 use App\Repository\CoatingRepository;
 use App\Repository\DesignRepository;
 use App\Repository\Site\ProductCoatingRepository;

@@ -2,7 +2,7 @@
 
 namespace App\Model\Site;
 
-use App\Components\Model;
+use App\Model\Model;
 use App\Modules\FileUploader;
 use App\Repository\CategoryRepository;
 use App\Repository\FileRepository;

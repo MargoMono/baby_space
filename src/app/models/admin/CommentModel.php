@@ -2,7 +2,7 @@
 
 namespace App\Model\Admin;
 
-use App\Components\Model;
+use App\Model\Model;
 use App\Modules\FileUploader;
 use App\Repository\BlogRepository;
 use App\Repository\CategoryRepository;
