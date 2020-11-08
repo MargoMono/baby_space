@@ -16,7 +16,7 @@ class CategoryModel extends Model
     public function getIndexData($order)
     {
         $categoryRepository = new CategoryRepository();
-        $data['categoryList'] = $categoryRepository->getCategoryList($order);
+        $data['categoryList'] = $categoryRepository->getAll($order);
 
         return $data;
     }
@@ -24,7 +24,7 @@ class CategoryModel extends Model
     public function getShowCreatePageData()
     {
         $categoryRepository = new CategoryRepository();
-        $categoryList = $categoryRepository->getCategoryList();
+        $categoryList = $categoryRepository->getAll();
 
         // удаляем возможность добавления подкатегории более 3 уровня
         foreach ($categoryList as $key => $category) {
@@ -75,7 +75,7 @@ class CategoryModel extends Model
         }
 
         $categoryRepository = new CategoryRepository();
-        $newCategoryId = $categoryRepository->createCategory($this->prepareCategoryData($params));
+        $newCategoryId = $categoryRepository->create($this->prepareCategoryData($params));
 
         if (empty($newCategoryId)) {
             $res['errors'][] = 'Ошибка сохранения категории';
@@ -108,8 +108,8 @@ class CategoryModel extends Model
     public function getShowUpdatePageData($id)
     {
         $categoryRepository = new CategoryRepository();
-        $data['category'] = $categoryRepository->getCategoryById($id);
-        $data['categoryList'] = $categoryRepository->getCategoryList();
+        $data['category'] = $categoryRepository->getById($id);
+        $data['categoryList'] = $categoryRepository->getAll();
         $data['categoryFilesList'] = $categoryRepository->getCategoryFilesByCategoryId($id);
 
         return $data;
@@ -143,7 +143,7 @@ class CategoryModel extends Model
         }
 
         $categoryRepository = new CategoryRepository();
-        $newCategory = $categoryRepository->updateCategory($this->prepareCategoryData($params));
+        $newCategory = $categoryRepository->updateById($this->prepareCategoryData($params));
 
         if (empty($newCategory)) {
             $res['errors'][] = 'Ошибка сохранения категории';
@@ -176,7 +176,7 @@ class CategoryModel extends Model
     public function getShowDeletePageData($id)
     {
         $categoryRepository = new CategoryRepository();
-        $data['category'] = $categoryRepository->getCategoryById($id);
+        $data['category'] = $categoryRepository->getById($id);
 
         return $data;
     }
@@ -202,7 +202,7 @@ class CategoryModel extends Model
             return $res;
         }
 
-        if ($categoryRepository->deleteCategoryById($data['id'])) {
+        if ($categoryRepository->deleteById($data['id'])) {
             $res['result'] = true;
             return $res;
         }

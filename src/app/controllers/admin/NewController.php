@@ -34,7 +34,7 @@ class NewController extends Controller
 
     public function create()
     {
-        $data = $this->context->create($_FILES['file'], $_POST);
+        $data = $this->context->create($_FILES, $_POST);
 
         if ($data['errors']) {
             $this->view->generate('admin/new/create.twig', $data);
@@ -53,7 +53,7 @@ class NewController extends Controller
 
     public function update()
     {
-        $data = $this->context->update($_FILES['file'], $_POST);
+        $data = $this->context->update($_FILES, $_POST);
         $data['new'] = $this->context->getShowUpdatePageData($_POST['id']);
 
         if ($data['errors']) {

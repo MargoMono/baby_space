@@ -35,7 +35,7 @@ class ProductModel extends Model
         $data['productList'] = $categoryRepository->getProductList();
 
         $categoryRepository = new CategoryRepository();
-        $categoryList = $categoryRepository->getCategoryList();
+        $categoryList = $categoryRepository->getAll();
 
         // удаляем возможность добавления товара в категорию у которой есть дочерняя
         foreach ($categoryList as $key => $category) {
@@ -152,7 +152,7 @@ class ProductModel extends Model
         $productList = $productRepository->getProductList();
 
         $categoryRepository = new CategoryRepository();
-        $categoryList = $categoryRepository->getCategoryList();
+        $categoryList = $categoryRepository->getAll();
 
         // удаляем возможность добавления товара в категорию у которой есть дочерняя
         foreach ($categoryList as $key => $category) {

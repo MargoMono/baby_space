@@ -3,12 +3,10 @@
 namespace App\Model\Admin;
 
 use App\Helper\TextHelper;
+use App\Modules\FileUploader;
 use App\Repository\BlogRepository;
+use App\Repository\FileRepository;
 
-/**
- * Конкретные Стратегии реализуют алгоритм, следуя базовому интерфейсу
- * Стратегии. Этот интерфейс делает их взаимозаменяемыми в Контексте.
- */
 class BlogStrategy implements Strategy
 {
     public $fileDirectory = 'blog';
@@ -16,6 +14,57 @@ class BlogStrategy implements Strategy
     public function getRepository()
     {
         return new BlogRepository();
+    }
+
+    public function modifyCreatePageData($data)
+    {
+        return $data;
+    }
+
+    public function addFileConnection($file)
+    {
+        $fileUploader = new FileUploader();
+
+        try {
+            $alias = $fileUploader->uploadOne($file, $this->fileDirectory);
+        } catch (\RuntimeException $e) {
+            $res['errors'][] = $e;
+            return $res;
+        }
+
+        $fileRepository = new FileRepository();
+
+        return $fileRepository->createFile($alias);
+    }
+
+    public function addFilesConnection($files, $id)
+    {
+
+    }
+
+    public function updateFileConnection($file, $params)
+    {
+        $fileUploader = new FileUploader();
+
+        try {
+            $image = $fileUploader->uploadOne($file, $this->fileDirectory);
+        } catch (\RuntimeException $e) {
+            $res['errors'][] = $e;
+            return $res;
+        }
+
+        if (!empty($image)) {
+            $fileUploader->deleteFile($params['file_alias'], $this->fileDirectory);
+        }
+
+        $fileRepository = new FileRepository();
+
+        return $fileRepository->createFile($image);
+    }
+
+    public function updateFilesConnection($files, $id)
+    {
+
     }
 
     public function prepareData($params)

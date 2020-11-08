@@ -172,6 +172,9 @@ try {
     $response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], processInput($_SERVER['REQUEST_URI']));
 
 } catch (\Exception $e) {
+    var_dump($e);
+    die();
+
     http_response_code(404);
     $model = new Model();
     $view = new View($model->getDefaultData());

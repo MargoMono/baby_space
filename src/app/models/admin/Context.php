@@ -2,10 +2,7 @@
 
 namespace App\Model\Admin;
 
-use App\Modules\FileUploader;
-use App\Repository\FileRepository;
 use App\Repository\Repository;
-use RuntimeException;
 
 class Context
 {
@@ -47,14 +44,16 @@ class Context
     /**
      * @return array
      */
-    public function getShowCreatePageData()
+    public function getShowCreatePageData(): array
     {
         /**
          * @var Repository $repository
          */
         $repository = $this->strategy->getRepository();
+        $data = $repository->getAll();
+        $data = $this->strategy->modifyCreatePageData($data);
 
-        return $repository->getAll();
+        return $data;
     }
 
     /**
@@ -66,32 +65,26 @@ class Context
     {
         $res['result'] = false;
 
-        $fileUploader = new FileUploader();
-
-        try {
-            $alias = $fileUploader->uploadOne($file, $this->strategy->fileDirectory);
-        } catch (RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
+        if (!empty($file['file'])) {
+            $params['file_id'] = $this->strategy->addFileConnection($file['file']);
+            if (empty($params['file_id'])) {
+                $res['errors'][] = 'Ошибка сохранения файла';
+                return $res;
+            }
         }
-
-        $fileRepository = new FileRepository();
-        $params['file_id'] = $fileRepository->createFile($alias);
-
-        if (empty($params['file_id'])) {
-            $res['errors'][] = 'Ошибка сохранения файла';
-            return $res;
-        }
-
         /**
          * @var Repository $repository
          */
         $repository = $this->strategy->getRepository();
-        $newEntity = $repository->create($this->strategy->prepareData($params));
+        $newEntityId = $repository->create($this->strategy->prepareData($params));
 
-        if (empty($newEntity)) {
-            $res['errors'][] = 'Ошибка сохранения новости';
+        if (empty($newEntityId)) {
+            $res['errors'][] = 'Ошибка сохранения';
             return $res;
+        }
+
+        if (!empty($file['files'])) {
+            $this->strategy->addFilesConnection($file['files'], $newEntityId);
         }
 
         $res['result'] = true;
@@ -119,22 +112,15 @@ class Context
      */
     public function update($file, $params): array
     {
+
         $res['result'] = false;
 
-        $fileUploader = new FileUploader();
-
-        try {
-            $alias = $fileUploader->uploadOne($file, $this->strategy->fileDirectory);
-        } catch (RuntimeException $e) {
-            $res['errors'][] = $e->getMessage();
-            return $res;
-        }
-
-        if (!empty($alias)) {
-            $fileUploader->deleteFile($params['file_alias'], $this->strategy->fileDirectory);
-
-            $fileRepository = new FileRepository();
-            $params['file_id'] = $fileRepository->createFile($alias);
+        if (!empty($file['file'])) {
+            $params['file_id'] = $this->strategy->updateFileConnection($file['file'], $params);
+            if (empty($params['file_id'])) {
+                $res['errors'][] = 'Ошибка сохранения файла';
+                return $res;
+            }
         }
 
         if (empty($params['file_id'])) {
@@ -146,11 +132,15 @@ class Context
          * @var Repository $repository
          */
         $repository = $this->strategy->getRepository();
-        $newCategory = $repository->updateById($this->strategy->prepareData($params));
+        $newEntityId = $repository->updateById($this->strategy->prepareData($params));
 
-        if (empty($newCategory)) {
-            $res['errors'][] = 'Ошибка сохранения статьи';
+        if (empty($newEntityId)) {
+            $res['errors'][] = 'Ошибка сохранения';
             return $res;
+        }
+
+        if (!empty($file['files'])) {
+            $this->strategy->updateFilesConnection($file['files'], $newEntityId);
         }
 
         $res['result'] = true;

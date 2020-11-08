@@ -201,7 +201,7 @@ class CatalogModel extends Model
     protected function getCategoryMenu()
     {
         $categoryRepository = new CategoryRepository();
-        $categoryList = $categoryRepository->getCategoryList();
+        $categoryList = $categoryRepository->getAll();
         $categoryList = $categoryRepository->getArrayWithIdAsKey($categoryList);
 
         $categoryMenu = array();

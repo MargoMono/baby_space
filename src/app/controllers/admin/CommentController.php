@@ -54,7 +54,7 @@ class CommentController extends Controller
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();
 
-        $data = $this->model->create($_FILES['file'], $_POST);
+        $data = $this->model->create($_FILES, $_POST);
 
         if ($data['errors']) {
             $this->view->generate('admin/comment/create.twig', $data);

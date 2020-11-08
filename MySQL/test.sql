@@ -271,7 +271,7 @@ create table category_file
     constraint category_file_file_id_fk
         foreign key (file_id) references file (id),
     constraint category_file_category_id_fk
-        foreign key (category_id) references category (id)
+        foreign key (category_id) references category (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 rename table catalog_order to price_list_order;

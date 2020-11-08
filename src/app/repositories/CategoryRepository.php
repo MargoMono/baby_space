@@ -5,9 +5,9 @@ namespace App\Repository;
 use App\Repository\AbstractRepository;
 use PDO;
 
-class CategoryRepository extends AbstractRepository
+class CategoryRepository extends AbstractRepository implements Repository
 {
-    public function getCategoryById($id)
+    public function getById($id)
     {
         $sql = '
         SELECT 
@@ -44,7 +44,7 @@ class CategoryRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function getCategoryList($order = null)
+    public function getAll($order = null)
     {
         if (empty($order)) {
             $order = 'id';
@@ -152,7 +152,7 @@ class CategoryRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function deleteCategoryById($id)
+    public function deleteById($id)
     {
         $sql = 'DELETE FROM category WHERE id = :id';
 
@@ -162,7 +162,7 @@ class CategoryRepository extends AbstractRepository
         return $result->execute();
     }
 
-    public function createCategory($data)
+    public function create($data)
     {
         $sql = '
 INSERT INTO category 
@@ -189,7 +189,7 @@ VALUES
         return null;
     }
 
-    public function updateCategory($data)
+    public function updateById($data)
     {
         $sql = '
 UPDATE category

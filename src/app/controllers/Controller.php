@@ -10,6 +10,7 @@ abstract class Controller
     public $model;
     public $view;
     public $context;
+    public $strategy;
 
     function __construct()
     {

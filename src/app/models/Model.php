@@ -34,7 +34,7 @@ class Model
     protected function getBreadcrumbs($categoryId)
     {
         $categoryRepository = new CategoryRepository();
-        $categoryList = $categoryRepository->getCategoryList();
+        $categoryList = $categoryRepository->getAll();
         $categoryList = $categoryRepository->getArrayWithIdAsKey($categoryList);
 
         $breadcrumbs = array();

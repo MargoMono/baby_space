@@ -37,7 +37,7 @@ class CoatingController extends Controller
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();
 
-        $data = $this->model->create($_FILES['file'], $_POST);
+        $data = $this->model->create($_FILES, $_POST);
 
         if ($data['errors']) {
             $this->view->generate('admin/coating/create.twig', $data);
@@ -73,7 +73,7 @@ class CoatingController extends Controller
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();
 
-        $data = $this->model->update($_FILES['file'], $_POST);
+        $data = $this->model->update($_FILES, $_POST);
 
         if ($data['errors']) {
             $data = array_merge($data, $this->model->getShowUpdatePageData($_POST['id']));

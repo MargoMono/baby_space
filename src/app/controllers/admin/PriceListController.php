@@ -38,7 +38,7 @@ class PriceListController extends Controller
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();
 
-        $data = $this->model->create($_FILES['file'], $_POST);
+        $data = $this->model->create($_FILES, $_POST);
 
         if ($data['errors']) {
             $this->view->generate('admin/price-list/create.twig', $data);
@@ -63,7 +63,7 @@ class PriceListController extends Controller
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();
 
-        $data = $this->model->update($_FILES['file'], $_POST);
+        $data = $this->model->update($_FILES, $_POST);
 
         if ($data['errors']) {
             $data = array_merge($data, $this->model->getShowUpdatePageData($_POST['id']));
