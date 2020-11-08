@@ -52,11 +52,19 @@ class CategoryStrategy implements Strategy
         $data['categoryList'] = $repository->getAll();
         $data['categoryFilesList'] = $repository->getCategoryFilesByCategoryId($id);
 
-
         foreach ($data['categoryList'] as $key => $category) {
             $data['categoryList'][$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
-        }
 
+            if ($data['categoryList'][$key]['id'] == $id) {
+                unset($data['categoryList'][$key]);
+            }
+
+            // удаляем возможность добавления подкатегории более 3 уровня
+            $level = $this->getCategoryLevel($category['id']);
+            if ($level >= 3) {
+                unset($data['categoryList'][$key]);
+            }
+        }
 
         return $data;
     }
