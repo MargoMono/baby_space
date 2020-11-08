@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Components\Repository;
+use App\Repository\Repository;
 use PDO;
 
 class SearchRepository extends Repository

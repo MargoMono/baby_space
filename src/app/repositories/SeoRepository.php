@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Components\Repository;
+use App\Repository\Repository;
 use PDO;
 
 class SeoRepository extends Repository

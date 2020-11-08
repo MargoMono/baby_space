@@ -2,7 +2,7 @@
 
 namespace App\Repository\Site;
 
-use App\Components\Repository;
+use App\Repository\Repository;
 use PDO;
 
 class ProductCoatingRepository extends Repository
