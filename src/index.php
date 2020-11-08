@@ -3,7 +3,7 @@
 include __DIR__ . '/vendor/autoload.php';
 
 use App\Model\Model;
-use App\Components\View;
+use App\View\View;
 use Phroute\Phroute\RouteCollector;
 use Phroute\Phroute\Dispatcher;
 

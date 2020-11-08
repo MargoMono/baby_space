@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Model\Model;
-use App\Components\View;
+use App\View\View;
 
 abstract class Controller
 {
