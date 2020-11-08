@@ -2,15 +2,14 @@
 
 namespace App\Repository;
 
-use App\Repository\AbstractRepository;
 use PDO;
 
-class PageRepository extends AbstractRepository
+class PageRepository extends AbstractRepository implements Repository
 {
     const COMPANY_PAGE_ID = 1;
     const DELIVERY_PAGE_ID = 2;
 
-    public function getPageById($id)
+    public function getById($id)
     {
         $sql = '
         SELECT 
@@ -27,7 +26,7 @@ class PageRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function getPageList($order = null)
+    public function getAll($order = null)
     {
         if (empty($order)) {
             $order = 'id';
@@ -46,7 +45,7 @@ class PageRepository extends AbstractRepository
         return $result->fetchAll();
     }
 
-    public function updatePage($data)
+    public function updateById($data)
     {
         $sql = '
 UPDATE page
@@ -67,5 +66,15 @@ WHERE id = :id';
         $result->bindParam(':id', $data['id']);
 
         return $result->execute();
+    }
+
+    public function create($data)
+    {
+        // TODO: Implement create() method.
+    }
+
+    public function deleteById($id)
+    {
+        // TODO: Implement create() method.
     }
 }

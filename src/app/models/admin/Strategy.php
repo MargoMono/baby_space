@@ -17,4 +17,6 @@ interface Strategy
     public function updateFileConnection($file, $params);
 
     public function updateFilesConnection($files, $id);
+
+    public function modifyUpdatePageData($data, $id);
 }

@@ -36,7 +36,7 @@
                             {% if key == 0 %}
                                 <option value="{{ category.id }}" selected="selected">{{ category.name }}</option>
                             {% else %}
-                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                <option value="{{ category.id }}">{{ category.breadcrumbs }}</option>
                             {% endif %}
                         {% endfor %}
                     </select>

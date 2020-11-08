@@ -15,7 +15,7 @@ class PageModel extends Model
     public function getIndexData($order)
     {
         $pageRepository = new PageRepository();
-        $data['pageList'] = $pageRepository->getPageList($order);
+        $data['pageList'] = $pageRepository->getAll($order);
 
         return $data;
     }
@@ -23,7 +23,7 @@ class PageModel extends Model
     public function getShowUpdatePageData($id)
     {
         $pageRepository = new PageRepository();
-        $data['page'] = $pageRepository->getPageById($id);
+        $data['page'] = $pageRepository->getById($id);
 
         return $data;
     }
@@ -52,7 +52,7 @@ class PageModel extends Model
         }
 
         $pageRepository = new PageRepository();
-        $new = $pageRepository->updatePage($this->prepareData($params));
+        $new = $pageRepository->updateById($this->prepareData($params));
 
         if (empty($new)) {
             $res['errors'][] = 'Ошибка сохранения статьи';

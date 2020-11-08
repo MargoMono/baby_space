@@ -2,18 +2,17 @@
 
 namespace App\Model\Admin;
 
-use App\Helper\TextHelper;
 use App\Modules\FileUploader;
 use App\Repository\FileRepository;
-use App\Repository\NewRepository;
+use App\Repository\PageRepository;
 
-class NewStrategy implements Strategy
+class PageStrategy implements Strategy
 {
-    public $fileDirectory = 'new';
+    public $fileDirectory = 'page';
 
     public function getRepository()
     {
-        return new NewRepository();
+        return new PageRepository();
     }
 
     public function modifyIndexData($data)
@@ -82,10 +81,8 @@ class NewStrategy implements Strategy
         return [
             'id' => $params['id'],
             'name' => $params['name'],
-            'description' => $params['description'],
             'content' => $params['content'],
             'file_id' => $params['file_id'],
-            'alias' => TextHelper::getTranslit($params['name']),
             'tag_title' => $params['tag_title'],
             'tag_description' => $params['tag_description'],
             'tag_keywords' => $params['tag_keywords'],

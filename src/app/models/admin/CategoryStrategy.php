@@ -2,10 +2,12 @@
 
 namespace App\Model\Admin;
 
+use App\Helper\BreadcrumbsHelper;
 use App\Helper\TextHelper;
 use App\Modules\FileUploader;
 use App\Repository\CategoryRepository;
 use App\Repository\FileRepository;
+use App\Repository\Repository;
 
 class CategoryStrategy implements Strategy
 {
@@ -16,15 +18,45 @@ class CategoryStrategy implements Strategy
         return new CategoryRepository();
     }
 
+    public function modifyIndexData($data)
+    {
+        foreach ($data as $key => $category) {
+            $data[$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
+        }
+
+        return $data;
+    }
+
     public function modifyCreatePageData($data)
     {
-        // удаляем возможность добавления подкатегории более 3 уровня
         foreach ($data as $key => $category) {
+            $data[$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
+
+            // удаляем возможность добавления подкатегории более 3 уровня
             $level = $this->getCategoryLevel($category['id']);
             if ($level >= 3) {
                 unset($data[$key]);
             }
         }
+
+        return $data;
+    }
+
+    public function modifyUpdatePageData($data, $id)
+    {
+        /**
+         * @var Repository $repository
+         */
+        $repository = $this->getRepository();
+
+        $data['categoryList'] = $repository->getAll();
+        $data['categoryFilesList'] = $repository->getCategoryFilesByCategoryId($id);
+
+
+        foreach ($data['categoryList'] as $key => $category) {
+            $data['categoryList'][$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
+        }
+
 
         return $data;
     }
@@ -57,6 +89,11 @@ class CategoryStrategy implements Strategy
         }
 
         $fileRepository = new FileRepository();
+
+        if (empty($imageList)) {
+            $res['result'] = true;
+            return $res;
+        }
 
         foreach ($imageList as $image) {
 
@@ -111,6 +148,11 @@ class CategoryStrategy implements Strategy
 
         $fileRepository = new FileRepository();
 
+        if (empty($imageList)) {
+            $res['result'] = true;
+            return $res;
+        }
+
         foreach ($imageList as $image) {
 
             $fileId = $fileRepository->createFile($image);
@@ -131,16 +173,7 @@ class CategoryStrategy implements Strategy
         return null;
     }
 
-    public function getShowUpdatePageData($id)
-    {
-        $repository = $this->getRepository();
 
-        $data['category'] = $repository->getById($id);
-        $data['categoryList'] = $repository->getAll();
-        $data['categoryFilesList'] = $repository->getCategoryFilesByCategoryId($id);
-
-        return $data;
-    }
 
     public function prepareData($params)
     {

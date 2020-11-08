@@ -36,9 +36,9 @@
                         <select name="parent">
                             {% for key, categoryItem in categoryList %}
                                 {% if categoryItem.id == category.parent_id %}
-                                    <option value="{{ category.parent_id }}" selected="selected">{{ category.parent_name }}</option>
+                                    <option value="{{ category.parent_id }}" selected="selected">{{ categoryItem.breadcrumbs }}</option>
                                 {% else %}
-                                    <option value="{{ categoryItem.id }}">{{ categoryItem.name }}</option>
+                                    <option value="{{ categoryItem.id }}">{{ categoryItem.breadcrumbs }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>

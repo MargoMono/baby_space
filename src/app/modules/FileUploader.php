@@ -102,10 +102,10 @@ class FileUploader
 
     public function deleteFile($fileName, $type)
     {
-        $file = $_SERVER['DOCUMENT_ROOT'] . "/upload/images/" . $type . "/" . $fileName;
+        $file = $_SERVER['DOCUMENT_ROOT'] . '/upload/images/' . $type . '/' . $fileName;
 
         if (file_exists($file)) {
-            unlink($_SERVER['DOCUMENT_ROOT'] . "/upload/images/" . $type . "/" . $fileName);
+            unlink($_SERVER['DOCUMENT_ROOT'] . '/upload/images/' . $type . '/' . $fileName);
         }
     }
 }

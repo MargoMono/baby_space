@@ -6,9 +6,7 @@ class AdminAuthenticationChecking
 {
     public function handle()
     {
-        $user = $_SESSION['user'];
-
-        if (!isset($user)) {
+        if (!isset($_SESSION['user'])) {
             header('Location: /user/login');
         }
     }

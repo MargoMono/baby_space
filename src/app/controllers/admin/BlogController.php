@@ -12,7 +12,7 @@ class BlogController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->context =  new Context(new BlogStrategy());
+        $this->context = new Context(new BlogStrategy());
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

@@ -16,7 +16,17 @@ class BlogStrategy implements Strategy
         return new BlogRepository();
     }
 
+    public function modifyIndexData($data)
+    {
+        return $data;
+    }
+
     public function modifyCreatePageData($data)
+    {
+        return $data;
+    }
+
+    public function modifyUpdatePageData($data, $id)
     {
         return $data;
     }

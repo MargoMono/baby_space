@@ -47,7 +47,7 @@ class CategoryController extends Controller
 
     public function actionShowUpdatePage($id)
     {
-        $data = $this->strategy->getShowUpdatePageData($id);
+        $data = $this->context->getShowUpdatePageData($id);
 
         $this->view->generate('admin/category/update.twig', $data);
     }
@@ -57,7 +57,7 @@ class CategoryController extends Controller
         $data = $this->context->update($_FILES, $_POST);
 
         if ($data['errors']) {
-            $data = array_merge($data, $this->strategy->getShowUpdatePageData($_POST['id']));
+            $data = array_merge($data, $this->context->getShowUpdatePageData($_POST['id']));
             $this->view->generate('admin/category/update.twig', $data);
             return;
         }

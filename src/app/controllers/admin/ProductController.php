@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Controller\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Model\Admin\CategoryModel;
 use App\Model\Admin\ProductModel;
 
 class ProductController extends Controller

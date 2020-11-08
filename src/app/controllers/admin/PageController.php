@@ -4,8 +4,9 @@ namespace App\Controller\Admin;
 
 use App\Controller\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Model\Admin\BlogModel;
+use App\Model\Admin\Context;
 use App\Model\Admin\PageModel;
+use App\Model\Admin\PageStrategy;
 
 class PageController extends Controller
 {
@@ -13,41 +14,36 @@ class PageController extends Controller
     {
         parent::__construct();
         $this->model = new PageModel();
+        $this->context = new Context(new PageStrategy());
+
+        $adminAuthenticationChecking = new AdminAuthenticationChecking();
+        $adminAuthenticationChecking->handle();
     }
 
     public function actionIndex()
     {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
-
-        $data = $this->model->getIndexData($_POST['order']);
+        $data['pageList'] = $this->context->getIndexData($_POST['order']);
 
         $this->view->generate('admin/page/index.twig', $data);
     }
 
     public function actionShowUpdatePage($id)
     {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
-
-        $data = $this->model->getShowUpdatePageData($id);
+        $data['page'] = $this->model->getShowUpdatePageData($id);
 
         $this->view->generate('admin/page/update.twig', $data);
     }
 
     public function update()
     {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
-
         $data = $this->model->update($_FILES, $_POST);
+        $data['page'] = $this->model->getShowUpdatePageData($_POST['id']);
 
         if ($data['errors']) {
-            $data = array_merge($data, $this->model->getShowUpdatePageData($_POST['id']));
             $this->view->generate('admin/page/update.twig', $data);
             return;
         }
 
-        header("Location: /admin/page");
+        header('Location: /admin/page');
     }
 }

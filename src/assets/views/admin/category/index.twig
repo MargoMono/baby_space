@@ -30,12 +30,6 @@
                         <input type="submit" class="btn btn-filter" value="&darr;">
                     </form>
                 </th>
-                <th>Родительская категории
-                    <form action="/admin/category" method="post">
-                        <input type="hidden" name="order" value="parent_name">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
                 <th>Очередность</th>
                 <th>Статус
                     <form action="/admin/category" method="post">
@@ -49,8 +43,7 @@
             {% for category in categoryList %}
                 <tr>
                     <td>{{ category.id }}</td>
-                    <td>{{ category.name }}</td>
-                    <td>{{ category.parent_name }}</td>
+                    <td>{{ category.breadcrumbs }}</td>
                     <td>{{ category.position }}</td>
                     <td> {% if category.enabled == 0 %} Скрыта {% else %} Отображается {% endif %}</td>
                     <td><a href="/admin/category/update/{{ category.id }}" title="Редактировать"><i

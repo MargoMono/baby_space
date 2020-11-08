@@ -37,8 +37,10 @@ class Context
          * @var Repository $repository
          */
         $repository = $this->strategy->getRepository();
+        $data = $repository->getAll($order);
+        $data = $this->strategy->modifyIndexData($data);
 
-        return $repository->getAll($order);
+        return $data;
     }
 
     /**
@@ -101,8 +103,10 @@ class Context
          * @var Repository $repository
          */
         $repository = $this->strategy->getRepository();
+        $data['category'] = $repository->getById($id);
+        $data = $this->strategy->modifyUpdatePageData($data, $id);
 
-        return $repository->getById($id);
+        return $data;
     }
 
     /**
