@@ -3,9 +3,9 @@
 namespace App\Model\Admin;
 
 use App\Components\Model;
-use App\Helper\FileHelper;
+use App\Modules\FileUploader;
+use App\Helper\TextHelper;
 use App\Repository\PortfolioRepository;
-use App\Components\AdminBase;
 use App\Repository\FileRepository;
 use App\Repository\BlogRepository;
 use RuntimeException;
@@ -27,10 +27,10 @@ class PortfolioModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $alias = $fileHelper->uploadFile($file, $this->fileDirectory);
+            $alias = $fileUploader->uploadOne($file, $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e;
             return $res;
@@ -68,17 +68,17 @@ class PortfolioModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $alias = $fileHelper->uploadFile($file, $this->fileDirectory);
+            $alias = $fileUploader->uploadOne($file, $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e->getMessage();
             return $res;
         }
 
         if (!empty($alias)) {
-            $fileHelper->deleteFile($params['file_alias'], $this->fileDirectory);
+            $fileUploader->deleteFile($params['file_alias'], $this->fileDirectory);
 
             $fileRepository = new FileRepository();
             $params['file_id'] = $fileRepository->createFile($alias);
@@ -133,7 +133,7 @@ class PortfolioModel extends Model
             'description' => $params['description'],
             'content' => $params['content'],
             'file_id' => $params['file_id'],
-            'alias' => AdminBase::getTranslit($params['name']),
+            'alias' => TextHelper::getTranslit($params['name']),
             'tag_title' => $params['tag_title'],
             'tag_description' => $params['tag_description'],
             'tag_keywords' => $params['tag_keywords'],

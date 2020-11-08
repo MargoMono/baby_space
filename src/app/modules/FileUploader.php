@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Helper;
+namespace App\Modules;
 
 use RuntimeException;
 use App\Exception\UploadFileException;
 
-class FileHelper
+class FileUploader
 {
     const IMAGES = [
         'image/gif',
@@ -22,7 +22,7 @@ class FileHelper
      * @return string
      * @throws UploadFileException
      */
-    public function uploadFile($file, $type)
+    public function uploadOne($file, $type)
     {
         if ($file['error'] !== UPLOAD_ERR_OK &&
             $file['error'] !== UPLOAD_ERR_NO_FILE) {
@@ -58,11 +58,11 @@ class FileHelper
         return $image;
     }
 
-    public function uploadFiles($fileList, $type)
+    public function uploadSeveral($fileList, $type)
     {
         $imageList = [];
 
-        if (empty($fileList)){
+        if (empty($fileList)) {
             return null;
         }
 
@@ -86,7 +86,8 @@ class FileHelper
 
             $alias = time() . $fileList["name"][$i];
 
-            move_uploaded_file($fileList["tmp_name"][$i], $_SERVER['DOCUMENT_ROOT'] . "/upload/images/" . $type . "/" . $alias);
+            move_uploaded_file($fileList["tmp_name"][$i],
+                $_SERVER['DOCUMENT_ROOT'] . "/upload/images/" . $type . "/" . $alias);
 
             $p = strrpos($fileList["name"][$i], '.');
             $filename = substr($fileList["name"][$i], 0, $p);
@@ -103,7 +104,7 @@ class FileHelper
     {
         $file = $_SERVER['DOCUMENT_ROOT'] . "/upload/images/" . $type . "/" . $fileName;
 
-        if (file_exists($file)){
+        if (file_exists($file)) {
             unlink($_SERVER['DOCUMENT_ROOT'] . "/upload/images/" . $type . "/" . $fileName);
         }
     }

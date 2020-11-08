@@ -1,12 +1,12 @@
 <?php
 
-namespace App;
+namespace App\Modules;
 
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
-class Mailer
+class MailerHelper
 {
     /**
      * @var string $subject
@@ -29,9 +29,9 @@ class Mailer
     private $nameTo;
 
     /**
-     * @var array $attachment
+     * @var array $attachments
      */
-    private $attachment;
+    private $attachments;
 
     /**
      * @param $subject

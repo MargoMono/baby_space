@@ -3,8 +3,7 @@
 namespace App\Model\Admin;
 
 use App\Components\Model;
-use App\Helper\FileHelper;
-use App\Components\AdminBase;
+use App\Modules\FileUploader;
 use App\Repository\CoatingRepository;
 use App\Repository\CommentRepository;
 use App\Repository\DesignRepository;
@@ -30,10 +29,10 @@ class DesignModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $imageList = $fileHelper->uploadFiles($files, $this->fileDirectory);
+            $imageList = $fileUploader->uploadSeveral($files, $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e;
             return $res;
@@ -88,10 +87,10 @@ class DesignModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $imageList = $fileHelper->uploadFiles($files, $this->fileDirectory);
+            $imageList = $fileUploader->uploadSeveral($files, $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e;
             return $res;
@@ -150,8 +149,8 @@ class DesignModel extends Model
         $fileRepository = new FileRepository();
         $file = $fileRepository->getFileById($photoId);
 
-        $fileHelper = new FileHelper();
-        $fileHelper->deleteFile($file['alias'], $this->fileDirectory);
+        $fileUploader = new FileUploader();
+        $fileUploader->deleteFile($file['alias'], $this->fileDirectory);
 
         $coatingRepository = new DesignRepository();
         if ($coatingRepository->deleteFileDesignConnection($id, $photoId)) {
@@ -172,8 +171,8 @@ class DesignModel extends Model
         $photoIds = $categoryRepository->getDesignPhotos($data['id']);
 
         foreach ($photoIds as $photo) {
-            $fileHelper = new FileHelper();
-            $fileHelper->deleteFile($photo['file_alias'], $this->fileDirectory);
+            $fileUploader = new FileUploader();
+            $fileUploader->deleteFile($photo['file_alias'], $this->fileDirectory);
 
             $coatingRepository = new CoatingRepository();
             if (!$coatingRepository->deleteFileCoatingConnection($data['id'], $photo['file_id'])) {

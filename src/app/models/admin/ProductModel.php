@@ -4,9 +4,9 @@ namespace App\Model\Admin;
 
 use App\Components\Model;
 use App\Helper\CatalogHelper;
-use App\Helper\FileHelper;
+use App\Modules\FileUploader;
+use App\Helper\TextHelper;
 use App\Repository\CategoryRepository;
-use App\Components\AdminBase;
 use App\Repository\CoatingRepository;
 use App\Repository\DesignRepository;
 use App\Repository\FileRepository;
@@ -60,11 +60,11 @@ class ProductModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $image = $fileHelper->uploadFile($file['file'], $this->fileDirectory);
-            $imageList = $fileHelper->uploadFiles($file['files'], $this->fileDirectory);
+            $image = $fileUploader->uploadOne($file['file'], $this->fileDirectory);
+            $imageList = $fileUploader->uploadSeveral($file['files'], $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e;
             return $res;
@@ -221,11 +221,11 @@ class ProductModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $image = $fileHelper->uploadFile($file['file'], $this->fileDirectory);
-            $imageList = $fileHelper->uploadFiles($file['files'], $this->fileDirectory);
+            $image = $fileUploader->uploadOne($file['file'], $this->fileDirectory);
+            $imageList = $fileUploader->uploadSeveral($file['files'], $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e->getMessage();
             return $res;
@@ -234,7 +234,7 @@ class ProductModel extends Model
         $fileRepository = new FileRepository();
 
         if (!empty($image)) {
-            $fileHelper->deleteFile($params['file_alias'], $this->fileDirectory);
+            $fileUploader->deleteFile($params['file_alias'], $this->fileDirectory);
             $params['file_id'] = $fileRepository->createFile($image);
         }
 
@@ -368,7 +368,7 @@ class ProductModel extends Model
             'content' => $params['content'],
             'file_id' => $params['file_id'],
             'enabled' => $params['enabled'],
-            'alias' => AdminBase::getTranslit($params['name']),
+            'alias' => TextHelper::getTranslit($params['name']),
             'position' => $params['position'],
             'tag_title' => $params['tag_title'],
             'tag_description' => $params['tag_description'],
@@ -403,8 +403,8 @@ class ProductModel extends Model
         $fileRepository = new FileRepository();
         $file = $fileRepository->getFileById($photoId);
 
-        $fileHelper = new FileHelper();
-        $fileHelper->deleteFile($file['alias'], $this->fileDirectory);
+        $fileUploader = new FileUploader();
+        $fileUploader->deleteFile($file['alias'], $this->fileDirectory);
 
         $productRepository = new ProductRepository();
         if ($productRepository->deleteFileProductConnection($id, $photoId)) {

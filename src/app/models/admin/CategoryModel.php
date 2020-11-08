@@ -3,9 +3,9 @@
 namespace App\Model\Admin;
 
 use App\Components\Model;
-use App\Helper\FileHelper;
+use App\Modules\FileUploader;
+use App\Helper\TextHelper;
 use App\Repository\CategoryRepository;
-use App\Components\AdminBase;
 use App\Repository\FileRepository;
 use RuntimeException;
 
@@ -56,11 +56,11 @@ class CategoryModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $image = $fileHelper->uploadFile($file['file'], $this->fileDirectory);
-            $imageList = $fileHelper->uploadFiles($file['files'], $this->fileDirectory);
+            $image = $fileUploader->uploadOne($file['file'], $this->fileDirectory);
+            $imageList = $fileUploader->uploadSeveral($file['files'], $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e;
             return $res;
@@ -119,11 +119,11 @@ class CategoryModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $image = $fileHelper->uploadFile($file['file'], $this->fileDirectory);
-            $imageList = $fileHelper->uploadFiles($file['files'], $this->fileDirectory);
+            $image = $fileUploader->uploadOne($file['file'], $this->fileDirectory);
+            $imageList = $fileUploader->uploadSeveral($file['files'], $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e->getMessage();
             return $res;
@@ -132,7 +132,7 @@ class CategoryModel extends Model
         $fileRepository = new FileRepository();
 
         if (!empty($image)) {
-            $fileHelper->deleteFile($params['file_alias'], $this->fileDirectory);
+            $fileUploader->deleteFile($params['file_alias'], $this->fileDirectory);
 
             $params['file_id'] = $fileRepository->createFile($image);
         }
@@ -221,7 +221,7 @@ class CategoryModel extends Model
             'description' => $params['description'],
             'file_id' => $params['file_id'],
             'enabled' => $params['enabled'],
-            'alias' => AdminBase::getTranslit($params['name']),
+            'alias' => TextHelper::getTranslit($params['name']),
             'position' => $params['position'],
             'tag_title' => $params['tag_title'],
             'tag_description' => $params['tag_description'],
@@ -238,8 +238,8 @@ class CategoryModel extends Model
         $fileRepository = new FileRepository();
         $file = $fileRepository->getFileById($photoId);
 
-        $fileHelper = new FileHelper();
-        $fileHelper->deleteFile($file['alias'], $this->fileDirectory);
+        $fileUploader = new FileUploader();
+        $fileUploader->deleteFile($file['alias'], $this->fileDirectory);
 
         $categoryRepository = new CategoryRepository();
         if ($categoryRepository->deleteFileCategoryConnection($id, $photoId)) {

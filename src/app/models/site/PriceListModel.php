@@ -4,7 +4,7 @@ namespace App\Model\Site;
 
 use App\Components\Model;
 use App\Controller\Site\MailController;
-use App\Mailer;
+use App\Modules\MailerHelper;
 use App\Repository\PriceListOrderRepository;
 use App\Repository\PriceListRepository;
 use DateTime;
@@ -45,7 +45,7 @@ class PriceListModel extends Model
             $priceList[$key]['path'] = 'upload/images/price-list/' . $price['file_alias'];
         }
 
-        $mailer = new Mailer($subject, $body, $data['email'], $data['name'], $priceList);
+        $mailer = new MailerHelper($subject, $body, $data['email'], $data['name'], $priceList);
 
         try {
             $mailer->send();

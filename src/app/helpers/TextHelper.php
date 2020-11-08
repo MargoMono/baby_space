@@ -1,22 +1,9 @@
 <?php
 
-namespace App\Components;
+namespace App\Helper;
 
- class AdminBase
+class TextHelper
 {
-    public static function checkAdmin()
-    {
-        $userRepository = new UserRepository();
-        $userId = $userRepository->checkLogged();
-        $user = $userRepository->getUserById($userId);
-
-        if ($user['role'] == 'admin') {
-            return $user;
-        }
-
-        die('Access denied');
-    }
-
     public static function getTranslit($s) {
         $s = (string) $s; // преобразуем в строковое значение
         $s = strip_tags($s); // убираем HTML-теги

@@ -3,9 +3,8 @@
 namespace App\Model\Site;
 
 use App\Components\Model;
-use App\Helper\FileHelper;
+use App\Modules\FileUploader;
 use App\Repository\CategoryRepository;
-use App\Components\AdminBase;
 use App\Repository\FileRepository;
 use App\Repository\BlogRepository;
 use App\Repository\PageRepository;

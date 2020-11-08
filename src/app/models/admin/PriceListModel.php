@@ -3,10 +3,9 @@
 namespace App\Model\Admin;
 
 use App\Components\Model;
-use App\Helper\FileHelper;
+use App\Modules\FileUploader;
 use App\Repository\PriceListOrderRepository;
 use App\Repository\CategoryRepository;
-use App\Components\AdminBase;
 use App\Repository\FileRepository;
 use App\Repository\BlogRepository;
 use App\Repository\PriceListRepository;
@@ -28,7 +27,7 @@ class PriceListModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         if ($file["type"] != 'application/pdf') {
             $res['errors'][] = 'Недопустимое расширение для файла, только pdf';
@@ -36,7 +35,7 @@ class PriceListModel extends Model
         }
 
         try {
-            $alias = $fileHelper->uploadFile($file,  $this->fileDirectory);
+            $alias = $fileUploader->uploadOne($file,  $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e;
             return $res;
@@ -74,7 +73,7 @@ class PriceListModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         if ($file["type"] != 'application/pdf') {
             $res['errors'][] = 'Недопустимое расширение для файла, только pdf';
@@ -82,14 +81,14 @@ class PriceListModel extends Model
         }
 
         try {
-            $alias = $fileHelper->uploadFile($file, $this->fileDirectory);
+            $alias = $fileUploader->uploadOne($file, $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e->getMessage();
             return $res;
         }
 
         if (!empty($alias)) {
-            $fileHelper->deleteFile($params['file_alias'], $this->fileDirectory);
+            $fileUploader->deleteFile($params['file_alias'], $this->fileDirectory);
             $fileRepository = new FileRepository();
             $params['file_id'] = $fileRepository->createFile($alias);
         }

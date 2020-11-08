@@ -4,7 +4,7 @@ namespace App\Model\Site;
 
 use App\Components\Model;
 use App\Controller\Site\MailController;
-use App\Mailer;
+use App\Modules\MailerHelper;
 use App\Repository\UserRepository;
 use PHPMailer\PHPMailer\Exception;
 
@@ -55,7 +55,7 @@ class UserModel extends Model
         $body = $mailModel->getTemplate('resetPassword.twig', $emailParams);
         $subject = "Восстановление пароля на сайте Кдф-трейдинг.рф";
 
-        $mailer = new Mailer($subject, $body, $user['email'], $user['name']);
+        $mailer = new MailerHelper($subject, $body, $user['email'], $user['name']);
 
         try {
             $mailer->send();

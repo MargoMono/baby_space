@@ -3,7 +3,7 @@
 namespace App\Controller\Site;
 
 use App\Components\Controller;
-use App\Mailer;
+use App\Modules\MailerHelper;
 use App\Model\Site\CommentModel;
 
 class CommentController extends Controller
@@ -41,7 +41,7 @@ class CommentController extends Controller
             $body = $mailModel->getTemplate('newComment.twig', $emailParams);
             $subject = 'Новый отзыв сайте Кдф-трейдинг.рф';
 
-            $mailer = new Mailer($subject, $body, 'kdf_16@mail.ru', 'КДФ');
+            $mailer = new MailerHelper($subject, $body, 'kdf_16@mail.ru', 'КДФ');
             $mailer->send();
         }
 
