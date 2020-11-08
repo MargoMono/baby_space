@@ -9,7 +9,7 @@ class AdminAuthenticationChecking
         $user = $_SESSION['user'];
 
         if (!isset($user)) {
-            header("Location: /user/login");
+            header('Location: /user/login');
         }
     }
 }

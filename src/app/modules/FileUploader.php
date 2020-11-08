@@ -7,7 +7,7 @@ use App\Exception\UploadFileException;
 
 class FileUploader
 {
-    const IMAGES = [
+    private $imagesFormat = [
         'image/gif',
         'image/jpeg',
         'image/png',
@@ -41,7 +41,7 @@ class FileUploader
             throw new RuntimeException('Большой размер файла');
         }
 
-        if (!in_array($file["type"], self::IMAGES)) {
+        if (!in_array($file["type"], $this->imagesFormat)) {
             throw new RuntimeException('Неправильный формат файла');
         }
 
@@ -80,7 +80,7 @@ class FileUploader
                 throw new RuntimeException('Большой размер файла');
             }
 
-            if (!in_array($fileList["type"][$i], self::IMAGES)) {
+            if (!in_array($fileList["type"][$i], $this->imagesFormat)) {
                 throw new RuntimeException('Большой размер файла');
             }
 
