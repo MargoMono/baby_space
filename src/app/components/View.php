@@ -10,7 +10,7 @@ class View
     private $defaultData;
 
     public function __construct($defaultData = null)
-        {
+    {
         $this->defaultData = $defaultData;
     }
 

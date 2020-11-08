@@ -2,7 +2,7 @@
 
 namespace App\Controller\Site;
 
-use App\Components\Controller;
+use App\Controller\Controller;
 
 
 class MailController extends Controller

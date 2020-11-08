@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Components\Controller;
+use App\Controller\Controller;
 use App\Middleware\AdminAuthenticationChecking;
 use App\Model\Admin\BlogModel;
 use App\Model\Admin\PageModel;

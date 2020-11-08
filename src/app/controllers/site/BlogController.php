@@ -2,12 +2,12 @@
 
 namespace App\Controller\Site;
 
-use App\Components\Controller;
+use App\Controller\Controller;
 use App\Model\Site\BlogModel;
 
 class BlogController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->model = new BlogModel();

@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Components;
+namespace App\Controller;
+
+use App\Components\Model;
+use App\Components\View;
 
 abstract class Controller
 {

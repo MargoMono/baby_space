@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Components\Controller;
+use App\Controller\Controller;
 use App\Model\Admin\UserModel;
 use App\Middleware\AdminAuthenticationChecking;
 
