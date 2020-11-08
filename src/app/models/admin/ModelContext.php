@@ -2,7 +2,7 @@
 
 namespace App\Model\Admin;
 
-use App\Helper\FileHelper;
+use App\Modules\FileUploader;
 use App\Repository\FileRepository;
 use App\Repository\Repository;
 
@@ -49,10 +49,10 @@ class ModelContext
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $image = $fileHelper->uploadFile($file['file'], $this->strategy->fileDirectory);
+            $image = $fileUploader->uploadOne($file['file'], $this->strategy->fileDirectory);
         } catch (\RuntimeException $e) {
             $res['errors'][] = $e;
             return $res;
@@ -90,17 +90,17 @@ class ModelContext
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $alias = $fileHelper->uploadFile($file['file'],  $this->strategy->fileDirectory);
+            $alias = $fileUploader->uploadOne($file['file'],  $this->strategy->fileDirectory);
         } catch (\RuntimeException $e) {
             $res['errors'][] = $e->getMessage();
             return $res;
         }
 
         if (!empty($alias)) {
-            $fileHelper->deleteFile($params['file_alias'], $this->strategy->fileDirectory);
+            $fileUploader->deleteFile($params['file_alias'], $this->strategy->fileDirectory);
 
             $fileRepository = new FileRepository();
             $params['file_id'] = $fileRepository->createFile($alias);

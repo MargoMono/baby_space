@@ -3,7 +3,7 @@
 namespace App\Model\Admin;
 
 use App\Components\Model;
-use App\Helper\FileHelper;
+use App\Modules\FileUploader;
 use App\Repository\BlogRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
@@ -67,7 +67,7 @@ class CommentModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         $params['user_name'] = "Администратор";
         $params['user_email'] = $_SESSION['user']['email'];
@@ -75,7 +75,7 @@ class CommentModel extends Model
 
         if(!empty($files)){
             try {
-                $imageList = $fileHelper->uploadFiles($files, 'comment');
+                $imageList = $fileUploader->uploadSeveral($files, 'comment');
             } catch (RuntimeException $e) {
                 $res['errors'][] = $e->getMessage();
                 return $res;

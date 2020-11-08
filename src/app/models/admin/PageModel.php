@@ -3,7 +3,7 @@
 namespace App\Model\Admin;
 
 use App\Components\Model;
-use App\Helper\FileHelper;
+use App\Modules\FileUploader;
 use App\Repository\FileRepository;
 use App\Repository\PageRepository;
 use RuntimeException;
@@ -32,10 +32,10 @@ class PageModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $alias = $fileHelper->uploadFile($file, $this->fileDirectory);
+            $alias = $fileUploader->uploadOne($file, $this->fileDirectory);
         } catch (RuntimeException $e) {
             $res['errors'][] = $e;
             return $res;

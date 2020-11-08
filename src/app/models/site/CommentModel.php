@@ -3,7 +3,7 @@
 namespace App\Model\Site;
 
 use App\Components\Model;
-use App\Helper\FileHelper;
+use App\Modules\FileUploader;
 use App\Repository\BlogRepository;
 use App\Repository\CommentRepository;
 use App\Repository\FileRepository;
@@ -91,10 +91,10 @@ class CommentModel extends Model
     {
         $res['result'] = false;
 
-        $fileHelper = new FileHelper();
+        $fileUploader = new FileUploader();
 
         try {
-            $imagesName = $fileHelper->uploadFiles($files['files'], 'comment');
+            $imagesName = $fileUploader->uploadSeveral($files['files'], 'comment');
         } catch (RuntimeException $e) {
             $res['errors'][] = $e->getMessage();
             return $res;
