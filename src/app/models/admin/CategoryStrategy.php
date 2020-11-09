@@ -4,10 +4,7 @@ namespace App\Model\Admin;
 
 use App\Helper\BreadcrumbsHelper;
 use App\Helper\TextHelper;
-use App\Modules\FileUploader;
-use App\Repository\BlogRepository;
 use App\Repository\CategoryRepository;
-use App\Repository\FileRepository;
 
 class CategoryStrategy extends AbstractAdminModel
 {
@@ -96,68 +93,14 @@ class CategoryStrategy extends AbstractAdminModel
     public function createFilesConnection($id, $fileId)
     {
         $repository = new CategoryRepository();
-
         return $repository->createFilesConnection($id, $fileId);
-    }
-
-    public function updateFilesConnection($files, $categoryId)
-    {
-        $fileUploader = new FileUploader();
-
-        try {
-            $imageList = $fileUploader->uploadSeveral($files, $this->fileDirectory);
-        } catch (\RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
-
-        $fileRepository = new FileRepository();
-
-        if (empty($imageList)) {
-            $res['result'] = true;
-            return $res;
-        }
-
-        foreach ($imageList as $image) {
-
-            $fileId = $fileRepository->createFile($image);
-
-            if (empty($fileId)) {
-                $res['errors'][] = 'Не удалось создать файл';
-                return $res;
-            }
-
-            $repository = new CategoryRepository();
-            $filesCategoryConnection = $repository->createFilesConnection($categoryId, $fileId);
-
-            if (empty($filesCategoryConnection)) {
-                $res['errors'][] = 'Не удалось создать связь между фото и категорей';
-                return $res;
-            }
-        }
-
-        return null;
-    }
-
-    public function getCategoryLevel($id)
-    {
-        $categoryRepository = new CategoryRepository();
-        $parent = $categoryRepository->getParentCategoryListById($id);
-
-        $level = 1;
-        while ($parent) {
-            $level++;
-            $parent = $categoryRepository->getParentCategoryListById($parent['id']);
-        }
-
-        return $level;
     }
 
     public function deleteFileConnection($id, $photoId): bool
     {
         $categoryRepository = new CategoryRepository();
 
-        if ($categoryRepository->deleteFileCategoryConnection($id, $photoId)) {
+        if ($categoryRepository->deleteFileConnection($id, $photoId)) {
             return true;
         }
 
@@ -180,4 +123,19 @@ class CategoryStrategy extends AbstractAdminModel
             'tag_keywords' => $params['tag_keywords'],
         ];
     }
+
+    private function getCategoryLevel($id)
+    {
+        $categoryRepository = new CategoryRepository();
+        $parent = $categoryRepository->getParentCategoryListById($id);
+
+        $level = 1;
+        while ($parent) {
+            $level++;
+            $parent = $categoryRepository->getParentCategoryListById($parent['id']);
+        }
+
+        return $level;
+    }
+
 }

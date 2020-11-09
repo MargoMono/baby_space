@@ -293,5 +293,5 @@ create table product_file
     constraint product_file_file_id_fk
         foreign key (file_id) references file (id),
     constraint product_file_product_id_fk
-        foreign key (product_id) references product (id)
+        foreign key (product_id) references product (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

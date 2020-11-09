@@ -2,30 +2,27 @@
 
 namespace App\Model\Admin;
 
-use App\Model\Model;
-use App\Modules\FileUploader;
 use App\Helper\TextHelper;
+use App\Repository\BlogRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\CoatingRepository;
-use App\Repository\FileRepository;
 use App\Repository\Site\ProductCoatingRepository;
 use App\Repository\Site\ProductRecommendationsRepository;
 use App\Repository\Site\ProductRepository;
-use RuntimeException;
 
-class ProductModel extends Model
+class ProductStrategy extends AbstractAdminModel
 {
-    private $fileDirectory = 'product';
+    public $fileDirectory = 'product';
 
-    public function getIndexData($order)
+    public function getIndexData($order = null)
     {
-        $categoryRepository = new ProductRepository();
-        $data['productList'] = $categoryRepository->getAll($order);
+        $repository = new ProductRepository();
+        $data['productList'] = $repository->getAll($order);
 
         return $data;
     }
 
-    public function getShowCreatePageData()
+    public function getShowCreatePageData($order = null)
     {
         $productRepository = new ProductRepository();
         $data['productList'] = $productRepository->getAll();
@@ -49,30 +46,11 @@ class ProductModel extends Model
         return $data;
     }
 
-    public function create($file, $params)
+    public function create($data)
     {
-        $res['result'] = false;
+        $repository = new ProductRepository();
 
-        $fileUploader = new FileUploader();
-
-        try {
-            $image = $fileUploader->uploadOne($file['file'], $this->fileDirectory);
-            $imageList = $fileUploader->uploadSeveral($file['files'], $this->fileDirectory);
-        } catch (RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
-
-        $fileRepository = new FileRepository();
-        $params['file_id'] = $fileRepository->createFile($image);
-
-        if (empty($params['file_id'])) {
-            $res['errors'][] = 'Ошибка сохранения файла';
-            return $res;
-        }
-
-        $productRepository = new ProductRepository();
-        $newProductId = $productRepository->create($this->prepareProductData($params));
+        $newProductId = $repository->create($data);
 
         if (empty($newProductId)) {
             $res['errors'][] = 'Ошибка сохранения подукта';
@@ -82,7 +60,8 @@ class ProductModel extends Model
         $productRecommendationsRepository = new ProductRecommendationsRepository();
         if (!empty($params['recommendation_ids'])) {
             foreach ($params['recommendation_ids'] as $recommendation) {
-                $productRecommendation = $productRecommendationsRepository->createProductRecommendations($newProductId, $recommendation);
+                $productRecommendation = $productRecommendationsRepository->createProductRecommendations($newProductId,
+                    $recommendation);
 
                 if (empty($productRecommendation)) {
                     $res['errors'][] = 'Ошибка сохранения рекомендаций';
@@ -103,27 +82,7 @@ class ProductModel extends Model
             }
         }
 
-        if (!empty($imageList)) {
-            foreach ($imageList as $image) {
-
-                $fileId = $fileRepository->createFile($image);
-
-                if (empty($fileId)) {
-                    $res['errors'][] = 'Не удалось создать файл';
-                    return $res;
-                }
-
-                $filesCategoryConnection = $productRepository->createFilesConnection($newProductId, $fileId);
-
-                if (empty($filesCategoryConnection)) {
-                    $res['errors'][] = 'Не удалось создать связь между фото и категорей';
-                    return $res;
-                }
-            }
-        }
-
-        $res['result'] = true;
-        return $res;
+        return $newProductId;
     }
 
     public function getShowUpdatePageData($id)
@@ -180,34 +139,10 @@ class ProductModel extends Model
         return $data;
     }
 
-    public function update($file, $params)
+    public function update($data)
     {
-        $res['result'] = false;
-
-        $fileUploader = new FileUploader();
-
-        try {
-            $image = $fileUploader->uploadOne($file['file'], $this->fileDirectory);
-            $imageList = $fileUploader->uploadSeveral($file['files'], $this->fileDirectory);
-        } catch (RuntimeException $e) {
-            $res['errors'][] = $e->getMessage();
-            return $res;
-        }
-
-        $fileRepository = new FileRepository();
-
-        if (!empty($image)) {
-            $fileUploader->deleteFile($params['file_alias'], $this->fileDirectory);
-            $params['file_id'] = $fileRepository->createFile($image);
-        }
-
-        if (empty($params['file_id'])) {
-            $res['errors'][] = 'Ошибка сохранения файла';
-            return $res;
-        }
-
-        $productRepository = new ProductRepository();
-        $newCategory = $productRepository->updateById($this->prepareProductData($params));
+        $repository = new ProductRepository();
+        $newCategory = $repository->updateById($data);
 
         if (empty($newCategory)) {
             $res['errors'][] = 'Ошибка сохранения товара';
@@ -223,7 +158,8 @@ class ProductModel extends Model
 
         if (!empty($params['recommendation_ids'])) {
             foreach ($params['recommendation_ids'] as $recommendation) {
-                $productRecommendation = $productRecommendationsRepository->createProductRecommendations($params['id'], $recommendation);
+                $productRecommendation = $productRecommendationsRepository->createProductRecommendations($params['id'],
+                    $recommendation);
 
                 if (empty($productRecommendation)) {
                     $res['errors'][] = 'Ошибка сохранения рекомендаций';
@@ -251,60 +187,43 @@ class ProductModel extends Model
             }
         }
 
-        if (!empty($imageList)) {
-            foreach ($imageList as $image) {
-
-                $fileId = $fileRepository->createFile($image);
-
-                if (empty($fileId)) {
-                    $res['errors'][] = 'Не удалось создать файл';
-                    return $res;
-                }
-
-                $filesProductConnection = $productRepository->createFilesConnection($params['id'], $fileId);
-
-                if (empty($filesProductConnection)) {
-                    $res['errors'][] = 'Не удалось создать связь между фото и товаром';
-                    return $res;
-                }
-            }
-        }
-
-        $res['result'] = true;
-        return $res;
+        return $newCategory;
     }
 
     public function getShowDeletePageData($id)
     {
-        $productRepository = new ProductRepository();
-        $data['product'] = $productRepository->getById($id);
+        $repository = new ProductRepository();
+        $data['product'] = $repository->getById($id);
 
         return $data;
     }
 
-    public function delete($data)
+    public function delete($id)
     {
-        $res['result'] = false;
-
-        $productRepository = new ProductRepository();
-
-        if (!$productRepository->deleteFilesProductConnectionByProductId($data['id'])) {
-            $res['errors'][] = 'ошибка при удалении товара';
-            return $res;
-        }
-
-        if (!$productRepository->deleteById($data['id'])) {
-            $res['errors'][] = 'ошибка при удалении товара';
-            return $res;
-        }
-
-        $res['result'] = true;
-        return $res;
+        $repository = new ProductRepository();
+        return $repository->deleteById($id);
     }
 
-    private function prepareProductData($params)
+    public function createFilesConnection($id, $fileId)
     {
-        $data = [
+        $repository = new ProductRepository();
+        return $repository->createFilesConnection($id, $fileId);
+    }
+
+    public function deleteFileConnection($id, $photoId): bool
+    {
+        $categoryRepository = new ProductRepository();
+
+        if ($categoryRepository->deleteFileConnection($id, $photoId)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function prepareData($params)
+    {
+        return [
             'id' => $params['id'],
             'category_id' => $params['category_id'],
             'name' => $params['name'],
@@ -318,29 +237,6 @@ class ProductModel extends Model
             'tag_description' => $params['tag_description'],
             'tag_keywords' => $params['tag_keywords'],
         ];
-
-        return $data;
-    }
-
-    public function photoDelete($id, $photoId)
-    {
-        $res['result'] = false;
-
-        $fileRepository = new FileRepository();
-        $file = $fileRepository->getFileById($photoId);
-
-        $fileUploader = new FileUploader();
-        $fileUploader->deleteFile($file['alias'], $this->fileDirectory);
-
-        $productRepository = new ProductRepository();
-        if ($productRepository->deleteFileConnection($id, $photoId)) {
-            $res['result'] = true;
-            return $res;
-        }
-
-        $res['errors'][] = "ошибка при удалении статьи";
-
-        return $res;
     }
 }
 

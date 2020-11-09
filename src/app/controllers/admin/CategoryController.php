@@ -12,7 +12,7 @@ class CategoryController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->context =  new Context(new CategoryStrategy());
+        $this->context = new Context(new CategoryStrategy());
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

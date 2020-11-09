@@ -7,7 +7,7 @@ use PDO;
 
 class ProductRepository extends AbstractRepository
 {
-    public function getProductById($id)
+    public function getById($id)
     {
         $sql = '
         SELECT 
@@ -44,7 +44,7 @@ class ProductRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function getProductList($order = null)
+    public function getAll($order = null)
     {
         if (empty($order)) {
             $order = 'id';
@@ -128,7 +128,7 @@ class ProductRepository extends AbstractRepository
         return $result->fetchAll();
     }
 
-    public function createProduct($data)
+    public function create($data)
     {
         $sql = '
 INSERT INTO product 
@@ -156,7 +156,7 @@ VALUES
         return null;
     }
 
-    public function updateProductById($data)
+    public function updateById($data)
     {
         $sql = '
 UPDATE product
@@ -191,7 +191,7 @@ WHERE id = :id';
         return $result->execute();
     }
 
-    public function deleteProductById($id)
+    public function deleteById($id)
     {
         $sql = 'DELETE FROM product WHERE id = :id';
 
@@ -239,7 +239,7 @@ WHERE id = :id';
         return $result->fetchAll();
     }
 
-    public function createFilesProductConnection($productId, $fileId)
+    public function createFilesConnection($productId, $fileId)
     {
         $sql = '
 INSERT INTO product_file
@@ -286,7 +286,7 @@ VALUES
         return $result->execute();
     }
 
-    public function deleteFileProductConnection($productId, $fileId)
+    public function deleteFileConnection($productId, $fileId)
     {
         $sql = 'DELETE FROM product_file WHERE product_id = :product_id AND file_id =:file_d';
 

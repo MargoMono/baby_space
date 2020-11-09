@@ -259,7 +259,7 @@ VALUES
         return null;
     }
 
-    public function deleteFileCategoryConnection($categoryId, $fileId)
+    public function deleteFileConnection($categoryId, $fileId)
     {
         $sql = 'DELETE FROM category_file WHERE category_id = :category_id AND file_id =:file_d';
 
