@@ -101,26 +101,6 @@ class ProductController extends Controller
         header("Location: /admin/product");
     }
 
-    public function actionShowProductPageKindPage()
-    {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
-
-        $data = $this->model->getShowProductPageKindPage();
-
-        $this->view->generate('admin/product/pageKind.twig', $data);
-    }
-
-    public function updateKindPage()
-    {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
-
-        $data = $this->model->updateKindPage($_POST);
-
-        $this->view->generate('admin/product/pageKind.twig', $data);
-    }
-
     public function photoDelete($id, $photoId)
     {
         $adminAuthenticationChecking = new AdminAuthenticationChecking();

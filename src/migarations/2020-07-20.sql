@@ -205,59 +205,13 @@ create table product_coating
             on update cascade on delete cascade
 );
 
-create table design
-(
-    id          int(11) auto_increment,
-    name        varchar(255) not null,
-    description varchar(255),
-    constraint design_pk
-        primary key (id)
-);
-
-create table design_file
-(
-    id        int(11) auto_increment,
-    file_id   int(11) not null,
-    design_id int(11) not null,
-    constraint design_file_pk
-        primary key (id),
-    constraint design_file_file_id_fk
-        foreign key (file_id) references file (id),
-    constraint design_file_coating_id_fk
-        foreign key (design_id) references design (id)
-);
-
-create table product_design
-(
-    id         int(11) auto_increment,
-    product_id int(11) not null,
-    design_id  int(11) not null,
-    constraint product_design_pk
-        primary key (id),
-    constraint product_design_product_id_fk
-        foreign key (product_id) references product (id)
-            on update cascade on delete cascade,
-    constraint product_design_design_id_fk
-        foreign key (design_id) references design (id)
-            on update cascade on delete cascade
-);
-
-create table product_page_kind
-(
-    id      int(11) auto_increment,
-    name    varchar(255) not null,
-    enabled bool,
-    constraint product_design_pk
-        primary key (id)
-);
-
 create table catalog_order
 (
     id         int(11) auto_increment,
     name       varchar(255) not null,
     company    varchar(255),
     created_at datetime     null,
-    constraint product_design_pk
+    constraint catalog_order_pk
         primary key (id)
 );
 

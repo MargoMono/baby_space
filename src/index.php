@@ -70,8 +70,6 @@ $router->get('admin/product/update/{id}', ['App\\Controller\\Admin\\ProductContr
 $router->post('admin/product/update/{id}', ['App\\Controller\\Admin\\ProductController', 'update']);
 $router->get('admin/product/delete/{id}', ['App\\Controller\\Admin\\ProductController', 'actionShowDeletePage']);
 $router->post('admin/product/delete', ['App\\Controller\\Admin\\ProductController', 'delete']);
-$router->get('admin/product-page-kind', ['App\\Controller\\Admin\\ProductController', 'actionShowProductPageKindPage']);
-$router->post('admin/product-page-kind', ['App\\Controller\\Admin\\ProductController', 'updateKindPage']);
 $router->get('admin/product/photo/delete/{id}/{photoId}', ['App\\Controller\\Admin\\ProductController', 'photoDelete']);
 
 // Страницы категорий
@@ -83,16 +81,6 @@ $router->post('admin/coating/update/{id}', ['App\\Controller\\Admin\\CoatingCont
 $router->get('admin/coating/delete/{id}', ['App\\Controller\\Admin\\CoatingController', 'actionShowDeletePage']);
 $router->post('admin/coating/delete/{id}', ['App\\Controller\\Admin\\CoatingController', 'delete']);
 $router->get('admin/coating/photo/delete/{id}/{photoId}', ['App\\Controller\\Admin\\CoatingController', 'photoDelete']);
-
-// Страницы категорий
-$router->any('admin/design', ['App\\Controller\\Admin\\DesignController', 'actionIndex']);
-$router->get('admin/design/create', ['App\\Controller\\Admin\\DesignController', 'actionShowCreatePage']);
-$router->post('admin/design/create', ['App\\Controller\\Admin\\DesignController', 'create']);
-$router->get('admin/design/update/{id}', ['App\\Controller\\Admin\\DesignController', 'actionShowUpdatePage']);
-$router->post('admin/design/update/{id}', ['App\\Controller\\Admin\\DesignController', 'update']);
-$router->get('admin/design/delete/{id}', ['App\\Controller\\Admin\\DesignController', 'actionShowDeletePage']);
-$router->post('admin/design/delete/{id}', ['App\\Controller\\Admin\\DesignController', 'delete']);
-$router->get('admin/design/photo/delete/{id}/{photoId}', ['App\\Controller\\Admin\\DesignController', 'photoDelete']);
 
 // Страницы продуктов
 $router->any('admin/category', ['App\\Controller\\Admin\\CategoryController', 'actionIndex']);

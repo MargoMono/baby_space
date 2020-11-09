@@ -73,14 +73,6 @@
                         {% endfor %}
                     </select>
 
-                    <p class="title-name">Коллекции дизайнов</p>
-                    <p class="note">* можно выбрать несколько дизайнов</p>
-                    <select multiple name="design_ids[]">';
-                        {% for design in designList %}
-                            <option value="{{ design.id }}">{{ design.name }}</option>
-                        {% endfor %}
-                    </select>
-
                     <p class="title-name">Статус</p>
                     <select name="enabled">
                         <option value="1" selected="selected">Отображается</option>

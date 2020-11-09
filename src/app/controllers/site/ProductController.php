@@ -25,12 +25,7 @@ class ProductController extends Controller
 
         $data['page'] = 'catalog';
 
-        if ($data['pageKind'] == 'coating') {
-            $this->view->generate('site/product/coating.twig', $data);
-            return;
-        }
-
-        $this->view->generate('site/product/design.twig', $data);
+        $this->view->generate('site/product/coating.twig', $data);
     }
 
     public function addToComparison()

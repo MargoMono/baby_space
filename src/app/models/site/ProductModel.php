@@ -4,10 +4,7 @@ namespace App\Model\Site;
 
 use App\Model\Model;
 use App\Repository\CoatingRepository;
-use App\Repository\DesignRepository;
 use App\Repository\Site\ProductCoatingRepository;
-use App\Repository\Site\ProductDesignRepository;
-use App\Repository\Site\ProductPageKindRepository;
 use App\Repository\Site\ProductRecommendationsRepository;
 use App\Repository\Site\ProductRepository;
 
@@ -15,14 +12,7 @@ class ProductModel extends Model
 {
     public function getProductData($productId)
     {
-        $productPageKindRepository = new ProductPageKindRepository();
-        $enableProductPageKind = $productPageKindRepository->getEnableProductPageKind();
-
-        if ($enableProductPageKind['id'] == ProductPageKindRepository::COATING_PAGE_ID) {
-            return $this->getCoatingProductData($productId);
-        }
-
-        return $this->getDesignProductData($productId);
+        return $this->getCoatingProductData($productId);
     }
 
     private function getCoatingProductData($productId)
@@ -53,40 +43,6 @@ class ProductModel extends Model
         $params = [
             'breadcrumbs' => $this->getBreadcrumbs($product['category_id']),
             'product' => $product,
-            'pageKind' => 'coating'
-        ];
-
-        return $params;
-    }
-
-    private function getDesignProductData($productId)
-    {
-        $productRepository = new ProductRepository();
-        $product = $productRepository->getEnableProductById($productId);
-
-        if (!$product) {
-            return false;
-        }
-
-        $productDesignRepository = new ProductDesignRepository();
-        $productDesignList = $productDesignRepository->getProductDesignListByProductId($productId);
-
-        foreach ($productDesignList as $productDesign) {
-            $designRepository = new DesignRepository();
-            $designPhotos = $designRepository->getDesignPhotos($productDesign['design_id']);
-            $productDesign['fileList'] = $designPhotos;
-            $product['designList'][] = $productDesign;
-        }
-
-        $productRecommendationsRepository = new ProductRecommendationsRepository();
-        $productRecommendationList = $productRecommendationsRepository->getProductRecommendationsIdsByProductId($productId);
-        $product['recommendationList'] = $productRecommendationList;
-        $product['isComparison'] = $this->isComparisonProduct($productId);
-
-        $params = [
-            'breadcrumbs' => $this->getBreadcrumbs($product['category_id']),
-            'product' => $product,
-            'pageKind' => 'design'
         ];
 
         return $params;

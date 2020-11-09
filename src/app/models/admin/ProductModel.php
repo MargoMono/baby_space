@@ -3,16 +3,12 @@
 namespace App\Model\Admin;
 
 use App\Model\Model;
-use App\Helper\CatalogHelper;
 use App\Modules\FileUploader;
 use App\Helper\TextHelper;
 use App\Repository\CategoryRepository;
 use App\Repository\CoatingRepository;
-use App\Repository\DesignRepository;
 use App\Repository\FileRepository;
 use App\Repository\Site\ProductCoatingRepository;
-use App\Repository\Site\ProductDesignRepository;
-use App\Repository\Site\ProductPageKindRepository;
 use App\Repository\Site\ProductRecommendationsRepository;
 use App\Repository\Site\ProductRepository;
 use RuntimeException;
@@ -49,9 +45,6 @@ class ProductModel extends Model
 
         $coatingRepository = new CoatingRepository();
         $data['coatingList'] = $coatingRepository->getCoatingList();
-
-        $designRepository = new DesignRepository();
-        $data['designList'] = $designRepository->getDesignList();
 
         return $data;
     }
@@ -104,18 +97,6 @@ class ProductModel extends Model
                 $productCoating = $productCoatingRepository->createProductCoating($newProductId, $coatingId);
 
                 if (empty($productCoating)) {
-                    $res['errors'][] = 'Ошибка сохранения рекомендаций';
-                    return $res;
-                }
-            }
-        }
-
-        $productDesignRepository = new ProductDesignRepository();
-        if (!empty($params['design_ids'])) {
-            foreach ($params['design_ids'] as $designId) {
-                $productDesign = $productDesignRepository->createProductDesign($newProductId, $designId);
-
-                if (empty($productDesign)) {
                     $res['errors'][] = 'Ошибка сохранения рекомендаций';
                     return $res;
                 }
@@ -191,27 +172,9 @@ class ProductModel extends Model
             $coatingList[$key]['selected'] = in_array($coating['id'], $coatingIds);
         }
 
-
-        $designRepository = new DesignRepository();
-        $designList = $designRepository->getDesignList();
-
-        $productDesignRepository = new ProductDesignRepository();
-        $productDesignList = $productDesignRepository->getProductDesignListByProductId($id);
-
-        $designIds = [];
-
-        foreach ($productDesignList as $productDesign) {
-            $designIds[] = $productDesign['design_id'];
-        }
-
-        foreach ($designList as $key => $design) {
-            $designList[$key]['selected'] = in_array($design['id'], $designIds);
-        }
-
         $data['productList'] = $productList;
         $data['categoryList'] = $categoryList;
         $data['coatingList'] = $coatingList;
-        $data['designList'] = $designList;
         $data['productFilesList'] = $productRepository->getProductFilesByProductId($id);
 
         return $data;
@@ -288,25 +251,6 @@ class ProductModel extends Model
             }
         }
 
-        $productDesignRepository = new ProductDesignRepository();
-        $productDesignList = $productDesignRepository->getProductDesignListByProductId($params['id']);
-
-
-        foreach ($productDesignList as $productDesign) {
-            $productDesignRepository->deleteProductDesign($productDesign['id']);
-        }
-
-        if (!empty($params['design_ids'])) {
-            foreach ($params['design_ids'] as $designId) {
-                $productDesign = $productDesignRepository->createProductDesign($params['id'], $designId);
-
-                if (empty($productDesign)) {
-                    $res['errors'][] = 'Ошибка сохранения рекомендаций';
-                    return $res;
-                }
-            }
-        }
-
         if (!empty($imageList)) {
             foreach ($imageList as $image) {
 
@@ -374,24 +318,6 @@ class ProductModel extends Model
             'tag_description' => $params['tag_description'],
             'tag_keywords' => $params['tag_keywords'],
         ];
-
-        return $data;
-    }
-
-    public function getShowProductPageKindPage()
-    {
-        $productPageKindRepository = new ProductPageKindRepository();
-        $data['enableProductPageKind'] = $productPageKindRepository->getEnableProductPageKind();
-
-        return $data;
-    }
-
-    public function updateKindPage($data)
-    {
-        $productPageKindRepository = new ProductPageKindRepository();
-
-        $productPageKindRepository->updateProductPageKind($data['kind']);
-        $data['enableProductPageKind'] = $productPageKindRepository->getEnableProductPageKind();
 
         return $data;
     }
