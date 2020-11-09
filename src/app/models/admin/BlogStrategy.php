@@ -3,78 +3,78 @@
 namespace App\Model\Admin;
 
 use App\Helper\TextHelper;
-use App\Modules\FileUploader;
 use App\Repository\BlogRepository;
-use App\Repository\FileRepository;
 
-class BlogStrategy implements Strategy
+class BlogStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'blog';
 
-    public function getRepository()
+    public function getIndexData($order = null)
     {
-        return new BlogRepository();
-    }
+        $repository = new BlogRepository();
+        $data['newList'] = $repository->getAll($order);
 
-    public function modifyIndexData($data)
-    {
         return $data;
     }
 
-    public function modifyCreatePageData($data)
+    public function getShowCreatePageData($order = null)
     {
+        $repository = new BlogRepository();
+        $data['newList'] = $repository->getAll($order);
+
         return $data;
     }
 
-    public function modifyUpdatePageData($data, $id)
+    public function create($data)
     {
+        $repository = new BlogRepository();
+
+        return $repository->create($data);
+    }
+
+    public function getShowUpdatePageData($id)
+    {
+        $repository = new BlogRepository();
+        $data['new'] = $repository->getById($id);
+
         return $data;
     }
 
-    public function addFileConnection($file)
+    public function update($data)
     {
-        $fileUploader = new FileUploader();
+        $repository = new BlogRepository();
+        return $repository->updateById($data);
+    }
 
-        try {
-            $alias = $fileUploader->uploadOne($file, $this->fileDirectory);
-        } catch (\RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
+    public function getShowDeletePageData($id)
+    {
+        $repository = new BlogRepository();
+        $data['new'] = $repository->getById($id);
 
-        $fileRepository = new FileRepository();
+        return $data;
+    }
 
-        return $fileRepository->createFile($alias);
+    public function delete($id)
+    {
+        $repository = new BlogRepository();
+        return $repository->deleteById($id);
     }
 
     public function addFilesConnection($files, $id)
     {
-
     }
 
-    public function updateFileConnection($file, $params)
+    public function createFilesConnection($id, $fileId)
     {
-        $fileUploader = new FileUploader();
-
-        try {
-            $image = $fileUploader->uploadOne($file, $this->fileDirectory);
-        } catch (\RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
-
-        if (!empty($image)) {
-            $fileUploader->deleteFile($params['file_alias'], $this->fileDirectory);
-        }
-
-        $fileRepository = new FileRepository();
-
-        return $fileRepository->createFile($image);
     }
 
     public function updateFilesConnection($files, $id)
     {
+    }
 
+    public function deleteFileConnection($id, $photoId): bool
+    {
+       return false;
     }
 
     public function prepareData($params)

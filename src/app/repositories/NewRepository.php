@@ -165,4 +165,9 @@ WHERE id = :id';
 
         return $result->fetch();
     }
+
+    public function createFilesConnection($id, $fileId)
+    {
+        // TODO: Implement createFilesConnection() method.
+    }
 }

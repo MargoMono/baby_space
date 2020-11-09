@@ -82,7 +82,7 @@ $router->get('admin/coating/delete/{id}', ['App\\Controller\\Admin\\CoatingContr
 $router->post('admin/coating/delete/{id}', ['App\\Controller\\Admin\\CoatingController', 'delete']);
 $router->get('admin/coating/photo/delete/{id}/{photoId}', ['App\\Controller\\Admin\\CoatingController', 'photoDelete']);
 
-// Страницы продуктов
+// Страницы товаров
 $router->any('admin/category', ['App\\Controller\\Admin\\CategoryController', 'actionIndex']);
 $router->get('admin/category/create', ['App\\Controller\\Admin\\CategoryController', 'actionShowCreatePage']);
 $router->post('admin/category/create', ['App\\Controller\\Admin\\CategoryController', 'createCategory']);

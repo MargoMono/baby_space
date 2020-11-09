@@ -148,4 +148,9 @@ WHERE id = :id';
 
         return $result->fetchAll();
     }
+
+    public function createFilesConnection($categoryId, $fileId)
+    {
+
+    }
 }

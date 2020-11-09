@@ -5,32 +5,33 @@ namespace App\Model\Admin;
 use App\Helper\BreadcrumbsHelper;
 use App\Helper\TextHelper;
 use App\Modules\FileUploader;
+use App\Repository\BlogRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\FileRepository;
-use App\Repository\Repository;
 
-class CategoryStrategy implements Strategy
+class CategoryStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'category';
 
-    public function getRepository()
+    public function getIndexData($order = null)
     {
-        return new CategoryRepository();
-    }
+        $repository = new CategoryRepository();
+        $data['categoryList'] = $repository->getAll($order);
 
-    public function modifyIndexData($data)
-    {
-        foreach ($data as $key => $category) {
-            $data[$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
+        foreach ($data['categoryList'] as $key => $category) {
+            $data['categoryList'][$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
         }
 
         return $data;
     }
 
-    public function modifyCreatePageData($data)
+    public function getShowCreatePageData($order = null)
     {
-        foreach ($data as $key => $category) {
-            $data[$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
+        $repository = new CategoryRepository();
+        $data['categoryList'] = $repository->getAll($order);
+
+        foreach ($data['categoryList'] as $key => $category) {
+            $data['categoryList'][$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
 
             // удаляем возможность добавления подкатегории более 3 уровня
             $level = $this->getCategoryLevel($category['id']);
@@ -38,17 +39,20 @@ class CategoryStrategy implements Strategy
                 unset($data[$key]);
             }
         }
-
-        return $data;
     }
 
-    public function modifyUpdatePageData($data, $id)
+    public function create($data)
     {
-        /**
-         * @var Repository $repository
-         */
-        $repository = $this->getRepository();
+        $repository = new CategoryRepository();
 
+        return $repository->create($data);
+    }
+
+    public function getShowUpdatePageData($id)
+    {
+        $repository = new CategoryRepository();
+
+        $data['category'] = $repository->getById($id);
         $data['categoryList'] = $repository->getAll();
         $data['categoryFilesList'] = $repository->getCategoryFilesByCategoryId($id);
 
@@ -69,78 +73,31 @@ class CategoryStrategy implements Strategy
         return $data;
     }
 
-    public function addFileConnection($file)
+    public function update($data)
     {
-        $fileUploader = new FileUploader();
-
-        try {
-            $alias = $fileUploader->uploadOne($file, $this->fileDirectory);
-        } catch (\RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
-
-        $fileRepository = new FileRepository();
-
-        return $fileRepository->createFile($alias);
+        $repository = new CategoryRepository();
+        return $repository->updateById($data);
     }
 
-    public function addFilesConnection($files, $categoryId)
+    public function getShowDeletePageData($id)
     {
-        $fileUploader = new FileUploader();
+        $categoryRepository = new CategoryRepository();
+        $data['category'] = $categoryRepository->getById($id);
 
-        try {
-            $imageList = $fileUploader->uploadSeveral($files, $this->fileDirectory);
-        } catch (\RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
-
-        $fileRepository = new FileRepository();
-
-        if (empty($imageList)) {
-            $res['result'] = true;
-            return $res;
-        }
-
-        foreach ($imageList as $image) {
-
-            $fileId = $fileRepository->createFile($image);
-
-            if (empty($fileId)) {
-                $res['errors'][] = 'Не удалось создать файл';
-                return $res;
-            }
-            $repository = $this->getRepository();
-            $filesCategoryConnection = $repository->createFilesCategoryConnection($categoryId, $fileId);
-
-            if (empty($filesCategoryConnection)) {
-                $res['errors'][] = 'Не удалось создать связь между фото и категорей';
-                return $res;
-            }
-        }
-
-        return null;
+        return $data;
     }
 
-    public function updateFileConnection($file, $params)
+    public function delete($id)
     {
-        $fileUploader = new FileUploader();
+        $repository = new CategoryRepository();
+        return $repository->deleteById($id);
+    }
 
-        try {
-            $image = $fileUploader->uploadOne($file, $this->fileDirectory);
-        } catch (\RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
+    public function createFilesConnection($id, $fileId)
+    {
+        $repository = new CategoryRepository();
 
-        if (!empty($image)) {
-            $fileUploader->deleteFile($params['file_alias'], $this->fileDirectory);
-        }
-
-        $fileRepository = new FileRepository();
-
-        return $fileRepository->createFile($image);
+        return $repository->createFilesConnection($id, $fileId);
     }
 
     public function updateFilesConnection($files, $categoryId)
@@ -169,8 +126,9 @@ class CategoryStrategy implements Strategy
                 $res['errors'][] = 'Не удалось создать файл';
                 return $res;
             }
-            $repository = $this->getRepository();
-            $filesCategoryConnection = $repository->createFilesCategoryConnection($categoryId, $fileId);
+
+            $repository = new CategoryRepository();
+            $filesCategoryConnection = $repository->createFilesConnection($categoryId, $fileId);
 
             if (empty($filesCategoryConnection)) {
                 $res['errors'][] = 'Не удалось создать связь между фото и категорей';
@@ -179,25 +137,6 @@ class CategoryStrategy implements Strategy
         }
 
         return null;
-    }
-
-
-
-    public function prepareData($params)
-    {
-        return [
-            'id' => $params['id'],
-            'parent' => $params['parent'] ?? 0,
-            'name' => $params['name'],
-            'description' => $params['description'],
-            'file_id' => $params['file_id'],
-            'enabled' => $params['enabled'],
-            'alias' => TextHelper::getTranslit($params['name']),
-            'position' => $params['position'],
-            'tag_title' => $params['tag_title'],
-            'tag_description' => $params['tag_description'],
-            'tag_keywords' => $params['tag_keywords'],
-        ];
     }
 
     public function getCategoryLevel($id)
@@ -214,32 +153,31 @@ class CategoryStrategy implements Strategy
         return $level;
     }
 
-    public function getShowDeletePageData($id)
+    public function deleteFileConnection($id, $photoId): bool
     {
         $categoryRepository = new CategoryRepository();
-        $data['category'] = $categoryRepository->getById($id);
 
-        return $data;
-    }
-
-    public function photoDelete($id, $photoId)
-    {
-        $res['result'] = false;
-
-        $fileRepository = new FileRepository();
-        $file = $fileRepository->getFileById($photoId);
-
-        $fileUploader = new FileUploader();
-        $fileUploader->deleteFile($file['alias'], $this->fileDirectory);
-
-        $categoryRepository = new CategoryRepository();
         if ($categoryRepository->deleteFileCategoryConnection($id, $photoId)) {
-            $res['result'] = true;
-            return $res;
+            return true;
         }
 
-        $res['errors'][] = "ошибка при удалении статьи";
+        return false;
+    }
 
-        return $res;
+    public function prepareData($params)
+    {
+        return [
+            'id' => $params['id'],
+            'parent' => $params['parent'] ?? 0,
+            'name' => $params['name'],
+            'description' => $params['description'],
+            'file_id' => $params['file_id'],
+            'enabled' => $params['enabled'],
+            'alias' => TextHelper::getTranslit($params['name']),
+            'position' => $params['position'],
+            'tag_title' => $params['tag_title'],
+            'tag_description' => $params['tag_description'],
+            'tag_keywords' => $params['tag_keywords'],
+        ];
     }
 }

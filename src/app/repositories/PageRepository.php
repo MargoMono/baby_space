@@ -77,4 +77,9 @@ WHERE id = :id';
     {
         // TODO: Implement create() method.
     }
+
+    public function createFilesConnection($id, $fileId)
+    {
+        // TODO: Implement createFilesConnection() method.
+    }
 }

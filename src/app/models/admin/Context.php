@@ -2,6 +2,9 @@
 
 namespace App\Model\Admin;
 
+use App\Modules\FileUploader;
+use App\Repository\CategoryRepository;
+use App\Repository\FileRepository;
 use App\Repository\Repository;
 
 class Context
@@ -33,29 +36,16 @@ class Context
      */
     public function getIndexData($order = null): array
     {
-        /**
-         * @var Repository $repository
-         */
-        $repository = $this->strategy->getRepository();
-        $data = $repository->getAll($order);
-        $data = $this->strategy->modifyIndexData($data);
-
-        return $data;
+        return $this->strategy->getIndexData($order);
     }
 
     /**
+     * @param null $order
      * @return array
      */
-    public function getShowCreatePageData(): array
+    public function getShowCreatePageData($order = null): array
     {
-        /**
-         * @var Repository $repository
-         */
-        $repository = $this->strategy->getRepository();
-        $data = $repository->getAll();
-        $data = $this->strategy->modifyCreatePageData($data);
-
-        return $data;
+        return $this->strategy->getShowCreatePageData($order);
     }
 
     /**
@@ -74,11 +64,8 @@ class Context
                 return $res;
             }
         }
-        /**
-         * @var Repository $repository
-         */
-        $repository = $this->strategy->getRepository();
-        $newEntityId = $repository->create($this->strategy->prepareData($params));
+
+        $newEntityId = $this->strategy->create($this->strategy->prepareData($params));
 
         if (empty($newEntityId)) {
             $res['errors'][] = 'Ошибка сохранения';
@@ -99,14 +86,7 @@ class Context
      */
     public function getShowUpdatePageData($id): array
     {
-        /**
-         * @var Repository $repository
-         */
-        $repository = $this->strategy->getRepository();
-        $data['category'] = $repository->getById($id);
-        $data = $this->strategy->modifyUpdatePageData($data, $id);
-
-        return $data;
+        return $this->strategy->getShowUpdatePageData($id);
     }
 
     /**
@@ -132,11 +112,7 @@ class Context
             return $res;
         }
 
-        /**
-         * @var Repository $repository
-         */
-        $repository = $this->strategy->getRepository();
-        $newEntityId = $repository->updateById($this->strategy->prepareData($params));
+        $newEntityId = $this->strategy->update($this->strategy->prepareData($params));
 
         if (empty($newEntityId)) {
             $res['errors'][] = 'Ошибка сохранения';
@@ -157,12 +133,7 @@ class Context
      */
     public function getShowDeletePageData($id)
     {
-        /**
-         * @var Repository $repository
-         */
-        $repository = $this->strategy->getRepository();
-
-        return $repository->getById($id);
+        return $this->strategy->getShowDeletePageData($id);
     }
 
     /**
@@ -173,17 +144,32 @@ class Context
     {
         $res['result'] = false;
 
-        /**
-         * @var Repository $repository
-         */
-        $repository = $this->strategy->getRepository();
-
-        if ($repository->deleteById($data['id'])) {
+        if ($this->strategy->delete($data['id'])) {
             $res['result'] = true;
             return $res;
         }
 
         $res['errors'][] = 'ошибка при удалении';
+
+        return $res;
+    }
+
+    public function photoDelete($id, $photoId)
+    {
+        $res['result'] = false;
+
+        $fileRepository = new FileRepository();
+        $file = $fileRepository->getFileById($photoId);
+
+        $fileUploader = new FileUploader();
+        $fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);
+
+        if($this->strategy->deleteFileConnection($id, $photoId)){
+            $res['result'] = true;
+            return $res;
+        }
+
+        $res['errors'][] = 'ошибка при удалении статьи';
 
         return $res;
     }

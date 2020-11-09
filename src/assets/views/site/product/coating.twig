@@ -177,7 +177,7 @@
             success: function (res) {
                 let response = JSON.parse(res);
                 if (response.result) {
-                    //инфа о количестве продуктов в избранном
+                    //инфа о количестве товаров в избранном
                     if($('body').is('.comparsion-info-box')) {
                         $('.comparsion-info-box').innerHTML('<img src="/assets/images/site/icons/favorite.png" alt=""> <p> ' + response.comparison_product_count + ' </p>');
                     } else {
@@ -217,7 +217,7 @@
             data: data,
             success: function (res) {
                 let response = JSON.parse(res);
-                //инфа о количестве продуктов в избранном
+                //инфа о количестве товаров в избранном
 
                 if (response.result) {
                     if($('body').is('.comparsion-info-box')) {

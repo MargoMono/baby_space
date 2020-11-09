@@ -13,4 +13,6 @@ interface Repository
     public function updateById($id);
 
     public function deleteById($id);
+
+    public function createFilesConnection($id, $fileId);
 }

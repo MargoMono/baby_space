@@ -240,7 +240,7 @@ WHERE id = :id';
         return $result->fetchAll();
     }
 
-    public function createFilesCategoryConnection($categoryId, $fileId)
+    public function createFilesConnection($categoryId, $fileId)
     {
         $sql = '
 INSERT INTO category_file

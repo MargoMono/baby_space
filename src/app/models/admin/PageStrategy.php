@@ -2,78 +2,69 @@
 
 namespace App\Model\Admin;
 
-use App\Modules\FileUploader;
-use App\Repository\FileRepository;
+use App\Repository\BlogRepository;
 use App\Repository\PageRepository;
 
-class PageStrategy implements Strategy
+class PageStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'page';
 
-    public function getRepository()
+    public function getIndexData($order = null)
     {
-        return new PageRepository();
-    }
+        $repository = new BlogRepository();
+        $data['pageList'] = $repository->getAll($order);
 
-    public function modifyIndexData($data)
-    {
         return $data;
     }
 
-    public function modifyCreatePageData($data)
+    public function getShowCreatePageData($order = null)
     {
+    }
+
+    public function create($data)
+    {
+    }
+
+    public function getShowUpdatePageData($id)
+    {
+        $repository = new PageRepository();
+        $data['page'] = $repository->getById($id);
+
         return $data;
     }
 
-    public function modifyUpdatePageData($data, $id)
+    public function update($data)
     {
-        return $data;
+        $repository = new PageRepository();
+        return $repository->updateById($data);
     }
 
-    public function addFileConnection($file)
+    public function delete($id)
     {
-        $fileUploader = new FileUploader();
-
-        try {
-            $alias = $fileUploader->uploadOne($file, $this->fileDirectory);
-        } catch (\RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
-
-        $fileRepository = new FileRepository();
-
-        return $fileRepository->createFile($alias);
+        $repository = new BlogRepository();
+        return $repository->deleteById($id);
     }
+
 
     public function addFilesConnection($files, $id)
     {
-
     }
 
-    public function updateFileConnection($file, $params)
+    public function createFilesConnection($id, $fileId)
     {
-        $fileUploader = new FileUploader();
-
-        try {
-            $image = $fileUploader->uploadOne($file, $this->fileDirectory);
-        } catch (\RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
-
-        if (!empty($image)) {
-            $fileUploader->deleteFile($params['file_alias'], $this->fileDirectory);
-        }
-
-        $fileRepository = new FileRepository();
-
-        return $fileRepository->createFile($image);
     }
 
     public function updateFilesConnection($files, $id)
     {
+    }
 
+    public function getShowDeletePageData($id)
+    {
+    }
+
+    public function deleteFileConnection($id, $photoId): bool
+    {
+        return false;
     }
 
     public function prepareData($params)

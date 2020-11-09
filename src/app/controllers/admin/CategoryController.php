@@ -12,7 +12,6 @@ class CategoryController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->strategy = new CategoryStrategy();
         $this->context =  new Context(new CategoryStrategy());
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
@@ -21,15 +20,13 @@ class CategoryController extends Controller
 
     public function actionIndex()
     {
-        $data['categoryList'] = $this->context->getIndexData($_POST['order']);
-
+        $data = $this->context->getIndexData($_POST['order']);
         $this->view->generate('admin/category/index.twig', $data);
     }
 
     public function actionShowCreatePage()
     {
-        $data['categoryList'] = $this->context->getShowCreatePageData();
-
+        $data = $this->context->getShowCreatePageData();
         $this->view->generate('admin/category/create.twig', $data);
     }
 
@@ -48,7 +45,6 @@ class CategoryController extends Controller
     public function actionShowUpdatePage($id)
     {
         $data = $this->context->getShowUpdatePageData($id);
-
         $this->view->generate('admin/category/update.twig', $data);
     }
 
@@ -67,7 +63,7 @@ class CategoryController extends Controller
 
     public function actionShowDeletePage($id)
     {
-        $data = $this->strategy->getShowDeletePageData($id);
+        $data = $this->context->getShowDeletePageData($id);
 
         $this->view->generate('admin/category/delete.twig', $data);
     }
@@ -77,7 +73,7 @@ class CategoryController extends Controller
         $data = $this->context->delete($_POST);
 
         if ($data['errors']) {
-            $data = array_merge($data, $this->strategy->getShowDeletePageData($_POST['id']));
+            $data = array_merge($data, $this->context->getShowDeletePageData($_POST['id']));
             $this->view->generate('admin/category/delete.twig', $data);
             return;
         }
@@ -87,8 +83,8 @@ class CategoryController extends Controller
 
     public function photoDelete($id, $photoId)
     {
-        $data = $this->strategy->photoDelete($id, $photoId);
-        $data = array_merge($data, $this->strategy->getShowUpdatePageData($id));
+        $data = $this->context->photoDelete($id, $photoId);
+        $data = array_merge($data, $this->context->getShowUpdatePageData($id));
 
         $this->view->generate('admin/category/update.twig', $data);
     }

@@ -210,7 +210,7 @@ class ProductModel extends Model
         $newCategory = $productRepository->updateProductById($this->prepareProductData($params));
 
         if (empty($newCategory)) {
-            $res['errors'][] = 'Ошибка сохранения продукта';
+            $res['errors'][] = 'Ошибка сохранения товара';
             return $res;
         }
 
@@ -264,7 +264,7 @@ class ProductModel extends Model
                 $filesProductConnection = $productRepository->createFilesProductConnection($params['id'], $fileId);
 
                 if (empty($filesProductConnection)) {
-                    $res['errors'][] = 'Не удалось создать связь между фото и продуктом';
+                    $res['errors'][] = 'Не удалось создать связь между фото и товаром';
                     return $res;
                 }
             }
@@ -289,12 +289,12 @@ class ProductModel extends Model
         $productRepository = new ProductRepository();
 
         if (!$productRepository->deleteFilesProductConnectionByProductId($data['id'])) {
-            $res['errors'][] = 'ошибка при удалении продукта';
+            $res['errors'][] = 'ошибка при удалении товара';
             return $res;
         }
 
         if (!$productRepository->deleteProductById($data['id'])) {
-            $res['errors'][] = 'ошибка при удалении продукта';
+            $res['errors'][] = 'ошибка при удалении товара';
             return $res;
         }
 

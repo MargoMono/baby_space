@@ -20,15 +20,13 @@ class BlogController extends Controller
 
     public function actionIndex()
     {
-        $data['newList'] = $this->context->getIndexData($_POST['order']);
-
+        $data = $this->context->getIndexData($_POST['order']);
         $this->view->generate('admin/blog/index.twig', $data);
     }
 
     public function actionShowCreatePage()
     {
-        $data['newList'] = $this->context->getShowCreatePageData();
-
+        $data = $this->context->getShowCreatePageData();
         $this->view->generate('admin/blog/create.twig', $data);
     }
 
@@ -46,17 +44,16 @@ class BlogController extends Controller
 
     public function actionShowUpdatePage($id)
     {
-        $data['new'] = $this->context->getShowUpdatePageData($id);
-
+        $data  = $this->context->getShowUpdatePageData($id);
         $this->view->generate('admin/blog/update.twig', $data);
     }
 
     public function update()
     {
         $data = $this->context->update($_FILES, $_POST);
-        $data['new'] = $this->context->getShowUpdatePageData($_POST['id']);
 
         if ($data['errors']) {
+            $data = array_merge($data, $this->context->getShowUpdatePageData($_POST['id']));
             $this->view->generate('admin/blog/update.twig', $data);
             return;
         }
@@ -66,17 +63,16 @@ class BlogController extends Controller
 
     public function actionShowDeletePage($id)
     {
-        $data['new'] = $this->context->getShowDeletePageData($id);
-
+        $data = $this->context->getShowDeletePageData($id);
         $this->view->generate('admin/blog/delete.twig', $data);
     }
 
     public function delete()
     {
         $data = $this->context->delete($_POST);
-        $data['new'] = $this->context->getShowDeletePageData($_POST['id']);
 
         if ($data['errors']) {
+            $data = array_merge($data, $this->context->getShowDeletePageData($_POST['id']));
             $this->view->generate('admin/blog/delete.twig', $data);
             return;
         }

@@ -3,78 +3,79 @@
 namespace App\Model\Admin;
 
 use App\Helper\TextHelper;
-use App\Modules\FileUploader;
-use App\Repository\FileRepository;
+use App\Repository\BlogRepository;
 use App\Repository\NewRepository;
 
-class NewStrategy implements Strategy
+class NewStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'new';
 
-    public function getRepository()
+    public function getIndexData($order = null)
     {
-        return new NewRepository();
-    }
+        $repository = new NewRepository();
+        $data['newList'] = $repository->getAll($order);
 
-    public function modifyIndexData($data)
-    {
         return $data;
     }
 
-    public function modifyCreatePageData($data)
+    public function getShowCreatePageData($order = null)
     {
+        $repository = new NewRepository();
+        $data['newList'] = $repository->getAll($order);
+
         return $data;
     }
 
-    public function modifyUpdatePageData($data, $id)
+    public function create($data)
     {
+        $repository = new NewRepository();
+
+        return $repository->create($data);
+    }
+
+    public function getShowUpdatePageData($id)
+    {
+        $repository = new NewRepository();
+        $data['new'] = $repository->getById($id);
+
         return $data;
     }
 
-    public function addFileConnection($file)
+    public function update($data)
     {
-        $fileUploader = new FileUploader();
+        $repository = new NewRepository();
+        return $repository->updateById($data);
+    }
 
-        try {
-            $alias = $fileUploader->uploadOne($file, $this->fileDirectory);
-        } catch (\RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
+    public function getShowDeletePageData($id)
+    {
+        $repository = new NewRepository();
+        $data['new'] = $repository->getById($id);
 
-        $fileRepository = new FileRepository();
+        return $data;
+    }
 
-        return $fileRepository->createFile($alias);
+    public function delete($id)
+    {
+        $repository = new NewRepository();
+        return $repository->deleteById($id);
     }
 
     public function addFilesConnection($files, $id)
     {
-
     }
 
-    public function updateFileConnection($file, $params)
+    public function createFilesConnection($id, $fileId)
     {
-        $fileUploader = new FileUploader();
-
-        try {
-            $image = $fileUploader->uploadOne($file, $this->fileDirectory);
-        } catch (\RuntimeException $e) {
-            $res['errors'][] = $e;
-            return $res;
-        }
-
-        if (!empty($image)) {
-            $fileUploader->deleteFile($params['file_alias'], $this->fileDirectory);
-        }
-
-        $fileRepository = new FileRepository();
-
-        return $fileRepository->createFile($image);
     }
 
     public function updateFilesConnection($files, $id)
     {
+    }
 
+    public function deleteFileConnection($id, $photoId): bool
+    {
+        return  false;
     }
 
     public function prepareData($params)
@@ -91,4 +92,5 @@ class NewStrategy implements Strategy
             'tag_keywords' => $params['tag_keywords'],
         ];
     }
+
 }

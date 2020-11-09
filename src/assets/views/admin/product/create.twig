@@ -4,11 +4,11 @@
     <section class="content-header">
         <h1>
             Панель администратора
-            <small>Добавить продукт</small>
+            <small>Добавить товар</small>
         </h1>
         <ol class="breadcrumb">
-            <li><a href="/admin/product/">Продукты</a></li>
-            <li class="active">Добавить продукт</li>
+            <li><a href="/admin/product/">Товары</a></li>
+            <li class="active">Добавить товар</li>
         </ol>
     </section>
 
@@ -27,8 +27,8 @@
             <div class="login-form">
                 <form action="#" enctype="multipart/form-data" method="post">
 
-                    <p class="title-name">Категория продукта</p>
-                    <p class="note">* можно добавить продукт только в категорию, не имеющую родительской</p>
+                    <p class="title-name">Категория товара</p>
+                    <p class="note">* можно добавить товар только в категорию, не имеющую родительской</p>
                     <select name="category_id" required>
                         <option value="" selected="selected">Отсутствует</option>
                         {% for category in categoryList %}
@@ -37,28 +37,28 @@
                     </select>
                     <p class="required">*обязательное поле</p>
 
-                    <p class="title-name">Название продукта</p>
+                    <p class="title-name">Название товара</p>
                     <p class="required">*обязательное поле</p>
                     <p class="note">*максимальная длина 100 символов</p>
                     <input type="text" name="name" placeholder="" value="" maxlength="100" required>
 
-                    <p class="title-name">Краткое описание продукта</p>
+                    <p class="title-name">Краткое описание товара</p>
                     <p class="required">*обязательное поле</p>
                     <p class="note">*максимальная длина 250 символов</p>
                     <textarea name="description" rows="2" cols="150" maxlength="250" required></textarea>
 
-                    <p class="title-name">Полное описание продукта</p>
+                    <p class="title-name">Полное описание товара</p>
                     <textarea id="summernote" name="content"></textarea>
 
-                    <p class="title-name">Главное изображение продукта</p>
+                    <p class="title-name">Главное изображение товара</p>
                     <input type="file" name="file" required>
                     <p class="required">*обязательное поле</p>
 
                     <p class="title-name">Изображения для галереи</p>
                     <input type='file' name='files[]' multiple >
 
-                    <p class="title-name">Рекомендованные продукты</p>
-                    <p class="note">* можно выбрать несколько продуктов</p>
+                    <p class="title-name">Рекомендованные товары</p>
+                    <p class="note">* можно выбрать несколько товаров</p>
                     <select multiple name="recommendation_ids[]">';
                         {% for product in productList %}
                             <option value="{{ product.id }}">{{ product.name }}</option>

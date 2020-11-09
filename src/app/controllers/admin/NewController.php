@@ -20,15 +20,13 @@ class NewController extends Controller
 
     public function actionIndex()
     {
-        $data['newList'] = $this->context->getIndexData($_POST['order']);
-
+        $data = $this->context->getIndexData($_POST['order']);
         $this->view->generate('admin/new/index.twig', $data);
     }
 
     public function actionShowCreatePage()
     {
-        $data['newList'] = $this->context->getShowCreatePageData();
-
+        $data = $this->context->getShowCreatePageData();
         $this->view->generate('admin/new/create.twig', $data);
     }
 
@@ -46,17 +44,16 @@ class NewController extends Controller
 
     public function actionShowUpdatePage($id)
     {
-        $data['new'] = $this->context->getShowUpdatePageData($id);
-
+        $data = $this->context->getShowUpdatePageData($id);
         $this->view->generate('admin/new/update.twig', $data);
     }
 
     public function update()
     {
         $data = $this->context->update($_FILES, $_POST);
-        $data['new'] = $this->context->getShowUpdatePageData($_POST['id']);
 
         if ($data['errors']) {
+            $data = array_merge($data, $this->context->getShowUpdatePageData($_POST['id']));
             $this->view->generate('admin/new/update.twig', $data);
             return;
         }
@@ -66,7 +63,7 @@ class NewController extends Controller
 
     public function actionShowDeletePage($id)
     {
-        $data['new'] = $this->context->getShowDeletePageData($id);
+        $data = $this->context->getShowDeletePageData($id);
 
         $this->view->generate('admin/new/delete.twig', $data);
     }
@@ -74,9 +71,10 @@ class NewController extends Controller
     public function delete()
     {
         $data = $this->context->delete($_POST);
-        $data['new'] = $this->context->getShowDeletePageData($_POST['id']);
+
 
         if ($data['errors']) {
+            $data = array_merge($data, $this->context->getShowDeletePageData($_POST['id']));
             $this->view->generate('admin/new/delete.twig', $data);
             return;
         }
