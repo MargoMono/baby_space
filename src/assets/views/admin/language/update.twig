@@ -1,0 +1,64 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Обновить язык</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/admin/language/">Языки</a></li>
+            <li class="active">Обновить язык</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        {% if errors is not empty %}
+            <div class="col-lg-12 mistake">
+                <p>Ошибка:</p>
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="col-lg-12 correct">
+            <div class="login-form">
+                <form action="/admin/language/update/{{ language.id }}" enctype="multipart/form-data" method="post">
+
+                    <input type="hidden" name="id" placeholder="" value="{{ language.id }}">
+
+                    <p class="title-name">Название</p>
+                    <input type="text" name="name" placeholder="" value="{{ language.name }}" required>
+                    <p class="required">*обязательное поле</p>
+
+                    <p class="title-name">Код языка</p>
+                    <input type="text" name="code" placeholder="" value="{{ language.code }}" required>
+                    <p class="required">*обязательное поле</p>
+
+                    <p class="title-name">Название файла языка</p>
+                    <input type="text" name="alias" placeholder="" value="{{ language.alias }}" required>
+                    <p class="required">*обязательное поле</p>
+
+                    <input type="hidden" name="file_id" placeholder="" value="{{ language.file_id }}">
+                    <input type="hidden" name="file_alias" placeholder="" value="{{ language.file_alias }}">
+
+                    <p class="title-name">Изображение (рекомендуется загрузить с сайта по <a href="https://icon-icons.com/ru/pack/Flat-Europe-Flag-Icons/266">ссылке</a>)</p>
+                    <img src="/upload/images/language/{{ language.file_alias }}" width="150" alt=""/>
+                    <input type="file" name="file" value="">
+
+                    <br><br>
+                    <input type="submit" name="button" class="btn btn-default" value="Обновить"/>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
+
+<script>
+
+    console.log($('input[type="file"]').prop('files'))
+</script>

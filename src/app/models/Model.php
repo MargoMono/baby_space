@@ -2,7 +2,9 @@
 
 namespace App\Model;
 
+use App\Components\Language;
 use App\Repository\CategoryRepository;
+use App\Repository\LanguageRepository;
 use App\Repository\NewRepository;
 
 class Model
@@ -28,7 +30,13 @@ class Model
         $data['lastNew'] = $lastNew;
         $data['footerCategoryList'] = $mainCategoryList;
 
-        return $data;
+        $languagesRepository = new LanguageRepository();
+        $data['languages'] = $languagesRepository->getAll();
+
+        $language = new Language();
+        $content = $language->getContent();
+
+        return array_merge($data, $content);
     }
 
     protected function getBreadcrumbs($categoryId)

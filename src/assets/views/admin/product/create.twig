@@ -1,5 +1,57 @@
 {% include 'admin/includes/header.twig' %}
 
+<style>
+    .tabs {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .tabs {
+        border: 1px solid lightgray;
+    }
+
+    .tabs__nav {
+        display: flex;
+        flex-wrap: wrap;
+        list-style-type: none;
+        background: #f8f8f8;
+        margin: 0;
+        border-bottom: 1px solid lightgray;
+    }
+
+    .tabs__link {
+        padding: 0.5rem 0.75rem;
+        text-decoration: none;
+        color: black;
+        text-align: center;
+        flex-shrink: 0;
+        flex-grow: 1;
+    }
+
+    .tabs__link_active {
+        background: lightgray;
+        cursor: default;
+    }
+
+    .tabs__link:not(.tabs__link_active):hover,
+    .tabs__link:not(.tabs__link_active):focus {
+        background-color: #efefef;
+    }
+
+    .tabs__content {
+        padding: 1rem;
+    }
+
+    .tabs__pane {
+        display: none;
+    }
+
+    .tabs__pane_show {
+        display: block;
+    }
+</style>
+
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
@@ -13,6 +65,7 @@
     </section>
 
     <section class="content">
+
         {% if errors is not empty %}
             <div class="col-lg-12 mistake">
                 <p>Ошибка:</p>
@@ -23,80 +76,95 @@
                 </ul>
             </div>
         {% endif %}
-        <div class="col-lg-12 correct">
-            <div class="login-form">
-                <form action="#" enctype="multipart/form-data" method="post">
 
-                    <p class="title-name">Категория товара</p>
-                    <p class="note">* можно добавить товар только в категорию, не имеющую родительской</p>
-                    <select name="category_id" required>
-                        <option value="" selected="selected">Отсутствует</option>
-                        {% for category in categoryList %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <p class="required">*обязательное поле</p>
+        <div class="tabs" id="tabs-1">
+            <div class="tabs__nav">
+                {% for language in languages %}
+                    <a class="tabs__link {% if language.alias == 'russian' %} tabs__link_active  {% endif %}"
+                       href="#{{ language.name }}">{{ language.name }}</a>
+                {% endfor %}
 
-                    <p class="title-name">Название товара</p>
-                    <p class="required">*обязательное поле</p>
-                    <p class="note">*максимальная длина 100 символов</p>
-                    <input type="text" name="name" placeholder="" value="" maxlength="100" required>
-
-                    <p class="title-name">Краткое описание товара</p>
-                    <p class="required">*обязательное поле</p>
-                    <p class="note">*максимальная длина 250 символов</p>
-                    <textarea name="description" rows="2" cols="150" maxlength="250" required></textarea>
-
-                    <p class="title-name">Полное описание товара</p>
-                    <textarea id="summernote" name="content"></textarea>
-
-                    <p class="title-name">Главное изображение товара</p>
-                    <input type="file" name="file" required>
-                    <p class="required">*обязательное поле</p>
-
-                    <p class="title-name">Изображения для галереи</p>
-                    <input type='file' name='files[]' multiple >
-
-                    <p class="title-name">Рекомендованные товары</p>
-                    <p class="note">* можно выбрать несколько товаров</p>
-                    <select multiple name="recommendation_ids[]">';
-                        {% for product in productList %}
-                            <option value="{{ product.id }}">{{ product.name }}</option>
-                        {% endfor %}
-                    </select>
-
-                    <p class="title-name">Коллекции пленок</p>
-                    <p class="note">* можно выбрать несколько коллекции</p>
-                    <select multiple name="coating_ids[]">';
-                        {% for coating in coatingList %}
-                            <option value="{{ coating.id }}">{{ coating.name }}</option>
-                        {% endfor %}
-                    </select>
-
-                    <p class="title-name">Статус</p>
-                    <select name="enabled">
-                        <option value="1" selected="selected">Отображается</option>
-                        <option value="0">Скрыта</option>
-                    </select>
-
-                    <p class="title-name">Порядковый номер</p>
-                    <input type="text" name="position" placeholder="" value="">
-
-                    <p class="title-name">Тэг title</p>
-                    <textarea name="tag_title" rows="4" cols="150"></textarea>
-
-                    <p class="title-name">Тэг description</p>
-                    <textarea name="tag_description" rows="4" cols="150"></textarea>
-
-                    <p class="title-name">Тэг keywords</p>
-                    <textarea name="tag_keywords" rows="4" cols="150"></textarea>
-                    <br><br>
-                    <input type="submit" name="button" class="btn btn-default" value="Сохранить"/>
-                </form>
             </div>
+            <div class="tabs__content">
+                {% for language in languages %}
+                    <div class="tabs__pane {% if language.alias == 'russian' %} tabs__pane_show  {% endif %}"
+                         id="{{ language.name }}">
+                        {{ language.name }}
+                        <form action="#" enctype="multipart/form-data" method="post">
 
+                            <p class="title-name">Категория товара</p>
+                            <p class="note">* можно добавить товар только в категорию, не имеющую родительской</p>
+                            <select name="category_id" required>
+                                <option value="" selected="selected">Отсутствует</option>
+                                {% for category in categoryList %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <p class="required">*обязательное поле</p>
+
+                            <p class="title-name">Название товара</p>
+                            <p class="required">*обязательное поле</p>
+                            <p class="note">*максимальная длина 100 символов</p>
+                            <input type="text" name="name" placeholder="" value="" maxlength="100" required>
+
+                            <p class="title-name">Краткое описание товара</p>
+                            <p class="required">*обязательное поле</p>
+                            <p class="note">*максимальная длина 250 символов</p>
+                            <textarea name="description" rows="2" cols="150" maxlength="250" required></textarea>
+
+                            <p class="title-name">Полное описание товара</p>
+                            <textarea id="summernote" name="content"></textarea>
+
+                            <p class="title-name">Главное изображение товара</p>
+                            <input type="file" name="file" required>
+                            <p class="required">*обязательное поле</p>
+
+                            <p class="title-name">Изображения для галереи</p>
+                            <input type='file' name='files[]' multiple>
+
+                            <p class="title-name">Рекомендованные товары</p>
+                            <p class="note">* можно выбрать несколько товаров</p>
+                            <select multiple name="recommendation_ids[]">';
+                                {% for product in productList %}
+                                    <option value="{{ product.id }}">{{ product.name }}</option>
+                                {% endfor %}
+                            </select>
+
+                            <p class="title-name">Коллекции пленок</p>
+                            <p class="note">* можно выбрать несколько коллекции</p>
+                            <select multiple name="coating_ids[]">';
+                                {% for coating in coatingList %}
+                                    <option value="{{ coating.id }}">{{ coating.name }}</option>
+                                {% endfor %}
+                            </select>
+
+                            <p class="title-name">Статус</p>
+                            <select name="enabled">
+                                <option value="1" selected="selected">Отображается</option>
+                                <option value="0">Скрыта</option>
+                            </select>
+
+                            <p class="title-name">Порядковый номер</p>
+                            <input type="text" name="position" placeholder="" value="">
+
+                            <p class="title-name">Тэг title</p>
+                            <textarea name="tag_title" rows="4" cols="150"></textarea>
+
+                            <p class="title-name">Тэг description</p>
+                            <textarea name="tag_description" rows="4" cols="150"></textarea>
+
+                            <p class="title-name">Тэг keywords</p>
+                            <textarea name="tag_keywords" rows="4" cols="150"></textarea>
+                            <br><br>
+                            <input type="submit" name="button" class="btn btn-default" value="Сохранить"/>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
+
+
+
     </section>
 </div>
-
 {% include 'admin/includes/footer.twig' %}
