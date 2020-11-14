@@ -113,16 +113,6 @@ class Route
         $router->post('admin/product/delete', ['App\\Controller\\Admin\\ProductController', 'delete']);
         $router->get('admin/product/photo/delete/{id}/{photoId}', ['App\\Controller\\Admin\\ProductController', 'photoDelete']);
 
-        // Страницы категорий
-        $router->any('admin/coating', ['App\\Controller\\Admin\\CoatingController', 'actionIndex']);
-        $router->get('admin/coating/create', ['App\\Controller\\Admin\\CoatingController', 'actionShowCreatePage']);
-        $router->post('admin/coating/create', ['App\\Controller\\Admin\\CoatingController', 'create']);
-        $router->get('admin/coating/update/{id}', ['App\\Controller\\Admin\\CoatingController', 'actionShowUpdatePage']);
-        $router->post('admin/coating/update/{id}', ['App\\Controller\\Admin\\CoatingController', 'update']);
-        $router->get('admin/coating/delete/{id}', ['App\\Controller\\Admin\\CoatingController', 'actionShowDeletePage']);
-        $router->post('admin/coating/delete/{id}', ['App\\Controller\\Admin\\CoatingController', 'delete']);
-        $router->get('admin/coating/photo/delete/{id}/{photoId}', ['App\\Controller\\Admin\\CoatingController', 'photoDelete']);
-
         // Страницы товаров
         $router->any('admin/category', ['App\\Controller\\Admin\\CategoryController', 'actionIndex']);
         $router->get('admin/category/create', ['App\\Controller\\Admin\\CategoryController', 'actionShowCreatePage']);

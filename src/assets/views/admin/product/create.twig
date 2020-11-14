@@ -1,170 +1,183 @@
 {% include 'admin/includes/header.twig' %}
 
-<style>
-    .tabs {
-        max-width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .tabs {
-        border: 1px solid lightgray;
-    }
-
-    .tabs__nav {
-        display: flex;
-        flex-wrap: wrap;
-        list-style-type: none;
-        background: #f8f8f8;
-        margin: 0;
-        border-bottom: 1px solid lightgray;
-    }
-
-    .tabs__link {
-        padding: 0.5rem 0.75rem;
-        text-decoration: none;
-        color: black;
-        text-align: center;
-        flex-shrink: 0;
-        flex-grow: 1;
-    }
-
-    .tabs__link_active {
-        background: lightgray;
-        cursor: default;
-    }
-
-    .tabs__link:not(.tabs__link_active):hover,
-    .tabs__link:not(.tabs__link_active):focus {
-        background-color: #efefef;
-    }
-
-    .tabs__content {
-        padding: 1rem;
-    }
-
-    .tabs__pane {
-        display: none;
-    }
-
-    .tabs__pane_show {
-        display: block;
-    }
-</style>
+<link rel="stylesheet" href="/assets/css/admin/tabs.css">
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>
-            Панель администратора
-            <small>Добавить товар</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="/admin/product/">Товары</a></li>
-            <li class="active">Добавить товар</li>
-        </ol>
+        <div class="pull-right">
+            <button type="submit" form="form-product" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
+            <a href="{{ cancel }}" data-toggle="tooltip" title="Отменить" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+        <h1>Добавить товар</h1>
     </section>
-
     <section class="content">
 
-        {% if errors is not empty %}
-            <div class="col-lg-12 mistake">
-                <p>Ошибка:</p>
-                <ul>
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
+        {% if error_warning %}
+            <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
         {% endif %}
 
-        <div class="tabs" id="tabs-1">
-            <div class="tabs__nav">
-                {% for language in languages %}
-                    <a class="tabs__link {% if language.alias == 'russian' %} tabs__link_active  {% endif %}"
-                       href="#{{ language.name }}">{{ language.name }}</a>
-                {% endfor %}
-
-            </div>
-            <div class="tabs__content">
-                {% for language in languages %}
-                    <div class="tabs__pane {% if language.alias == 'russian' %} tabs__pane_show  {% endif %}"
-                         id="{{ language.name }}">
-                        {{ language.name }}
-                        <form action="#" enctype="multipart/form-data" method="post">
-
-                            <p class="title-name">Категория товара</p>
-                            <p class="note">* можно добавить товар только в категорию, не имеющую родительской</p>
-                            <select name="category_id" required>
-                                <option value="" selected="selected">Отсутствует</option>
-                                {% for category in categoryList %}
-                                    <option value="{{ category.id }}">{{ category.name }}</option>
-                                {% endfor %}
-                            </select>
-                            <p class="required">*обязательное поле</p>
-
-                            <p class="title-name">Название товара</p>
-                            <p class="required">*обязательное поле</p>
-                            <p class="note">*максимальная длина 100 символов</p>
-                            <input type="text" name="name" placeholder="" value="" maxlength="100" required>
-
-                            <p class="title-name">Краткое описание товара</p>
-                            <p class="required">*обязательное поле</p>
-                            <p class="note">*максимальная длина 250 символов</p>
-                            <textarea name="description" rows="2" cols="150" maxlength="250" required></textarea>
-
-                            <p class="title-name">Полное описание товара</p>
-                            <textarea id="summernote" name="content"></textarea>
-
-                            <p class="title-name">Главное изображение товара</p>
-                            <input type="file" name="file" required>
-                            <p class="required">*обязательное поле</p>
-
-                            <p class="title-name">Изображения для галереи</p>
-                            <input type='file' name='files[]' multiple>
-
-                            <p class="title-name">Рекомендованные товары</p>
-                            <p class="note">* можно выбрать несколько товаров</p>
-                            <select multiple name="recommendation_ids[]">';
-                                {% for product in productList %}
-                                    <option value="{{ product.id }}">{{ product.name }}</option>
-                                {% endfor %}
-                            </select>
-
-                            <p class="title-name">Коллекции пленок</p>
-                            <p class="note">* можно выбрать несколько коллекции</p>
-                            <select multiple name="coating_ids[]">';
-                                {% for coating in coatingList %}
-                                    <option value="{{ coating.id }}">{{ coating.name }}</option>
-                                {% endfor %}
-                            </select>
-
-                            <p class="title-name">Статус</p>
-                            <select name="enabled">
-                                <option value="1" selected="selected">Отображается</option>
-                                <option value="0">Скрыта</option>
-                            </select>
-
-                            <p class="title-name">Порядковый номер</p>
-                            <input type="text" name="position" placeholder="" value="">
-
-                            <p class="title-name">Тэг title</p>
-                            <textarea name="tag_title" rows="4" cols="150"></textarea>
-
-                            <p class="title-name">Тэг description</p>
-                            <textarea name="tag_description" rows="4" cols="150"></textarea>
-
-                            <p class="title-name">Тэг keywords</p>
-                            <textarea name="tag_keywords" rows="4" cols="150"></textarea>
-                            <br><br>
-                            <input type="submit" name="button" class="btn btn-default" value="Сохранить"/>
-                        </form>
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-product" class="form-horizontal">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab-general" data-toggle="tab">Основное</a></li>
+                <li><a href="#tab-data" data-toggle="tab">Данные</a></li>
+                <li><a href="#tab-links" data-toggle="tab">Связи</a></li>
+                <li><a href="#tab-image" data-toggle="tab">Изображения</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab-general">
+                    <ul class="nav nav-tabs" id="language">
+                        {% for language in languages %}
+                            <li><a href="#tab-language-{{ language.id }}" data-toggle="tab"> {{ language.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                        {% for language in languages %}
+                            <div class="tab-pane" id="tab-language-{{ language.id }}">
+                                <div class="form-group required">
+                                    <label class="col-sm-2 control-label" for="input-name">Название</label>
+                                    <div class="col-sm-10">
+                                        <input required type="text" name="name-{{ language.id }}" value="{{ product.name }}" id="input-name" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input-description">Описание</label>
+                                    <div class="col-sm-10">
+                                        <textarea data-toggle="summernote" id="input-description" name="description-{{ language.id }}">{{ product.content }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input-meta_title">Мета-тег Title</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="meta_title-{{ language.id }}" value="{{ product.name }}" id="input-meta_title" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input-meta_description">Мета-тег Description</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="meta_description-{{ language.id }}" value="{{ product.name }}" id="input-meta_description" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input-meta_keyword">Мета-тег Keyword</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="meta_keyword-{{ language.id }}" value="{{ product.name }}" id="input-meta_keyword" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input-tag">Теги товара</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="tag-{{ language.id }}" value="{{ product.name }}" id="input-tag" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+                </div>
+                <div class="tab-pane" id="tab-data">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-category">Категория</label>
+                            <div class="col-sm-10">
+                                <select required name="category_id" id="input-category" class="form-control">
+                                    {% for category in categoryList %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-status">Статус</label>
+                            <div class="col-sm-10">
+                                <select name="status" id="input-status" class="form-control">
+                                    <option value="1">Отображается</option>
+                                    <option value="0">Скрыт</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-sort">Порядок сортировки</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="sort" value="{{ product.sort }}" id="input-sort" class="form-control"/>
+                            </div>
+                        </div>
+                </div>
+                <div class="tab-pane" id="tab-links">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-recommendation">Рекомендуемые товары</label>
+                        <div class="col-sm-10">
+                            <select name="exapmle-select" id="input-recommendation" class="form-control">
+                                <option value="example-1">Пример-1</option>
+                                <option value="example-2">Пример-2</option>
+                                <option value="example-3">Пример-3</option>
+                            </select>
+                            <div id="product-recommendation-list" class="well well-sm" style="height: 150px; overflow: auto;">
+                                <input type="hidden" name="product_related[]" value="{{ product_related.product_id }}"/>
+                            </div>
+                            <ul id="list"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tab-image">
+                    <p class="title-name">Главное изображение товара</p>
+                    <img src="/upload/images/product/{{ product.file_alias }}" width="150" alt=""/>
+                    <input type="file" name="file" value="">
+
+                    <p class="title-name">Дополнительные изображения</p>
+                    {% for photo in productFilesList %}
+                        <img src="/upload/images/product/{{ photo.file_alias }}" width="150" alt=""/>
+                        <a href="/admin/product/photo/delete/{{ product.id }}/{{ photo.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
+                        <br><br>
+                    {% endfor %}
+                    <input type='file' name='files[]' multiple >
+                </div>
             </div>
-        </div>
-
-
-
+        </form>
     </section>
 </div>
 {% include 'admin/includes/footer.twig' %}
+
+<script type="text/javascript">
+    $('#language a:first').tab('show');
+    $('#option a:first').tab('show');
+</script>
+
+<script type="text/javascript">
+
+    // Product recommendations
+    const recommendation_select = document.querySelector('#input-recommendation');
+    const recommendation_list = document.querySelector('#product-recommendation-list');
+    const options = recommendation_select.options;
+
+    const createListElem = (content) => {
+        const li = document.createElement('li');
+        li.textContent = content;
+        return li;
+    }
+
+    const findOptionLabel = (val) => {
+        const [ option ] = Array.prototype.filter.call(options, (option) => val === option.value);
+        return option.text;
+    }
+
+    recommendation_select.addEventListener('change', (e) => {
+        const value = e.target.value;
+        const textForListElem = findOptionLabel(value);
+        const listElem = createListElem(textForListElem);
+        recommendation_list.append(listElem);
+    })
+
+
+</script>
+
+    <script>
+        $(document).ready(function () {
+            $('#summernote_{{ language.id }}').summernote({
+                height: 200,                 // set editor height
+                minHeight: null,             // set minimum height of editor
+                maxHeight: null,             // set maximum height of editor
+                focus: true                  // set focus to editable area after initializing summernote
+            });
+        });
+    </script>
+
+

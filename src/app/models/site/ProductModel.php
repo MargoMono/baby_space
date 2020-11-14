@@ -3,8 +3,6 @@
 namespace App\Model\Site;
 
 use App\Model\Model;
-use App\Repository\CoatingRepository;
-use App\Repository\Site\ProductCoatingRepository;
 use App\Repository\Site\ProductRecommendationsRepository;
 use App\Repository\Site\ProductRepository;
 
@@ -23,17 +21,6 @@ class ProductModel extends Model
         if (!$product) {
             return false;
         }
-
-        $productCoatingRepository = new ProductCoatingRepository();
-        $productCoatingIds = $productCoatingRepository->getProductCoatingListByProductId($productId);
-
-        foreach ($productCoatingIds as $productCoating) {
-            $coatingRepository = new CoatingRepository();
-            $coatingFiles = $coatingRepository->getCoatingPhotos($productCoating['coating_id']);
-            $productCoating['fileList'] = $coatingFiles;
-            $product['coatingList'][] = $productCoating;
-        }
-
 
         $productRecommendationsRepository = new ProductRecommendationsRepository();
         $productRecommendationList = $productRecommendationsRepository->getProductRecommendationsIdsByProductId($productId);

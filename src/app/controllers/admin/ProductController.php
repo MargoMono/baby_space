@@ -6,6 +6,7 @@ use App\Controller\Controller;
 use App\Middleware\AdminAuthenticationChecking;
 use App\Model\Admin\Context;
 use App\Model\Admin\ProductStrategy;
+use Symfony\Component\Yaml\Exception\RuntimeException;
 
 class ProductController extends Controller
 {
@@ -32,9 +33,12 @@ class ProductController extends Controller
 
     public function create()
     {
-        $data = $this->context->create($_FILES, $_POST);
-
-        if ($data['errors']) {
+        try {
+            $this->context->validation($_FILES, $_POST);
+            $this->context->create($_FILES, $_POST);
+        } catch (\Exception $exception) {
+            $data = $this->context->getShowCreatePageData();
+            $data['error_warning'] = 'Невозможно создать продукт, обратитесь к разработчику и сообщите ему код ошибки (' . $exception->getMessage() .' )';
             $this->view->generate('admin/product/create.twig', $data);
             return;
         }

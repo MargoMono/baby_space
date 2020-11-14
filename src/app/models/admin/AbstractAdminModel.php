@@ -2,11 +2,21 @@
 
 namespace App\Model\Admin;
 
+use App\Log\Logger;
 use App\Modules\FileUploader;
 use App\Repository\FileRepository;
 
 abstract class AbstractAdminModel implements Strategy
 {
+    protected $language;
+    protected $logger;
+
+    public function __construct()
+    {
+        $this->language = $_SESSION['language'];
+        $this->logger = Logger::getLogger(static::class);
+    }
+
     public function addFileConnection($file)
     {
         $fileUploader = new FileUploader();

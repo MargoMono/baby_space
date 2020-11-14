@@ -10,6 +10,8 @@ interface Strategy
 
     public function getShowCreatePageData($order = null);
 
+    public function validation($file, $params);
+
     public function create($data);
 
     public function getShowUpdatePageData($id);

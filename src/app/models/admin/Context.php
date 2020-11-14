@@ -48,6 +48,11 @@ class Context
         return $this->strategy->getShowCreatePageData($order);
     }
 
+    public function validation($file, $params)
+    {
+        return $this->strategy->validation($file, $params);
+    }
+
     /**
      * @param $file
      * @param $params

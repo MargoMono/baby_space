@@ -27,6 +27,21 @@ class LanguageRepository extends AbstractRepository implements Repository
         return $result->fetchAll();
     }
 
+    public function getAllId()
+    {
+
+        $sql = '
+        SELECT id
+        FROM language 
+        ';
+
+        $result = $this->db->prepare($sql);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
     public function getById($id)
     {
         $sql = '

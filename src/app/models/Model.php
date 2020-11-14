@@ -9,6 +9,11 @@ use App\Repository\NewRepository;
 
 class Model
 {
+    public function __construct()
+    {
+        $language = $_SESSION['language'];
+    }
+
     public function getDefaultData()
     {
         $categoryRepository = new CategoryRepository();

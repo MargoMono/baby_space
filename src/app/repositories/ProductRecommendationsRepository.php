@@ -4,6 +4,7 @@ namespace App\Repository\Site;
 
 use App\Repository\AbstractRepository;
 use PDO;
+use PDOException;
 
 class ProductRecommendationsRepository extends AbstractRepository
 {
@@ -54,9 +55,9 @@ class ProductRecommendationsRepository extends AbstractRepository
         FROM product p 
             JOIN category c ON p.category_id = c.id 
             JOIN file f ON p.file_id = f.id 
-        WHERE p.enabled = 1 
+        WHERE p.status = 1 
             AND p.category_id = :category_id 
-        ORDER BY p.position ASC 
+        ORDER BY p.sort ASC 
         LIMIT :limit';
 
         $result = $this->db->prepare($sql);
@@ -68,7 +69,7 @@ class ProductRecommendationsRepository extends AbstractRepository
         return $result->fetchAll();
     }
 
-    public function createProductRecommendations($productId, $recommendationId)
+    public function create($productId, $recommendationId)
     {
         $sql = '
 INSERT INTO product_recommendations 
@@ -80,11 +81,13 @@ VALUES
         $result->bindParam(':product_id', $productId);
         $result->bindParam(':recommendation_id', $recommendationId);
 
-        if ($result->execute()) {
+        try {
+            $result->execute();
             return $this->db->lastInsertId();
+        } catch (PDOException $e){
+            $this->logger->error($e->getMessage());
+            throw new \RuntimeException('Unable to create product recommendations');
         }
-
-        return null;
     }
 
     public function updateProductById($data)
@@ -96,9 +99,9 @@ UPDATE product
     name = :name,
     description = :description,
     file_id = :file_id,
-    enabled = :enabled,
+    status = :enabled,
     alias = :alias,
-    position = :position,
+    sort = :position,
     tag_title = :tag_title,
     tag_description = :tag_description,
     tag_keywords = :tag_keywords

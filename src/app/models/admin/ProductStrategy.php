@@ -3,10 +3,9 @@
 namespace App\Model\Admin;
 
 use App\Helper\TextHelper;
-use App\Repository\BlogRepository;
 use App\Repository\CategoryRepository;
-use App\Repository\CoatingRepository;
-use App\Repository\Site\ProductCoatingRepository;
+use App\Repository\LanguageRepository;
+use App\Repository\Site\ProductDescriptionRepository;
 use App\Repository\Site\ProductRecommendationsRepository;
 use App\Repository\Site\ProductRepository;
 
@@ -40,45 +39,29 @@ class ProductStrategy extends AbstractAdminModel
 
         $data['categoryList'] = $productList;
 
-        $coatingRepository = new CoatingRepository();
-        $data['coatingList'] = $coatingRepository->getCoatingList();
-
         return $data;
+    }
+
+    public function validation($file, $params)
+    {
+
     }
 
     public function create($data)
     {
         $repository = new ProductRepository();
-
         $newProductId = $repository->create($data);
 
-        if (empty($newProductId)) {
-            $res['errors'][] = 'Ошибка сохранения подукта';
-            return $res;
+        $productDescriptionRepository = new ProductDescriptionRepository();
+
+        foreach ($data['description'] as $description){
+            $productDescriptionRepository->create($newProductId, $description);
         }
 
         $productRecommendationsRepository = new ProductRecommendationsRepository();
         if (!empty($params['recommendation_ids'])) {
             foreach ($params['recommendation_ids'] as $recommendation) {
-                $productRecommendation = $productRecommendationsRepository->createProductRecommendations($newProductId,
-                    $recommendation);
-
-                if (empty($productRecommendation)) {
-                    $res['errors'][] = 'Ошибка сохранения рекомендаций';
-                    return $res;
-                }
-            }
-        }
-
-        $productCoatingRepository = new ProductCoatingRepository();
-        if (!empty($params['coating_ids'])) {
-            foreach ($params['coating_ids'] as $coatingId) {
-                $productCoating = $productCoatingRepository->createProductCoating($newProductId, $coatingId);
-
-                if (empty($productCoating)) {
-                    $res['errors'][] = 'Ошибка сохранения рекомендаций';
-                    return $res;
-                }
+                $productRecommendationsRepository->create($newProductId, $recommendation);
             }
         }
 
@@ -88,19 +71,18 @@ class ProductStrategy extends AbstractAdminModel
     public function getShowUpdatePageData($id)
     {
         $productRepository = new ProductRepository();
-        $data['product'] = $productRepository->getById($id);
-        $productList = $productRepository->getAll();
+        $product = $productRepository->getById($id);
+
+        $productRepository = new ProductDescriptionRepository();
+        $productDescription = $productRepository->getById($product['id']);
+
+        foreach ($productDescription as $description) {
+            $product['language_id'][$description['language_id']] = $description;
+        }
+
 
         $categoryRepository = new CategoryRepository();
         $categoryList = $categoryRepository->getAll();
-
-        // удаляем возможность добавления товара в категорию у которой есть дочерняя
-        foreach ($categoryList as $key => $category) {
-            $childCategory = $categoryRepository->getChildCategoryListById($category['id']);
-            if (!empty($childCategory)) {
-                unset($categoryList[$key]);
-            }
-        }
 
         $productRecommendationsRepository = new ProductRecommendationsRepository();
         $productRecommendations = $productRecommendationsRepository->getProductRecommendationsIdsByProductId($id);
@@ -111,29 +93,14 @@ class ProductStrategy extends AbstractAdminModel
             $productRecommendationIds[] = $product['id'];
         }
 
+        $productList = $productRepository->getAll();
         foreach ($productList as $key => $product) {
             $productList[$key]['selected'] = in_array($product['id'], $productRecommendationIds);
         }
 
-        $coatingRepository = new CoatingRepository();
-        $coatingList = $coatingRepository->getCoatingList();
-
-        $productCoatingRepository = new ProductCoatingRepository();
-        $productCoatingList = $productCoatingRepository->getProductCoatingListByProductId($id);
-
-        $coatingIds = [];
-
-        foreach ($productCoatingList as $productCoating) {
-            $coatingIds[] = $productCoating['coating_id'];
-        }
-
-        foreach ($coatingList as $key => $coating) {
-            $coatingList[$key]['selected'] = in_array($coating['id'], $coatingIds);
-        }
-
+        $data['product'] = $product;
         $data['productList'] = $productList;
         $data['categoryList'] = $categoryList;
-        $data['coatingList'] = $coatingList;
         $data['productFilesList'] = $productRepository->getProductFilesByProductId($id);
 
         return $data;
@@ -158,29 +125,10 @@ class ProductStrategy extends AbstractAdminModel
 
         if (!empty($params['recommendation_ids'])) {
             foreach ($params['recommendation_ids'] as $recommendation) {
-                $productRecommendation = $productRecommendationsRepository->createProductRecommendations($params['id'],
+                $productRecommendation = $productRecommendationsRepository->create($params['id'],
                     $recommendation);
 
                 if (empty($productRecommendation)) {
-                    $res['errors'][] = 'Ошибка сохранения рекомендаций';
-                    return $res;
-                }
-            }
-        }
-
-        $productCoatingRepository = new ProductCoatingRepository();
-        $productCoatingList = $productCoatingRepository->getProductCoatingListByProductId($params['id']);
-
-
-        foreach ($productCoatingList as $productCoating) {
-            $productCoatingRepository->deleteProductCoating($productCoating['id']);
-        }
-
-        if (!empty($params['coating_ids'])) {
-            foreach ($params['coating_ids'] as $coatingId) {
-                $productCoating = $productCoatingRepository->createProductCoating($params['id'], $coatingId);
-
-                if (empty($productCoating)) {
                     $res['errors'][] = 'Ошибка сохранения рекомендаций';
                     return $res;
                 }
@@ -223,19 +171,31 @@ class ProductStrategy extends AbstractAdminModel
 
     public function prepareData($params)
     {
+        $languageRepository = new LanguageRepository();
+        $languages = $languageRepository->getAll();
+
+        $paramsDescription = [];
+
+        foreach ($languages as $language) {
+            $paramsDescription[$language['id']] = [
+                'language_id' => $language['id'],
+                'name' => $params['name-' . $language['id']],
+                'description' => $params['description-' . $language['id']],
+                'meta_title' => $params['meta_title-' . $language['id']],
+                'meta_description' => $params['meta_description-' . $language['id']],
+                'meta_keyword' => $params['meta_keyword-' . $language['id']],
+                'tag' => $params['tag-' . $language['id']],
+            ];
+        }
+
         return [
             'id' => $params['id'],
             'category_id' => $params['category_id'],
-            'name' => $params['name'],
-            'description' => $params['description'],
-            'content' => $params['content'],
+            'status' => $params['status'],
+            'sort' => $params['sort'],
             'file_id' => $params['file_id'],
-            'enabled' => $params['enabled'],
             'alias' => TextHelper::getTranslit($params['name']),
-            'position' => $params['position'],
-            'tag_title' => $params['tag_title'],
-            'tag_description' => $params['tag_description'],
-            'tag_keywords' => $params['tag_keywords'],
+            'description' => $paramsDescription,
         ];
     }
 }

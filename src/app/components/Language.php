@@ -6,6 +6,8 @@ use App\Repository\LanguageRepository;
 
 class Language
 {
+    CONST DEFAUL_LANGUGE_ALIAS = 'russian';
+
     public $language;
 
     public function __construct()
@@ -46,16 +48,12 @@ class Language
         $languageRepository = new LanguageRepository();
         $languages = $languageRepository->getAll();
 
-        $defaultLanguage = '';
         $languagesAs = [];
 
         foreach ($languages as $key => $language) {
             $languageCode = explode(',', $language['code']);
             foreach ($languageCode as $code) {
                 $languagesAs[strtok(strtolower(trim($code)), '-')] = $language['alias'];
-            }
-            if ($language['by_default'] == 1) {
-                $defaultLanguage = $language['alias'];
             }
         }
 
@@ -66,7 +64,7 @@ class Language
             }
         }
 
-        return $defaultLanguage;
+        return self::DEFAUL_LANGUGE_ALIAS;
     }
 }
 

@@ -4,6 +4,7 @@ namespace App\Repository\Site;
 
 use App\Repository\AbstractRepository;
 use PDO;
+use PDOException;
 
 class ProductRepository extends AbstractRepository
 {
@@ -34,7 +35,7 @@ class ProductRepository extends AbstractRepository
             JOIN category cp ON p.category_id = cp.id
             JOIN file f ON p.file_id = f.id
         WHERE p.id = :id
-        AND p.enabled = 1';
+        AND p.status = 1';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -73,9 +74,9 @@ class ProductRepository extends AbstractRepository
         FROM product p 
             JOIN category c ON p.category_id = c.id 
             JOIN file f ON p.file_id = f.id 
-        WHERE p.enabled = 1 
+        WHERE p.status = 1 
             AND p.category_id = :category_id 
-        ORDER BY p.position ASC ';
+        ORDER BY p.sort ASC ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
@@ -93,9 +94,9 @@ class ProductRepository extends AbstractRepository
         FROM product p 
             JOIN category c ON p.category_id = c.id 
             JOIN file f ON p.file_id = f.id 
-        WHERE p.enabled = 1 
+        WHERE p.status = 1 
             AND p.category_id = :category_id 
-        ORDER BY p.position ASC 
+        ORDER BY p.sort ASC 
         LIMIT :limit';
 
         $result = $this->db->prepare($sql);
@@ -115,9 +116,9 @@ class ProductRepository extends AbstractRepository
         FROM product p 
             JOIN category c ON p.category_id = c.id 
             JOIN file f ON p.file_id = f.id 
-        WHERE p.enabled = 1 
+        WHERE p.status = 1 
             AND p.category_id = :category_id 
-        ORDER BY p.position ASC 
+        ORDER BY p.sort ASC 
         LIMIT ' . $limit . ' OFFSET ' . $count;
 
         $result = $this->db->prepare($sql);
@@ -132,28 +133,24 @@ class ProductRepository extends AbstractRepository
     {
         $sql = '
 INSERT INTO product 
-    (category_id, name, description, content, file_id, enabled, alias, position, tag_title, tag_description, tag_keywords) 
+    (category_id, file_id, status, alias, sort) 
 VALUES 
-    (:category_id, :name, :description, :content, :file_id, :enabled, :alias, :position, :tag_title, :tag_description, :tag_keywords) ';
+    (:category_id, :file_id, :status, :alias, :sort) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
-        $result->bindParam(':name', $data['name']);
-        $result->bindParam(':description', $data['description']);
-        $result->bindParam(':content', $data['content']);
         $result->bindParam(':file_id', $data['file_id']);
-        $result->bindParam(':enabled', $data['enabled']);
+        $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':position', $data['position']);
-        $result->bindParam(':tag_title', $data['tag_title']);
-        $result->bindParam(':tag_description', $data['tag_description']);
-        $result->bindParam(':tag_keywords', $data['tag_keywords']);
+        $result->bindParam(':sort', $data['sort']);
 
-        if ($result->execute()) {
+        try {
+            $result->execute();
             return $this->db->lastInsertId();
+        } catch (PDOException $e){
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to create product');
         }
-
-        return null;
     }
 
     public function updateById($data)
@@ -166,9 +163,9 @@ UPDATE product
     description = :description,
     content = :content,
     file_id = :file_id,
-    enabled = :enabled,
+    status = :enabled,
     alias = :alias,
-    position = :position,
+    sort = :position,
     tag_title = :tag_title,
     tag_description = :tag_description,
     tag_keywords = :tag_keywords
@@ -208,7 +205,7 @@ WHERE id = :id';
             p.*, f.alias as file_alias
         FROM product p 
             JOIN file f ON p.file_id = f.id 
-        WHERE p.enabled = 1 
+        WHERE p.status = 1 
             AND p.id IN (' . $ids . ') 
         ORDER BY p.position ASC 
         LIMIT :limit';
@@ -228,7 +225,7 @@ WHERE id = :id';
             p.*, f.alias as file_alias
         FROM product p 
             JOIN file f ON p.file_id = f.id 
-        WHERE p.enabled = 1 
+        WHERE p.status = 1 
              AND p.id IN (' . $ids . ') 
         ORDER BY p.position ASC ';
 
