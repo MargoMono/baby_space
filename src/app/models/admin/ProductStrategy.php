@@ -9,59 +9,65 @@ use App\Repository\ProductDescriptionRepository;
 use App\Repository\ProductRecommendationsRepository;
 use App\Repository\ProductRepository;
 
-class ProductStrategy extends AbstractAdminModel
+class ProductStrategy implements Strategy
 {
     public $fileDirectory = 'product';
+    public $productRepository;
+    public $categoryRepository;
+    public $productDescriptionRepository;
+    public $productRecommendationsRepository;
+    public $languageRepository;
+
+    public function __construct()
+    {
+        $this->productRepository = new ProductRepository();
+        $this->categoryRepository = new CategoryRepository();
+        $this->productDescriptionRepository = new ProductDescriptionRepository();
+        $this->productRecommendationsRepository = new ProductRecommendationsRepository();
+        $this->languageRepository = new LanguageRepository();
+    }
+
+    public function getFileDirectory(): string
+    {
+        return $this->fileDirectory;
+    }
 
     public function getIndexData($order = null)
     {
-        $repository = new ProductRepository();
-        $data['productList'] = $repository->getAll($order);
-
+        $data['productList'] = $this->productRepository->getAll($order);
         return $data;
     }
 
     public function getShowCreatePageData($order = null)
     {
-        $productRepository = new ProductRepository();
-        $data['productList'] = $productRepository->getAll();
+        $data['productList'] = $this->productRepository->getAll();
 
-        $productRepository = new CategoryRepository();
-        $productList = $productRepository->getAll();
+        $categoryList = $this->categoryRepository->getAll();
 
         // удаляем возможность добавления товара в категорию у которой есть дочерняя
-        foreach ($productList as $key => $category) {
-            $childCategory = $productRepository->getChildCategoryListById($category['id']);
+        foreach ($categoryList as $key => $category) {
+            $childCategory = $this->categoryRepository->getChildCategoryListById($category['id']);
             if (!empty($childCategory)) {
-                unset($productList[$key]);
+                unset($categoryList[$key]);
             }
         }
 
-        $data['categoryList'] = $productList;
+        $data['categoryList'] = $categoryList;
 
         return $data;
     }
 
-    public function validation($file, $params)
-    {
-
-    }
-
     public function create($data)
     {
-        $repository = new ProductRepository();
-        $newProductId = $repository->create($data);
+        $newProductId = $this->productRepository->create($data);
 
-        $productDescriptionRepository = new ProductDescriptionRepository();
-
-        foreach ($data['description'] as $description){
-            $productDescriptionRepository->create($newProductId, $description);
+        foreach ($data['description'] as $description) {
+            $this->productDescriptionRepository->create($newProductId, $description);
         }
 
-        $productRecommendationsRepository = new ProductRecommendationsRepository();
         if (!empty($params['recommendation_ids'])) {
             foreach ($params['recommendation_ids'] as $recommendation) {
-                $productRecommendationsRepository->create($newProductId, $recommendation);
+                $this->productRecommendationsRepository->create($newProductId, $recommendation);
             }
         }
 
@@ -70,22 +76,17 @@ class ProductStrategy extends AbstractAdminModel
 
     public function getShowUpdatePageData($id)
     {
-        $productRepository = new ProductRepository();
-        $product = $productRepository->getById($id);
+        $product = $this->productRepository->getById($id);
 
-        $productRepository = new ProductDescriptionRepository();
-        $productDescription = $productRepository->getById($product['id']);
+        $productDescription = $this->productDescriptionRepository->getById($product['id']);
 
         foreach ($productDescription as $description) {
             $product['language_id'][$description['language_id']] = $description;
         }
 
+        $categoryList = $this->categoryRepository->getAll();
 
-        $categoryRepository = new CategoryRepository();
-        $categoryList = $categoryRepository->getAll();
-
-        $productRecommendationsRepository = new ProductRecommendationsRepository();
-        $productRecommendations = $productRecommendationsRepository->getProductRecommendationsIdsByProductId($id);
+        $productRecommendations = $this->productRecommendationsRepository->getProductRecommendationsIdsByProductId($id);
 
         $productRecommendationIds = [];
 
@@ -93,7 +94,7 @@ class ProductStrategy extends AbstractAdminModel
             $productRecommendationIds[] = $product['id'];
         }
 
-        $productList = $productRepository->getAll();
+        $productList = $this->productRepository->getAll();
         foreach ($productList as $key => $product) {
             $productList[$key]['selected'] = in_array($product['id'], $productRecommendationIds);
         }
@@ -101,31 +102,29 @@ class ProductStrategy extends AbstractAdminModel
         $data['product'] = $product;
         $data['productList'] = $productList;
         $data['categoryList'] = $categoryList;
-        $data['productFilesList'] = $productRepository->getProductFilesByProductId($id);
+        $data['productFilesList'] = $this->productRepository->getProductFilesByProductId($id);
 
         return $data;
     }
 
     public function update($data)
     {
-        $repository = new ProductRepository();
-        $newCategory = $repository->updateById($data);
+        $newCategory = $this->productRepository->updateById($data);
 
         if (empty($newCategory)) {
             $res['errors'][] = 'Ошибка сохранения товара';
             return $res;
         }
 
-        $productRecommendationsRepository = new ProductRecommendationsRepository();
-        $productRecommendations = $productRecommendationsRepository->getProductRecommendationsIdsByProductId($params['id']);
+        $productRecommendations = $this->productRecommendationsRepository->getProductRecommendationsIdsByProductId($params['id']);
 
         foreach ($productRecommendations as $product) {
-            $productRecommendationsRepository->deleteProductRecommendations($product['id'], $params['id']);
+            $this->productRecommendationsRepository->deleteProductRecommendations($product['id'], $params['id']);
         }
 
         if (!empty($params['recommendation_ids'])) {
             foreach ($params['recommendation_ids'] as $recommendation) {
-                $productRecommendation = $productRecommendationsRepository->create($params['id'],
+                $productRecommendation = $this->productRecommendationsRepository->create($params['id'],
                     $recommendation);
 
                 if (empty($productRecommendation)) {
@@ -140,39 +139,29 @@ class ProductStrategy extends AbstractAdminModel
 
     public function getShowDeletePageData($id)
     {
-        $repository = new ProductRepository();
-        $data['product'] = $repository->getById($id);
+        $data['product'] = $this->productRepository->getById($id);
 
         return $data;
     }
 
     public function delete($id)
     {
-        $repository = new ProductRepository();
-        return $repository->deleteById($id);
+        $this->productRepository->deleteById($id);
     }
 
     public function createFilesConnection($id, $fileId)
     {
-        $repository = new ProductRepository();
-        return $repository->createFilesConnection($id, $fileId);
+        $this->productRepository->createFilesConnection($id, $fileId);
     }
 
-    public function deleteFileConnection($id, $photoId): bool
+    public function deleteFileConnection($id, $photoId)
     {
-        $categoryRepository = new ProductRepository();
-
-        if ($categoryRepository->deleteFileConnection($id, $photoId)) {
-            return true;
-        }
-
-        return false;
+        $this->productRepository->deleteFileConnection($id, $photoId);
     }
 
     public function prepareData($params)
     {
-        $languageRepository = new LanguageRepository();
-        $languages = $languageRepository->getAll();
+        $languages = $this->languageRepository->getAll();
 
         $paramsDescription = [];
 
@@ -197,6 +186,21 @@ class ProductStrategy extends AbstractAdminModel
             'alias' => TextHelper::getTranslit($params['name']),
             'description' => $paramsDescription,
         ];
+    }
+
+    public function validation($file, $params)
+    {
+        // TODO: Implement validation() method.
+    }
+
+    public function getFile($id)
+    {
+        return $this->productRepository->getById($id);
+    }
+
+    public function getFiles($id)
+    {
+        return $this->productRepository->getProductFilesByProductId($id);
     }
 }
 

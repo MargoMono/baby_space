@@ -4,7 +4,7 @@ namespace App\Models\Admin;
 
 interface Strategy
 {
-    // Work with pages
+    public function getFileDirectory(): string;
 
     public function getIndexData($order = null);
 
@@ -22,23 +22,11 @@ interface Strategy
 
     public function delete($id);
 
-
-    // Work with files
-
-    public function addFileConnection($file);
-
-    public function addFilesConnection($files, $id);
-
-    public function createFilesConnection($id, $fileId);
-
-    public function updateFileConnection($file, $params);
-
-    public function updateFilesConnection($files, $id);
-
-    public function deleteFileConnection($id, $photoId): bool;
-
-
     // Work with data
 
     public function prepareData($params);
+
+    public function getFile($id);
+
+    public function getFiles($id);
 }

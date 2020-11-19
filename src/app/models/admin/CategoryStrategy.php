@@ -2,11 +2,11 @@
 
 namespace App\Models\Admin;
 
-use App\Helper\BreadcrumbsHelper;
-use App\Helper\TextHelper;
+use App\Helpers\BreadcrumbsHelper;
+use App\Helpers\TextHelper;
 use App\Repository\CategoryRepository;
 
-class CategoryStrategy extends AbstractAdminModel
+class CategoryStrategy
 {
     public $fileDirectory = 'category';
 

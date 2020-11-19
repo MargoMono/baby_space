@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\Repository\AbstractRepository;
 use PDO;
+use PDOException;
 
 class FileRepository extends AbstractRepository
 {
@@ -19,11 +19,13 @@ class FileRepository extends AbstractRepository
         $result->bindParam(':alias', $image['alias']);
         $result->bindParam(':name', $image['name']);
 
-        if ($result->execute()) {
+        try {
+            $result->execute();
             return $this->db->lastInsertId();
+        } catch (PDOException $e){
+            $this->logger->error($e->getMessage(), $image);
+            throw new \RuntimeException('Unable to create product');
         }
-
-        return null;
     }
 
     public function getFileById($id)

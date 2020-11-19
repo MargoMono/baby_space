@@ -2,11 +2,9 @@
 
 namespace App\Models\Admin;
 
-use App\Helper\TextHelper;
-use App\Repository\BlogRepository;
 use App\Repository\LanguageRepository;
 
-class LanguageStrategy extends AbstractAdminModel
+class LanguageStrategy
 {
     public $fileDirectory = 'language';
 

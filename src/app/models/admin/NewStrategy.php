@@ -2,11 +2,10 @@
 
 namespace App\Models\Admin;
 
-use App\Helper\TextHelper;
-use App\Repository\BlogRepository;
+use App\Helpers\TextHelper;
 use App\Repository\NewRepository;
 
-class NewStrategy extends AbstractAdminModel
+class NewStrategy
 {
     public $fileDirectory = 'new';
 

@@ -2,8 +2,8 @@
 
 namespace App\Modules;
 
+use App\Exceptions\UploadFileException;
 use RuntimeException;
-use App\Exception\UploadFileException;
 
 class FileUploader
 {
@@ -87,7 +87,7 @@ class FileUploader
             $alias = time() . $fileList["name"][$i];
 
             move_uploaded_file($fileList["tmp_name"][$i],
-                $_SERVER['DOCUMENT_ROOT'] . "/upload/images/" . $type . "/" . $alias);
+                $_SERVER['DOCUMENT_ROOT'] . '/upload/images/' . $type . "/" . $alias);
 
             $p = strrpos($fileList["name"][$i], '.');
             $filename = substr($fileList["name"][$i], 0, $p);
@@ -104,7 +104,7 @@ class FileUploader
     {
         $file = $_SERVER['DOCUMENT_ROOT'] . '/upload/images/' . $type . '/' . $fileName;
 
-        if (file_exists($file)) {
+        if (!empty($fileName) && file_exists($file)) {
             unlink($_SERVER['DOCUMENT_ROOT'] . '/upload/images/' . $type . '/' . $fileName);
         }
     }

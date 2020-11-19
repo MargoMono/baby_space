@@ -14,14 +14,9 @@
     </section>
 
     <section class="content">
-        {% if errors is not empty %}
-            <div class="col-lg-12 mistake">
-                <p>Ошибка:</p>
-                <ul>
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
+        {% if error_warning %}
+            <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
         {% endif %}
         <div class="col-lg-12 correct">

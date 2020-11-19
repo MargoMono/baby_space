@@ -2,10 +2,9 @@
 
 namespace App\Models\Admin;
 
+use App\Components\Logger;
 use App\Modules\FileUploader;
-use App\Repository\CategoryRepository;
 use App\Repository\FileRepository;
-use App\Repository\Repository;
 
 class Context
 {
@@ -15,11 +14,26 @@ class Context
     private $strategy;
 
     /**
+     * @var FileUploader
+     */
+    private $fileUploader;
+
+    /**
+     * @var FileRepository
+     */
+    private $fileRepository;
+
+    private $logger;
+
+    /**
      * @param Strategy $strategy
      */
     public function __construct(Strategy $strategy)
     {
         $this->strategy = $strategy;
+        $this->logger = Logger::getLogger(static::class);
+        $this->fileUploader = new FileUploader();
+        $this->fileRepository = new FileRepository();
     }
 
     /**
@@ -56,33 +70,20 @@ class Context
     /**
      * @param $file
      * @param $params
-     * @return array
      */
-    public function create($file, $params): array
+    public function create($file, $params): void
     {
         $res['result'] = false;
 
         if (!empty($file['file'])) {
-            $params['file_id'] = $this->strategy->addFileConnection($file['file']);
-            if (empty($params['file_id'])) {
-                $res['errors'][] = 'Ошибка сохранения файла';
-                return $res;
-            }
+            $params['file_id'] = $this->addFileConnection($file['file']);
         }
 
         $newEntityId = $this->strategy->create($this->strategy->prepareData($params));
 
-        if (empty($newEntityId)) {
-            $res['errors'][] = 'Ошибка сохранения';
-            return $res;
-        }
-
         if (!empty($file['files'])) {
-            $this->strategy->addFilesConnection($file['files'], $newEntityId);
+            $this->addFilesConnection($file['files'], $newEntityId);
         }
-
-        $res['result'] = true;
-        return $res;
     }
 
     /**
@@ -101,11 +102,10 @@ class Context
      */
     public function update($file, $params): array
     {
-
         $res['result'] = false;
 
         if (!empty($file['file'])) {
-            $params['file_id'] = $this->strategy->updateFileConnection($file['file'], $params);
+            $params['file_id'] = $this->updateFileConnection($file['file'], $params);
             if (empty($params['file_id'])) {
                 $res['errors'][] = 'Ошибка сохранения файла';
                 return $res;
@@ -125,7 +125,7 @@ class Context
         }
 
         if (!empty($file['files'])) {
-            $this->strategy->updateFilesConnection($file['files'], $newEntityId);
+            $this->updateFilesConnection($file['files'], $newEntityId);
         }
 
         $res['result'] = true;
@@ -143,39 +143,87 @@ class Context
 
     /**
      * @param $data
-     * @return array
      */
-    public function delete($data): array
+    public function delete($data): void
     {
-        $res['result'] = false;
+        $id = $data['id'];
 
-        if ($this->strategy->delete($data['id'])) {
-            $res['result'] = true;
-            return $res;
+        $file = $this->strategy->getFile($id);
+        $files = $this->strategy->getFiles($id);
+
+        $this->strategy->delete($id);
+
+        if (empty($file)) {
+            $error = "Unable to delete product id - $id";
+            $this->logger->error($error);
+            throw new \LogicException($error);
         }
 
-        $res['errors'][] = 'ошибка при удалении';
+        $this->fileUploader->deleteFile($file['file_alias'], $this->strategy->fileDirectory);
 
-        return $res;
+        if (!empty($files)) {
+            foreach ($files as $file) {
+                $this->fileUploader->deleteFile($file['file_alias'], $this->strategy->fileDirectory);
+            }
+        }
     }
 
-    public function photoDelete($id, $photoId)
+    public function photoDelete($id, $photoId): void
     {
-        $res['result'] = false;
+        $file = $this->fileRepository->getFileById($photoId);
+        $this->fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);
+        $this->strategy->deleteFileConnection($id, $photoId);
+    }
 
-        $fileRepository = new FileRepository();
-        $file = $fileRepository->getFileById($photoId);
+    public function addFileConnection($file): string
+    {
+        $alias = $this->fileUploader->uploadOne($file, $this->strategy->getFileDirectory());
 
-        $fileUploader = new FileUploader();
-        $fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);
-
-        if($this->strategy->deleteFileConnection($id, $photoId)){
-            $res['result'] = true;
-            return $res;
+        if (empty($alias)) {
+            throw new \RuntimeException('Can\'t create file connection - information about uploaded file is empty');
         }
 
-        $res['errors'][] = 'ошибка при удалении статьи';
+        return $this->fileRepository->createFile($alias);
+    }
 
-        return $res;
+    private function addFilesConnection($files, $categoryId): void
+    {
+        $imageList = $this->fileUploader->uploadSeveral($files, $this->strategy->getFileDirectory());
+
+        if (empty($imageList)) {
+            throw new \RuntimeException('Can\'t create files connection - information about uploaded files is empty');
+        }
+
+        foreach ($imageList as $image) {
+            $fileId = $this->fileRepository->createFile($image);
+            $this->strategy->createFilesConnection($categoryId, $fileId);
+        }
+    }
+
+    private function updateFileConnection($file, $params): string
+    {
+        $image = $this->fileUploader->uploadOne($file, $this->strategy->getFileDirectory());
+
+        if (empty($image)) {
+            throw new \RuntimeException('Can\'t create file connection - information about uploaded file is empty');
+        }
+
+        $this->fileUploader->deleteFile($params['file_alias'], $this->strategy->getFileDirectory());
+
+        return $this->fileRepository->createFile($image);
+    }
+
+    private function updateFilesConnection($files, $categoryId): void
+    {
+        $imageList = $this->fileUploader->uploadSeveral($files, $this->strategy->getFileDirectory());
+
+        if (empty($imageList)) {
+            throw new \RuntimeException('Can\'t create files connection - information about uploaded files is empty');
+        }
+
+        foreach ($imageList as $image) {
+            $fileId = $this->fileRepository->createFile($image);
+            $this->strategy->createFilesConnection($categoryId, $fileId);
+        }
     }
 }

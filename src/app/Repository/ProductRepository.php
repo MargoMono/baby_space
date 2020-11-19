@@ -146,7 +146,7 @@ VALUES
         try {
             $result->execute();
             return $this->db->lastInsertId();
-        } catch (PDOException $e){
+        } catch (PDOException $e) {
             $this->logger->error($e->getMessage(), $data);
             throw new \RuntimeException('Unable to create product');
         }
@@ -194,7 +194,12 @@ WHERE id = :id';
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage());
+            throw new \RuntimeException('Unable to delete product');
+        }
     }
 
     public function getEnabledProductListByIds($ids, $limit)
@@ -247,11 +252,13 @@ VALUES
         $result->bindParam(':product_id', $productId);
         $result->bindParam(':file_id', $fileId);
 
-        if ($result->execute()) {
+        try {
+            $result->execute();
             return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), [$productId, $fileId]);
+            throw new \RuntimeException('Unable to create product');
         }
-
-        return null;
     }
 
     public function getProductFilesByProductId($id)
@@ -290,7 +297,12 @@ VALUES
         $result->bindParam(':product_id', $productId);
         $result->bindParam(':file_d', $fileId);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), [$productId, $fileId]);
+            throw new \RuntimeException('Unable to delete product-file connection');
+        }
     }
 }
 

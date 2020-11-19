@@ -2,12 +2,17 @@
 
 namespace App\Models\Admin;
 
-use App\Helper\TextHelper;
+use App\Helpers\TextHelper;
 use App\Repository\BlogRepository;
 
-class BlogStrategy extends AbstractAdminModel
+class BlogStrategy implements Strategy
 {
     public $fileDirectory = 'blog';
+
+    public function getFileDirectory(): string
+    {
+        return $this->fileDirectory;
+    }
 
     public function getIndexData($order = null)
     {
@@ -60,23 +65,6 @@ class BlogStrategy extends AbstractAdminModel
         return $repository->deleteById($id);
     }
 
-    public function addFilesConnection($files, $id)
-    {
-    }
-
-    public function createFilesConnection($id, $fileId)
-    {
-    }
-
-    public function updateFilesConnection($files, $id)
-    {
-    }
-
-    public function deleteFileConnection($id, $photoId): bool
-    {
-       return false;
-    }
-
     public function prepareData($params)
     {
         return [
@@ -90,5 +78,31 @@ class BlogStrategy extends AbstractAdminModel
             'tag_description' => $params['tag_description'],
             'tag_keywords' => $params['tag_keywords'],
         ];
+    }
+
+
+    public function validation($file, $params)
+    {
+        // TODO: Implement validation() method.
+    }
+
+    public function addFileConnection($file)
+    {
+        // TODO: Implement addFileConnection() method.
+    }
+
+    public function updateFileConnection($file, $params)
+    {
+        // TODO: Implement updateFileConnection() method.
+    }
+
+    public function getFile($id)
+    {
+        // TODO: Implement getFile() method.
+    }
+
+    public function getFiles($id)
+    {
+        // TODO: Implement getFiles() method.
     }
 }
