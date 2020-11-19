@@ -5,7 +5,7 @@ namespace App\Models\Admin;
 use App\Helper\TextHelper;
 use App\Repository\BlogRepository;
 
-class BlogStrategy extends AbstractAdminModels
+class BlogStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'blog';
 

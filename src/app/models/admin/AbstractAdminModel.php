@@ -2,7 +2,7 @@
 
 namespace App\Models\Admin;
 
-use App\Log\Logger;
+use App\Components\Logger;
 use App\Modules\FileUploader;
 use App\Repository\FileRepository;
 

@@ -2,7 +2,7 @@
 
 namespace App\Models\Admin;
 
-use App\Models\Models;
+use App\Models\Model;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 

@@ -6,7 +6,7 @@ use App\Helper\TextHelper;
 use App\Repository\BlogRepository;
 use App\Repository\LanguageRepository;
 
-class LanguageStrategy extends AbstractAdminModels
+class LanguageStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'language';
 

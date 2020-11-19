@@ -6,7 +6,7 @@ use App\Helper\BreadcrumbsHelper;
 use App\Helper\TextHelper;
 use App\Repository\CategoryRepository;
 
-class CategoryStrategy extends AbstractAdminModels
+class CategoryStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'category';
 

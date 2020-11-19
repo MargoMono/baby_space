@@ -2,14 +2,14 @@
 
 namespace App\Models\Admin;
 
-use App\Helper\TextHelper;
+use App\Helpers\TextHelper;
 use App\Repository\CategoryRepository;
 use App\Repository\LanguageRepository;
-use App\Repository\Site\ProductDescriptionRepository;
-use App\Repository\Site\ProductRecommendationsRepository;
-use App\Repository\Site\ProductRepository;
+use App\Repository\ProductDescriptionRepository;
+use App\Repository\ProductRecommendationsRepository;
+use App\Repository\ProductRepository;
 
-class ProductStrategy extends AbstractAdminModels
+class ProductStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'product';
 

@@ -2,9 +2,9 @@
 
 namespace App\Models\Site;
 
-use App\Models\Models;
+use App\Models\Model;
 use App\Controllers\Site\MailController;
-use App\Modules\MailerHelper;
+use App\Helpers\MailerHelper;
 use App\Repository\UserRepository;
 use PHPMailer\PHPMailer\Exception;
 

@@ -5,7 +5,7 @@ namespace App\Models\Admin;
 use App\Repository\BlogRepository;
 use App\Repository\PageRepository;
 
-class PageStrategy extends AbstractAdminModels
+class PageStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'page';
 

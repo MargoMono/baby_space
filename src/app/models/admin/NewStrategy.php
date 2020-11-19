@@ -6,7 +6,7 @@ use App\Helper\TextHelper;
 use App\Repository\BlogRepository;
 use App\Repository\NewRepository;
 
-class NewStrategy extends AbstractAdminModels
+class NewStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'new';
 
