@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Model\Site;
+namespace App\Models\Site;
 
-use App\Model\Model;
-use App\Model\SearchRepository;
+use App\Models\Models;
+use App\Models\SearchRepository;
 
 class SearchModel extends Model
 {

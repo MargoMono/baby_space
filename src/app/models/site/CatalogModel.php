@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Model\Site;
+namespace App\Models\Site;
 
-use App\Model\Model;
-use App\Controller\Site\MailController;
+use App\Models\Models;
+use App\Controllers\Site\MailController;
 use App\Mailer;
 use App\Repository\CategoryOrderRepository;
 use App\Repository\CategoryRepository;

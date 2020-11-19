@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Components\Db;
-use App\Log\Logger;
+use App\Components\Logger;
 
 abstract class AbstractRepository
 {

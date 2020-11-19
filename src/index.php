@@ -1,8 +1,5 @@
 <?php
 
-var_dump(phpinfo());
-die();
-
 include __DIR__ . '/vendor/autoload.php';
 
 use App\Components\Language;

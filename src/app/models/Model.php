@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 use App\Components\Language;
 use App\Repository\CategoryRepository;

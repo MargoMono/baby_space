@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Model\Site;
+namespace App\Models\Site;
 
-use App\Model\Model;
+use App\Models\Model;
 use App\Repository\BlogRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;

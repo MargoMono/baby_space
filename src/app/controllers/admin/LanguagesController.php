@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controllers\Admin;
 
-use App\Controller\Controller;
+use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Model\Admin\Context;
-use App\Model\Admin\LanguageStrategy;
+use App\Models\Admin\Context;
+use App\Models\Admin\LanguageStrategy;
 
 class LanguagesController extends Controller
 {

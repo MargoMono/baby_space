@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Model\Admin;
+namespace App\Models\Admin;
 
 use App\Repository\BlogRepository;
 use App\Repository\PageRepository;
 
-class PageStrategy extends AbstractAdminModel
+class PageStrategy extends AbstractAdminModels
 {
     public $fileDirectory = 'page';
 

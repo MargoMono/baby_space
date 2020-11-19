@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Model\Admin;
+namespace App\Models\Admin;
 
 use App\Helper\TextHelper;
 use App\Repository\BlogRepository;
 
-class BlogStrategy extends AbstractAdminModel
+class BlogStrategy extends AbstractAdminModels
 {
     public $fileDirectory = 'blog';
 

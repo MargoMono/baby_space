@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controllers\Admin;
 
-use App\Controller\Controller;
+use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Model\Admin\PortfolioModel;
+use App\Models\Admin\PortfolioModel;
 
 class PortfolioController extends Controller
 {

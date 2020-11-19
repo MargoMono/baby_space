@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\Admin;
+namespace App\Models\Admin;
 
 interface Strategy
 {

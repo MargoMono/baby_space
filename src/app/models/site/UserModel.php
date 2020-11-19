@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Model\Site;
+namespace App\Models\Site;
 
-use App\Model\Model;
-use App\Controller\Site\MailController;
+use App\Models\Models;
+use App\Controllers\Site\MailController;
 use App\Modules\MailerHelper;
 use App\Repository\UserRepository;
 use PHPMailer\PHPMailer\Exception;
@@ -51,8 +51,8 @@ class UserModel extends Model
         ];
 
 
-        $mailModel = new MailController();
-        $body = $mailModel->getTemplate('resetPassword.twig', $emailParams);
+        $mailModels = new MailController();
+        $body = $mailModels->getTemplate('resetPassword.twig', $emailParams);
         $subject = "Восстановление пароля на сайте Кдф-трейдинг.рф";
 
         $mailer = new MailerHelper($subject, $body, $user['email'], $user['name']);

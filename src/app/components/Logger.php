@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Log;
+namespace App\Components;
 
 use Monolog\Handler\FirePHPHandler;
 use Monolog\Logger as LoggerBase;

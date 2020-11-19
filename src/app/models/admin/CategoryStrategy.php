@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Model\Admin;
+namespace App\Models\Admin;
 
 use App\Helper\BreadcrumbsHelper;
 use App\Helper\TextHelper;
 use App\Repository\CategoryRepository;
 
-class CategoryStrategy extends AbstractAdminModel
+class CategoryStrategy extends AbstractAdminModels
 {
     public $fileDirectory = 'category';
 

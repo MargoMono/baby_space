@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Model\Admin;
+namespace App\Models\Admin;
 
 use App\Helper\TextHelper;
 use App\Repository\BlogRepository;
 use App\Repository\NewRepository;
 
-class NewStrategy extends AbstractAdminModel
+class NewStrategy extends AbstractAdminModels
 {
     public $fileDirectory = 'new';
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controllers\Admin;
 
-use App\Controller\Controller;
-use App\Model\AdminModel;
+use App\Controllers\Controller;
+use App\Models\AdminModel;
 use App\Middleware\AdminAuthenticationChecking;
 
 class IndexController extends Controller

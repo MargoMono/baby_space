@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controllers\Admin;
 
-use App\Controller\Controller;
+use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Model\Admin\BlogStrategy;
-use App\Model\Admin\Context;
+use App\Models\Admin\BlogStrategy;
+use App\Models\Admin\Context;
 
 class BlogController extends Controller
 {

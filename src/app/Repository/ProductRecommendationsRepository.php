@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Site;
+namespace App\Repository;
 
 use App\Repository\AbstractRepository;
 use PDO;

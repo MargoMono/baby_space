@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\Admin;
+namespace App\Models\Admin;
 
 use App\Helper\TextHelper;
 use App\Repository\CategoryRepository;
@@ -9,7 +9,7 @@ use App\Repository\Site\ProductDescriptionRepository;
 use App\Repository\Site\ProductRecommendationsRepository;
 use App\Repository\Site\ProductRepository;
 
-class ProductStrategy extends AbstractAdminModel
+class ProductStrategy extends AbstractAdminModels
 {
     public $fileDirectory = 'product';
 

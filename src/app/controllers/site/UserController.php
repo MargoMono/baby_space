@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\Site;
+namespace App\Controllers\Site;
 
-use App\Model\Site\UserModel;
-use App\Controller\Controller;
+use App\Models\Site\UserModel;
+use App\Controllers\Controller;
 
 class UserController extends Controller
 {

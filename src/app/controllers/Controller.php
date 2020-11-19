@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controllers;
 
-use App\Model\Model;
+use App\Models\Model;
 use App\View\View;
 
 abstract class Controller
@@ -10,6 +10,7 @@ abstract class Controller
     public $model;
     public $view;
     public $context;
+
     public $strategy;
 
     function __construct()

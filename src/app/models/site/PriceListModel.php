@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Model\Site;
+namespace App\Models\Site;
 
-use App\Model\Model;
-use App\Controller\Site\MailController;
+use App\Models\Models;
+use App\Controllers\Site\MailController;
 use App\Modules\MailerHelper;
 use App\Repository\PriceListOrderRepository;
 use App\Repository\PriceListRepository;
@@ -16,8 +16,8 @@ class PriceListModel extends Model
     {
         $res['result'] = false;
 
-        $mailModel = new MailController();
-        $body = $mailModel->getTemplate('catalogOrder.twig', $data);
+        $mailModels = new MailController();
+        $body = $mailModels->getTemplate('catalogOrder.twig', $data);
         $subject = "Заказ прайс-листа на сайте Кдф-трейдинг.рф";
 
         $priceListOrderRepository = new PriceListOrderRepository();

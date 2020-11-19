@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controller\Site;
+namespace App\Controllers\Site;
 
 use App\Components\Language;
-use App\Controller\Controller;
-use App\Model\Site\IndexModel;
+use App\Controllers\Controller;
+use App\Models\Site\IndexModel;
 
 class IndexController extends Controller
 {

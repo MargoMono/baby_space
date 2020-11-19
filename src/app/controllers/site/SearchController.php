@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\Site;
+namespace App\Controllers\Site;
 
-use App\Controller\Controller;
-use App\Model\Site\SearchModel;
+use App\Controllers\Controller;
+use App\Models\Site\SearchModel;
 
 class SearchController extends Controller
 {

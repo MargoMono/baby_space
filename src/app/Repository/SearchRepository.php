@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Model;
+namespace App\Repository;
 
-use App\Repository\AbstractRepository;
 use PDO;
 
 class SearchRepository extends AbstractRepository

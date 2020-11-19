@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controllers\Admin;
 
-use App\Controller\Controller;
-use App\Model\Admin\UserModel;
+use App\Controllers\Controller;
+use App\Models\Admin\UserModel;
 use App\Middleware\AdminAuthenticationChecking;
 
 class UserController extends Controller

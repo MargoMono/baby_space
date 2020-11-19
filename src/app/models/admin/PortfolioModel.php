@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Model\Admin;
+namespace App\Models\Admin;
 
-use App\Model\Model;
+use App\Models\Models;
 use App\Modules\FileUploader;
 use App\Helper\TextHelper;
 use App\Repository\PortfolioRepository;

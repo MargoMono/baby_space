@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\Site;
+namespace App\Controllers\Site;
 
-use App\Controller\Controller;
-use App\Model\Site\DeliveryModel;
+use App\Controllers\Controller;
+use App\Models\Site\DeliveryModel;
 
 class DeliveryController extends Controller
 {

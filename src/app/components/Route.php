@@ -2,13 +2,13 @@
 
 namespace App\Components;
 
-use App\Controller\Admin\LanguagesController;
-use App\Model\Model;
+use App\Controllers\Admin\LanguagesController;
+use App\Models\Model;
 use App\View\View;
 use Phroute\Phroute\Dispatcher;
 use Phroute\Phroute\RouteCollector;
-use App\Controller\Admin\ProductController;
-use App\Controller\Site\IndexController;
+use App\Controllers\Admin\ProductController;
+use App\Controllers\Site\IndexController;
 
 class Route
 {
