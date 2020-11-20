@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Components\Language;
 use PDO;
 use PDOException;
 
@@ -44,21 +45,34 @@ class ProductRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function getAll($order = null)
+    public function getAll($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort['order'])) {
+            $sort['order'] = 'id';
         }
+
+        if (empty($sort['desc'])) {
+            $sort['desc'] = 'ASC';
+        }
+        
+        $languageId = Language::DEFAUL_LANGUGE_ID;
 
         $sql = '
         SELECT 
-            p.*, f.alias AS file_alias, c.name AS category_name
+            p.*, 
+            f.alias AS file_alias, 
+            c.name AS category_name,
+            pd.description as description, pd.name as product_name
         FROM product p
             JOIN file f ON p.file_id = f.id 
             JOIN category c ON p.category_id = c.id 
-        ORDER BY ' . $order;
+            JOIN product_description pd ON p.id = pd.product_id
+        WHERE language_id = :language_id
+        ORDER BY '. $sort['order'].' '. $sort['desc'];
+
 
         $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

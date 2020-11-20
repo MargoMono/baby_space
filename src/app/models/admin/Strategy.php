@@ -6,7 +6,7 @@ interface Strategy
 {
     public function getFileDirectory(): string;
 
-    public function getIndexData($order = null);
+    public function getIndexData($sort = null);
 
     public function getShowCreatePageData($order = null);
 

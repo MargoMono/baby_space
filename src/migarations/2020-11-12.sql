@@ -11,7 +11,7 @@ create table language
         foreign key (file_id) references file (id)
 );
 
-INSERT INTO language (name, alias, code, file_id) VALUE ('Русский', 'russian', 'ru,ru_RU.UTF-8,ru_RU,russian', '67')
+INSERT INTO language (name, alias, code, file_id) VALUE ('Русский', 'russian', 'ru,ru_RU.UTF-8,ru_RU,russian', '67');
 
 
 CREATE TABLE `product_description`
@@ -33,4 +33,27 @@ CREATE TABLE `product_description`
     CONSTRAINT product_description_language_id_fk
         FOREIGN KEY (language_id) REFERENCES language (id)
             ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+create table currency
+(
+    id         int auto_increment,
+    name       varchar(255) not null,
+    code       varchar(255) not null,
+    alias      varchar(255) not null,
+    constraint currency_pk
+        primary key (id)
+);
+
+create table product_currency
+(
+    id          int(11) auto_increment,
+    currency_id int(11) not null,
+    product_id  int(11) not null,
+    constraint product_currency_pk
+        primary key (id),
+    constraint product_currency_product_id_fk
+        foreign key (product_id) references product (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint product_currency_currency_id_fk
+        foreign key (currency_id) references currency (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

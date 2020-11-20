@@ -45,38 +45,13 @@ class Context
     }
 
     /**
-     * @param null $order
-     * @return array
-     */
-    public function getIndexData($order = null): array
-    {
-        return $this->strategy->getIndexData($order);
-    }
-
-    /**
-     * @param null $order
-     * @return array
-     */
-    public function getShowCreatePageData($order = null): array
-    {
-        return $this->strategy->getShowCreatePageData($order);
-    }
-
-    public function validation($file, $params)
-    {
-        return $this->strategy->validation($file, $params);
-    }
-
-    /**
      * @param $file
      * @param $params
      */
     public function create($file, $params): void
     {
-        $res['result'] = false;
-
-        if (!empty($file['file'])) {
-            $params['file_id'] = $this->addFileConnection($file['file']);
+        if (!empty($file['file']) && $file['file']['error'] != FileUploader::UPLOAD_ERR_NO_FILE) {
+            $params['file_id'] = $this->createFile($file['file']);
         }
 
         $newEntityId = $this->strategy->create($this->strategy->prepareData($params));
@@ -87,58 +62,20 @@ class Context
     }
 
     /**
-     * @param $id
-     * @return array
-     */
-    public function getShowUpdatePageData($id): array
-    {
-        return $this->strategy->getShowUpdatePageData($id);
-    }
-
-    /**
      * @param $file
      * @param $params
-     * @return array
      */
-    public function update($file, $params): array
+    public function update($file, $params)
     {
-        $res['result'] = false;
-
-        if (!empty($file['file'])) {
-            $params['file_id'] = $this->updateFileConnection($file['file'], $params);
-            if (empty($params['file_id'])) {
-                $res['errors'][] = 'Ошибка сохранения файла';
-                return $res;
-            }
-        }
-
-        if (empty($params['file_id'])) {
-            $res['errors'][] = 'Ошибка сохранения файла';
-            return $res;
+        if (!empty($file['file']) && $file['file']['error'] != FileUploader::UPLOAD_ERR_NO_FILE) {
+            $params['file_id'] = $this->updateFile($file['file'], $params);
         }
 
         $newEntityId = $this->strategy->update($this->strategy->prepareData($params));
 
-        if (empty($newEntityId)) {
-            $res['errors'][] = 'Ошибка сохранения';
-            return $res;
-        }
-
         if (!empty($file['files'])) {
             $this->updateFilesConnection($file['files'], $newEntityId);
         }
-
-        $res['result'] = true;
-        return $res;
-    }
-
-    /**
-     * @param $id
-     * @return array
-     */
-    public function getShowDeletePageData($id)
-    {
-        return $this->strategy->getShowDeletePageData($id);
     }
 
     /**
@@ -153,13 +90,9 @@ class Context
 
         $this->strategy->delete($id);
 
-        if (empty($file)) {
-            $error = "Unable to delete product id - $id";
-            $this->logger->error($error);
-            throw new \LogicException($error);
+        if (!empty($file)) {
+            $this->fileUploader->deleteFile($file['file_alias'], $this->strategy->fileDirectory);
         }
-
-        $this->fileUploader->deleteFile($file['file_alias'], $this->strategy->fileDirectory);
 
         if (!empty($files)) {
             foreach ($files as $file) {
@@ -175,7 +108,7 @@ class Context
         $this->strategy->deleteFileConnection($id, $photoId);
     }
 
-    public function addFileConnection($file): string
+    public function createFile($file): string
     {
         $alias = $this->fileUploader->uploadOne($file, $this->strategy->getFileDirectory());
 
@@ -200,7 +133,7 @@ class Context
         }
     }
 
-    private function updateFileConnection($file, $params): string
+    private function updateFile($file, $params): string
     {
         $image = $this->fileUploader->uploadOne($file, $this->strategy->getFileDirectory());
 

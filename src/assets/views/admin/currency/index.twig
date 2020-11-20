@@ -1,0 +1,74 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="pull-right">
+            <a href="/admin/currency/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+        </div>
+        <h1>Валюта</h1>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> Список валют</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-currency">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <td class="text-left"> <a {% if sort.order == 'name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/currency/sort/?order=name&desc={{ sort.desc }}">Название</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'alias' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/currency/sort/?order=alias&desc={{ sort.desc }}">Ссылка</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'code' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/currency/sort/?order=code&desc={{ sort.desc }}">Код</a></td>
+                                            <td class="text-right">Действие</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {% if currencyList %}
+                                            {% for currency in currencyList %}
+                                                <tr id="item-currency-{{ currency.id }}">
+                                                    <td class="text-left">{{ currency.name }}</td>
+                                                    <td class="text-left">{{ currency.alias }}</td>
+                                                    <td class="text-left">{{ currency.code }}</td>
+                                                    <td class="text-right">
+                                                        {% if currency.alias != 'russian' %}
+                                                            <a href="/admin/currency/update/{{ currency.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                            <a href="/admin/currency/delete/{{ currency.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td class="text-center" colspan="8">{{ text_no_results }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}

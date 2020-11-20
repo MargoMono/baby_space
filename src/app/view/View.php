@@ -22,12 +22,7 @@ class View
 
         $template = $twig->load($templateName);
 
-        if (!empty($data)) {
-            echo $template->render(array_merge($this->defaultData, $data));
-            return;
-        }
-
-        echo $template->render($this->defaultData);
+        echo $template->render($data);
     }
 
     function generateAjax($data = [])

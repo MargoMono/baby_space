@@ -7,21 +7,24 @@ use PDOException;
 
 class ProductDescriptionRepository extends AbstractRepository
 {
-    public function getById($productId)
+    public function getByIdAndLanguageId($productId, $languageIg)
     {
         $sql = '
         SELECT 
            *
         FROM product_description 
-        WHERE product_id = :product_id';
+        WHERE product_id = :product_id
+        AND language_id = :language_id
+        ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':product_id', $productId);
+        $result->bindParam(':language_id', $languageIg);
         $result->setFetchMode(PDO::FETCH_ASSOC);
 
         try {
             $result->execute();
-            return $result->fetchAll();
+            return $result->fetch();
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage(), $productId);
             throw new \RuntimeException('Unable to load product description');

@@ -2,26 +2,25 @@
 
 namespace App\Models\Admin;
 
-use App\Repository\LanguageRepository;
+use App\Repository\CurrencyRepository;
 
-class LanguageStrategy implements Strategy
+class CurrencyStrategy implements Strategy
 {
-    public $fileDirectory = 'language';
-    private $languageRepository;
+    private $currencyRepository;
 
     public function __construct()
     {
-        $this->languageRepository = new LanguageRepository();
+        $this->currencyRepository = new CurrencyRepository();
     }
 
     public function getFileDirectory(): string
     {
-        return $this->fileDirectory;
+        return null;
     }
 
     public function getIndexData($sort = null)
     {
-        $data['languageList'] = $this->languageRepository->getAll($sort);
+        $data['currencyList'] = $this->currencyRepository->getAll($sort);
 
         if($sort['desc'] == 'DESC'){
             $sort['desc'] = 'ASC';
@@ -31,49 +30,48 @@ class LanguageStrategy implements Strategy
 
         $data['sort'] = $sort;
 
-
         return $data;
     }
 
     public function getShowCreatePageData($order = null)
     {
-        $data['languageList'] = $this->languageRepository->getAll($order);
+        $data['currencyList'] = $this->currencyRepository->getAll($order);
 
         return $data;
     }
 
     public function create($data)
     {
-        return $this->languageRepository->create($data);
+        return $this->currencyRepository->create($data);
     }
 
     public function getShowUpdatePageData($id)
     {
-        $data['language'] = $this->languageRepository->getById($id);
+        $data['currency'] = $this->currencyRepository->getById($id);
 
         return $data;
     }
 
     public function update($data)
     {
-        return $this->languageRepository->updateById($data);
+        return $this->currencyRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
     {
-        $data['language'] = $this->languageRepository->getById($id);
+        $data['currency'] = $this->currencyRepository->getById($id);
 
         return $data;
     }
 
     public function delete($id)
     {
-        return $this->languageRepository->deleteById($id);
+        return $this->currencyRepository->deleteById($id);
     }
 
     public function getFile($id)
     {
-        return $this->languageRepository->getById($id);
+        return $this->currencyRepository->getById($id);
     }
 
     public function getFiles($id)
@@ -88,7 +86,6 @@ class LanguageStrategy implements Strategy
             'name' => $params['name'],
             'code' => $params['code'],
             'alias' => $params['alias'],
-            'file_id' => $params['file_id'],
         ];
     }
 

@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Admin;
 
-use App\Components\Logger;
 use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
 use App\Models\Admin\Context;
@@ -13,7 +12,8 @@ class ProductController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->context = new Context(new ProductStrategy());
+        $this->strategy = new ProductStrategy();
+        $this->context = new Context($this->strategy);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();
@@ -21,7 +21,7 @@ class ProductController extends Controller
 
     public function actionIndex()
     {
-        $data = $this->context->getIndexData($_POST['order']);
+        $data = $this->context->getIndexData($_GET);
         $this->view->generate('admin/product/index.twig', $data);
     }
 

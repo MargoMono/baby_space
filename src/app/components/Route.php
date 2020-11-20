@@ -95,6 +95,7 @@ class Route
 
         // Язык
         $router->any('admin/language', [Admin\LanguagesController::class, 'actionIndex']);
+        $router->any('admin/language/sort/{id}?', [Admin\LanguagesController::class, 'actionIndex']);
         $router->get('admin/language/create', [Admin\LanguagesController::class, 'actionShowCreatePage']);
         $router->post('admin/language/create', [Admin\LanguagesController::class, 'create']);
         $router->get('admin/language/update/{id}', [Admin\LanguagesController::class, 'actionShowUpdatePage']);
@@ -102,8 +103,20 @@ class Route
         $router->get('admin/language/delete/{id}', [Admin\LanguagesController::class, 'actionShowDeletePage']);
         $router->post('admin/language/delete', [Admin\LanguagesController::class, 'delete']);
 
+        // Валюта
+        $router->any('admin/currency', [Admin\CurrencyController::class, 'actionIndex']);
+        $router->any('admin/currency/sort/{id}?', [Admin\CurrencyController::class, 'actionIndex']);
+        $router->get('admin/currency/create', [Admin\CurrencyController::class, 'actionShowCreatePage']);
+        $router->post('admin/currency/create', [Admin\CurrencyController::class, 'create']);
+        $router->get('admin/currency/update/{id}', [Admin\CurrencyController::class, 'actionShowUpdatePage']);
+        $router->post('admin/currency/update/{id}', [Admin\CurrencyController::class, 'update']);
+        $router->get('admin/currency/delete/{id}', [Admin\CurrencyController::class, 'actionShowDeletePage']);
+        $router->post('admin/currency/delete', [Admin\CurrencyController::class, 'delete']);
+
         // Страницы категорий
         $router->any('admin/product', [Admin\ProductController::class, 'actionIndex']);
+        $router->any('admin/product/sort/{id}?', [Admin\ProductController::class, 'actionIndex']);
+        $router->any('admin/product/filter/{id}?', [Admin\ProductController::class, 'actionFilter']);
         $router->get('admin/product/create', [Admin\ProductController::class, 'actionShowCreatePage']);
         $router->post('admin/product/create', [Admin\ProductController::class, 'create']);
         $router->get('admin/product/update/{id}', [Admin\ProductController::class, 'actionShowUpdatePage']);

@@ -5,7 +5,7 @@ namespace App\Repository;
 use PDO;
 use PDOException;
 
-class LanguageRepository extends AbstractRepository implements Repository
+class CurrencyRepository extends AbstractRepository
 {
     public function getAll($sort = null)
     {
@@ -18,9 +18,8 @@ class LanguageRepository extends AbstractRepository implements Repository
         }
 
         $sql = '
-        SELECT l.* , f.alias AS file_alias
-        FROM language l
-        LEFT JOIN file f ON l.file_id = f.id
+        SELECT * 
+        FROM currency 
         ORDER BY '. $sort['order'].' '. $sort['desc'];
 
         $result = $this->db->prepare($sql);
@@ -31,28 +30,12 @@ class LanguageRepository extends AbstractRepository implements Repository
         return $result->fetchAll();
     }
 
-    public function getAllId()
-    {
-
-        $sql = '
-        SELECT id
-        FROM language 
-        ';
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
     public function getById($id)
     {
         $sql = '
-        SELECT b.*, f.alias AS file_alias
-        FROM language b
-        LEFT JOIN file f ON b.file_id = f.id
-        WHERE b.id = :id';
+        SELECT *
+        FROM currency 
+        WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -65,16 +48,15 @@ class LanguageRepository extends AbstractRepository implements Repository
     public function create($data)
     {
         $sql = '
-INSERT INTO language
-    (name, alias, code, file_id) 
+INSERT INTO currency
+    (name, alias, code) 
 VALUES 
-    (:name, :alias, :code, :file_id) ';
+    (:name, :alias, :code) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
         $result->bindParam(':alias', $data['alias']);
         $result->bindParam(':code', $data['code']);
-        $result->bindParam(':file_id', $data['file_id']);
 
         try {
             $result->execute();
@@ -90,19 +72,17 @@ VALUES
     public function updateById($data)
     {
         $sql = '
-UPDATE language
+UPDATE currency
     SET
     name = :name,
     alias = :alias,
-    code = :code,
-    file_id = :file_id
+    code = :code
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
         $result->bindParam(':alias', $data['alias']);
         $result->bindParam(':code', $data['code']);
-        $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':id', $data['id']);
 
         return $result->execute();
@@ -110,16 +90,11 @@ WHERE id = :id';
 
     public function deleteById($id)
     {
-        $sql = 'DELETE FROM language WHERE id = :id';
+        $sql = 'DELETE FROM currency WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
 
         return $result->execute();
-    }
-
-    public function createFilesConnection($id, $fileId)
-    {
-        // TODO: Implement createFilesConnection() method.
     }
 }

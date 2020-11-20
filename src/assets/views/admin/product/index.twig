@@ -2,66 +2,135 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>
-            Панель администратора
-            <small>Товары</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li class="active">Товары</li>
-        </ol>
+        <div class="pull-right">
+            <button type="button" data-toggle="tooltip" title="{{ button_filter }}" onclick="$('#filter-product').toggleClass('hidden-sm hidden-xs');" class="btn btn-default hidden-md hidden-lg"><i class="fa fa-filter"></i></button>
+            <a href="{{ add }}" data-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+            <button type="submit" form="form-product" formaction="{{ copy }}" data-toggle="tooltip" title="{{ button_copy }}" class="btn btn-default"><i class="fa fa-copy"></i></button>
+            <button type="button" form="form-product" formaction="{{ delete }}" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
+        </div>
+        <h1>Товары</h1>
     </section>
-
     <section class="content">
-        <a href="/admin/product/create" class="btn btn-default back"><i class="fa fa-plus"></i> Добавить товар</a>
+        <div class="container-fluid">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div id="filter-product" class="col-md-3 col-md-push-9 col-sm-12 hidden-sm hidden-xs">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-filter"></i>Фильтр</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="control-label" for="input-name">Название товара</label>
+                                <input type="text" name="filter_name" placeholder="Название товара" id="input-name" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="input-category">Категория</label>
+                                <input type="text" name="filter_category" placeholder="Категория" id="input-category" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="input-price">Цена</label>
+                                <input type="text" name="filter_price" placeholder="Цена" id="input-price" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="input-status">Статус</label>
+                                <select name="filter_status" id="input-status" class="form-control">
+                                    <option></option>
+                                    <option value="1">Включено</option>
+                                    <option value="0">Отключено</option>
+                                </select>
+                            </div>
+                            <div class="form-group text-right">
+                                <button type="button" id="button-filter" class="btn btn-default"><i class="fa fa-filter"></i>Фильтровать</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9 col-md-pull-3 col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_list }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-product">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                                            <td class="text-center">Изображение</td>
+                                            <td class="text-left"> <a {% if sort.order == 'pd.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/product/sort/?order=pd.name&desc={{ sort.desc }}">Название</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'c.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/product/sort/?order=c.name&desc={{ sort.desc }}">Категория</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'p.status' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/product/sort/?order=p.status&desc={{ sort.desc }}">Статус</a></td>
+                                            <td class="text-right">Действие</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
 
-        <h4>Список товаров</h4>
+                                        {% if productList %}
+                                            {% for product in productList %}
+                                                <tr>
+                                                    <td class="text-center">{% if product.product_id in selected %}
+                                                            <input type="checkbox" name="selected[]" value="{{ product.product_id }}" checked="checked" />
+                                                        {% else %}
+                                                            <input type="checkbox" name="selected[]" value="{{ product.product_id }}" />
+                                                        {% endif %}</td>
+                                                    <td class="text-center">{% if product.image %} <img src="{{ product.image }}" alt="{{ product.product_name }}" class="img-thumbnail" /> {% else %} <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span> {% endif %}</td>
+                                                    <td class="text-left">{{ product.product_name }}</td>
+                                                    <td class="text-left">{{ product.category_name }}</td>
+                                                    <td class="text-left">{{ product.status }}</td>
+                                                    <td class="text-right"><a href="{{ product.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td class="text-center" colspan="8">{{ text_no_results }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
 
-        <table class="table-bordered table-striped table">
-            <tr>
-                <th>Номер
-                    <form action="/admin/product" method="post">
-                        <input type="hidden" name="order" value="id">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Название
-                    <form action="/admin/product" method="post">
-                        <input type="hidden" name="order" value="name">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Категория
-                    <form action="/admin/product" method="post">
-                        <input type="hidden" name="order" value="category_name">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Очередность</th>
-                <th>Статус
-                    <form action="/admin/product" method="post">
-                        <input type="hidden" name="order" value="position">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th></th>
-                <th></th>
-            </tr>
-            {% for product in productList %}
-                <tr>
-                    <td>{{ product.id }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.category_name }}</td>
-                    <td>{{ product.position }}</td>
-                    <td> {% if product.enabled == 0 %} Скрыта {% else %} Отображается {% endif %}</td>
-                    <td><a href="/admin/product/update/{{ product.id }}" title="Редактировать"><i
-                                    class="fa fa-pencil-square-o"></i></a></td>
-                    <td><a href="/admin/product/delete/{{ product.id }}" title="Удалить"><i
-                                    class="fa fa-times"></i></a></td>
-                </tr>
-            {% endfor %}
-        </table>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
 
 {% include 'admin/includes/footer.twig' %}
 
+<script>
+    $(function() {
+        $('#button-filter').click(function(e) {
+            e.preventDefault();
+            let data = {
+                'name': $('#input-name').val(),
+                'category': $('#input-category').val(),
+                'price': $('#input-price').val(),
+                'status': $('#input-status').val()
+            };
+            $.ajax({
+                url: '/admin/product/filter',
+                type: 'POST',
+                data: data,
+                success: function(res) {
+                    $('.articles-list').append(res);
+                },
+                error: function() {
+                },
+            });
+        });
+    });
+</script>

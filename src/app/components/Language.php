@@ -7,6 +7,7 @@ use App\Repository\LanguageRepository;
 class Language
 {
     CONST DEFAUL_LANGUGE_ALIAS = 'russian';
+    CONST DEFAUL_LANGUGE_ID = 1;
 
     public $language;
 

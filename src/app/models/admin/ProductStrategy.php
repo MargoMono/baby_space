@@ -32,16 +32,29 @@ class ProductStrategy implements Strategy
         return $this->fileDirectory;
     }
 
-    public function getIndexData($order = null)
+    public function getIndexData($sort = null)
     {
-        $data['productList'] = $this->productRepository->getAll($order);
+        $productList = $this->productRepository->getAll($sort);
+        $data['productList'] = $productList;
+
+        if($sort['desc'] == 'DESC'){
+            $sort['desc'] = 'ASC';
+        } else {
+            $sort['desc'] = 'DESC';
+        }
+
+        $data['sort'] = $sort;
+
         return $data;
+    }
+
+    public function getFilteredData($data)
+    {
+        var_dump($data);
     }
 
     public function getShowCreatePageData($order = null)
     {
-        $data['productList'] = $this->productRepository->getAll();
-
         $categoryList = $this->categoryRepository->getAll();
 
         // удаляем возможность добавления товара в категорию у которой есть дочерняя
@@ -53,6 +66,7 @@ class ProductStrategy implements Strategy
         }
 
         $data['categoryList'] = $categoryList;
+        $data['languages'] = $this->languageRepository->getAll();
 
         return $data;
     }
@@ -77,31 +91,15 @@ class ProductStrategy implements Strategy
     public function getShowUpdatePageData($id)
     {
         $product = $this->productRepository->getById($id);
+        $languages = $this->languageRepository->getAll();
 
-        $productDescription = $this->productDescriptionRepository->getById($product['id']);
-
-        foreach ($productDescription as $description) {
-            $product['language_id'][$description['language_id']] = $description;
+        foreach ($languages as $key => $language) {
+            $languages[$key]['product'] = $this->productDescriptionRepository->getByIdAndLanguageId($product['id'],
+                $language['id']);
         }
 
-        $categoryList = $this->categoryRepository->getAll();
-
-        $productRecommendations = $this->productRecommendationsRepository->getProductRecommendationsIdsByProductId($id);
-
-        $productRecommendationIds = [];
-
-        foreach ($productRecommendations as $product) {
-            $productRecommendationIds[] = $product['id'];
-        }
-
-        $productList = $this->productRepository->getAll();
-        foreach ($productList as $key => $product) {
-            $productList[$key]['selected'] = in_array($product['id'], $productRecommendationIds);
-        }
-
-        $data['product'] = $product;
-        $data['productList'] = $productList;
-        $data['categoryList'] = $categoryList;
+        $data['languages'] = $languages;
+        $data['categoryList'] = $this->categoryRepository->getAll();;
         $data['productFilesList'] = $this->productRepository->getProductFilesByProductId($id);
 
         return $data;
