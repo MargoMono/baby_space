@@ -3,8 +3,7 @@
 namespace App\Models\Site;
 
 use App\Models\Models;
-use App\Modules\FileUploader;
-use App\Repository\BlogRepository;
+use App\Helpers\FileUploaderHelper;
 use App\Repository\CommentRepository;
 use App\Repository\FileRepository;
 use DateTime;
@@ -91,7 +90,7 @@ class CommentModel extends Model
     {
         $res['result'] = false;
 
-        $fileUploader = new FileUploader();
+        $fileUploader = new FileUploaderHelper();
 
         try {
             $imagesName = $fileUploader->uploadSeveral($files['files'], 'comment');

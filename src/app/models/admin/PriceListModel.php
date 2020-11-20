@@ -3,7 +3,7 @@
 namespace App\Models\Admin;
 
 use App\Models\Model;
-use App\Modules\FileUploader;
+use App\Helpers\FileUploaderHelper;
 use App\Repository\PriceListOrderRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\FileRepository;
@@ -27,7 +27,7 @@ class PriceListModel extends Model
     {
         $res['result'] = false;
 
-        $fileUploader = new FileUploader();
+        $fileUploader = new FileUploaderHelper();
 
         if ($file["type"] != 'application/pdf') {
             $res['errors'][] = 'Недопустимое расширение для файла, только pdf';
@@ -73,7 +73,7 @@ class PriceListModel extends Model
     {
         $res['result'] = false;
 
-        $fileUploader = new FileUploader();
+        $fileUploader = new FileUploaderHelper();
 
         if ($file["type"] != 'application/pdf') {
             $res['errors'][] = 'Недопустимое расширение для файла, только pdf';

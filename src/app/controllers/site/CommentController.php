@@ -3,7 +3,7 @@
 namespace App\Controllers\Site;
 
 use App\Controllers\Controller;
-use App\Modules\MailerHelper;
+use App\Helpers\MailerHelper;
 use App\Models\Site\CommentModel;
 
 class CommentController extends Controller

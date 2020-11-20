@@ -3,9 +3,7 @@
 namespace App\Models\Admin;
 
 use App\Models\Model;
-use App\Modules\FileUploader;
-use App\Repository\BlogRepository;
-use App\Repository\CategoryRepository;
+use App\Helpers\FileUploaderHelper;
 use App\Repository\CommentRepository;
 use App\Repository\FileRepository;
 use DateTime;
@@ -67,7 +65,7 @@ class CommentModel extends Model
     {
         $res['result'] = false;
 
-        $fileUploader = new FileUploader();
+        $fileUploader = new FileUploaderHelper();
 
         $params['user_name'] = "Администратор";
         $params['user_email'] = $_SESSION['user']['email'];

@@ -3,7 +3,7 @@
 namespace App\Models\Admin;
 
 use App\Models\Model;
-use App\Modules\FileUploader;
+use App\Helpers\FileUploaderHelper;
 use App\Helper\TextHelper;
 use App\Repository\PortfolioRepository;
 use App\Repository\FileRepository;
@@ -27,7 +27,7 @@ class PortfolioModel extends Model
     {
         $res['result'] = false;
 
-        $fileUploader = new FileUploader();
+        $fileUploader = new FileUploaderHelper();
 
         try {
             $alias = $fileUploader->uploadOne($file, $this->fileDirectory);
@@ -68,7 +68,7 @@ class PortfolioModel extends Model
     {
         $res['result'] = false;
 
-        $fileUploader = new FileUploader();
+        $fileUploader = new FileUploaderHelper();
 
         try {
             $alias = $fileUploader->uploadOne($file, $this->fileDirectory);

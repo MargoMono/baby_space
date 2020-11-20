@@ -3,7 +3,7 @@
 namespace App\Models\Admin;
 
 use App\Components\Logger;
-use App\Modules\FileUploader;
+use App\Helpers\FileUploaderHelper;
 use App\Repository\FileRepository;
 
 class Context
@@ -14,7 +14,7 @@ class Context
     private $strategy;
 
     /**
-     * @var FileUploader
+     * @var FileUploaderHelper
      */
     private $fileUploader;
 
@@ -32,7 +32,7 @@ class Context
     {
         $this->strategy = $strategy;
         $this->logger = Logger::getLogger(static::class);
-        $this->fileUploader = new FileUploader();
+        $this->fileUploader = new FileUploaderHelper();
         $this->fileRepository = new FileRepository();
     }
 
@@ -50,7 +50,7 @@ class Context
      */
     public function create($file, $params): void
     {
-        if (!empty($file['file']) && $file['file']['error'] != FileUploader::UPLOAD_ERR_NO_FILE) {
+        if (!empty($file['file']) && $file['file']['error'] != FileUploaderHelper::UPLOAD_ERR_NO_FILE) {
             $params['file_id'] = $this->createFile($file['file']);
         }
 
@@ -67,7 +67,7 @@ class Context
      */
     public function update($file, $params)
     {
-        if (!empty($file['file']) && $file['file']['error'] != FileUploader::UPLOAD_ERR_NO_FILE) {
+        if (!empty($file['file']) && $file['file']['error'] != FileUploaderHelper::UPLOAD_ERR_NO_FILE) {
             $params['file_id'] = $this->updateFile($file['file'], $params);
         }
 

@@ -4,7 +4,7 @@ namespace App\Models\Site;
 
 use App\Models\Models;
 use App\Controllers\Site\MailController;
-use App\Modules\MailerHelper;
+use App\Helpers\MailerHelper;
 use App\Repository\PriceListOrderRepository;
 use App\Repository\PriceListRepository;
 use DateTime;

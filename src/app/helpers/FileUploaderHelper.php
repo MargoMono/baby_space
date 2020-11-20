@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules;
+namespace App\Helpers;
 
 use App\Exceptions\UploadFileException;
 use RuntimeException;
 
-class FileUploader
+class FileUploaderHelper
 {
     private $imagesFormat = [
         'image/gif',
