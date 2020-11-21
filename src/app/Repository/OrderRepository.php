@@ -19,7 +19,7 @@ class OrderRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function save($order, $products)
+    public function save($sort, $products)
     {
         $sql = '
         INSERT INTO product_order
@@ -30,14 +30,14 @@ class OrderRepository extends AbstractRepository
         $products = json_encode($products);
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':user_name', $order['name'], PDO::PARAM_STR);
-        $result->bindParam(':user_phone', $order['phone'], PDO::PARAM_STR);
-        $result->bindParam(':user_email', $order['email'], PDO::PARAM_STR);
-        $result->bindParam(':user_city', $order['city'], PDO::PARAM_STR);
-        $result->bindParam(':user_adress', $order['address'], PDO::PARAM_STR);
-        $result->bindParam(':user_delivery', $order['delivery'], PDO::PARAM_STR);
-        $result->bindParam(':user_payment', $order['payment'], PDO::PARAM_STR);
-        $result->bindParam(':user_comment', $order['comment'], PDO::PARAM_STR);
+        $result->bindParam(':user_name', $sort['name'], PDO::PARAM_STR);
+        $result->bindParam(':user_phone', $sort['phone'], PDO::PARAM_STR);
+        $result->bindParam(':user_email', $sort['email'], PDO::PARAM_STR);
+        $result->bindParam(':user_city', $sort['city'], PDO::PARAM_STR);
+        $result->bindParam(':user_adress', $sort['address'], PDO::PARAM_STR);
+        $result->bindParam(':user_delivery', $sort['delivery'], PDO::PARAM_STR);
+        $result->bindParam(':user_payment', $sort['payment'], PDO::PARAM_STR);
+        $result->bindParam(':user_comment', $sort['comment'], PDO::PARAM_STR);
         $result->bindParam(':products', $products, PDO::PARAM_STR);
 
         if ($result->execute()) {

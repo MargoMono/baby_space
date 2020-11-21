@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
-interface Repository
+interface Entity
 {
-    public function getAll($order = null);
+    public function getAll($sort = null);
 
     public function getById($id);
 
@@ -14,5 +14,5 @@ interface Repository
 
     public function deleteById($id);
 
-    public function createFilesConnection($id, $fileId);
+    public function getFileByEntityId($id);
 }

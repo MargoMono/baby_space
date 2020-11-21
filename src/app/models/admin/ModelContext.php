@@ -6,10 +6,10 @@ use App\Components\Logger;
 use App\Helpers\FileUploaderHelper;
 use App\Repository\FileRepository;
 
-class Context
+class ModelContext
 {
     /**
-     * @var Strategy
+     * @var ModelStrategy
      */
     private $strategy;
 
@@ -26,9 +26,9 @@ class Context
     private $logger;
 
     /**
-     * @param Strategy $strategy
+     * @param ModelStrategy $strategy
      */
-    public function __construct(Strategy $strategy)
+    public function __construct(ModelStrategy $strategy)
     {
         $this->strategy = $strategy;
         $this->logger = Logger::getLogger(static::class);
@@ -37,9 +37,9 @@ class Context
     }
 
     /**
-     * @param Strategy $strategy
+     * @param ModelStrategy $strategy
      */
-    public function setStrategy(Strategy $strategy)
+    public function setStrategy(ModelStrategy $strategy)
     {
         $this->strategy = $strategy;
     }
@@ -91,12 +91,14 @@ class Context
         $this->strategy->delete($id);
 
         if (!empty($file)) {
-            $this->fileUploader->deleteFile($file['file_alias'], $this->strategy->fileDirectory);
+            $this->fileRepository->deleteById($file['id']);
+            $this->fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);
         }
 
         if (!empty($files)) {
             foreach ($files as $file) {
-                $this->fileUploader->deleteFile($file['file_alias'], $this->strategy->fileDirectory);
+                $this->fileRepository->deleteById($file['id']);
+                $this->fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);
             }
         }
     }

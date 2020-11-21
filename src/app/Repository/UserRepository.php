@@ -9,10 +9,10 @@ class UserRepository extends AbstractRepository
 {
     const ADMIN = 100;
 
-    public function getUserList($order = null)
+    public function getUserList($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort)) {
+            $sort = 'id';
         }
 
         $sql = '
@@ -20,10 +20,10 @@ class UserRepository extends AbstractRepository
             u.*, r.name AS role_name 
         FROM user u 
             JOIN role r on u.role_id = r.id
-            ORDER BY u.' . $order;
+            ORDER BY u.' . $sort;
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $order);
+        $result->bindParam(':order', $sort);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

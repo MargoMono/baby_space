@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Repository\AbstractRepository;
 use PDO;
 
-class CategoryRepository extends AbstractRepository implements Repository
+class CategoryRepository extends AbstractRepository implements Entity
 {
     public function getById($id)
     {
@@ -44,10 +44,10 @@ class CategoryRepository extends AbstractRepository implements Repository
         return $result->fetch();
     }
 
-    public function getAll($order = null)
+    public function getAll($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort)) {
+            $sort = 'id';
         }
 
         $sql = '
@@ -55,10 +55,10 @@ class CategoryRepository extends AbstractRepository implements Repository
             c.*, cp.name AS parent_name, cp.id AS parent_id
         FROM category c
             LEFT JOIN category cp ON c.parent_id = cp.id
-        ORDER BY ' . $order;
+        ORDER BY ' . $sort;
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $order);
+        $result->bindParam(':order', $sort);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
@@ -270,4 +270,8 @@ VALUES
         return $result->execute();
     }
 
+    public function getFileByEntityId($id)
+    {
+        // TODO: Implement getFileByEntityId() method.
+    }
 }

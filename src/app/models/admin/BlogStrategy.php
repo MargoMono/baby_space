@@ -5,64 +5,71 @@ namespace App\Models\Admin;
 use App\Helpers\TextHelper;
 use App\Repository\BlogRepository;
 
-class BlogStrategy implements Strategy
+class BlogStrategy implements ModelStrategy
 {
     public $fileDirectory = 'blog';
+
+    private $blogRepository;
+
+    public function __construct()
+    {
+        $this->blogRepository = new BlogRepository();
+    }
 
     public function getFileDirectory(): string
     {
         return $this->fileDirectory;
     }
 
-    public function getIndexData($order = null)
+    public function getIndexData($sort = null)
     {
-        $repository = new BlogRepository();
-        $data['newList'] = $repository->getAll($order);
+        $data['blogList'] = $this->blogRepository->getAll($sort);
+
+        if($sort['desc'] == 'DESC'){
+            $sort['desc'] = 'ASC';
+        } else {
+            $sort['desc'] = 'DESC';
+        }
+
+        $data['sort'] = $sort;
 
         return $data;
     }
 
-    public function getShowCreatePageData($order = null)
+    public function getShowCreatePageData($sort = null)
     {
-        $repository = new BlogRepository();
-        $data['newList'] = $repository->getAll($order);
+        $data['blogList'] = $this->blogRepository->getAll($sort);
 
         return $data;
     }
 
     public function create($data)
     {
-        $repository = new BlogRepository();
-
-        return $repository->create($data);
+        return $this->blogRepository->create($data);
     }
 
     public function getShowUpdatePageData($id)
     {
-        $repository = new BlogRepository();
-        $data['new'] = $repository->getById($id);
+        $data['blog'] = $this->blogRepository->getById($id);
 
         return $data;
     }
 
     public function update($data)
     {
-        $repository = new BlogRepository();
-        return $repository->updateById($data);
+        return $this->blogRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
     {
-        $repository = new BlogRepository();
-        $data['new'] = $repository->getById($id);
+        $data['blog'] = $this->blogRepository->getById($id);
 
         return $data;
     }
 
     public function delete($id)
     {
-        $repository = new BlogRepository();
-        return $repository->deleteById($id);
+        return $this->blogRepository->deleteById($id);
     }
 
     public function prepareData($params)

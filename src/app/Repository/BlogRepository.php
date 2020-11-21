@@ -4,22 +4,25 @@ namespace App\Repository;
 
 use PDO;
 
-class BlogRepository extends AbstractRepository implements Repository
+class BlogRepository extends AbstractRepository implements Entity
 {
-    public function getAll($order = null)
+    public function getAll($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort['order'])) {
+            $sort['order'] = 'b.id';
+        }
+
+        if (empty($sort['desc'])) {
+            $sort['desc'] = 'ASC';
         }
 
         $sql = '
-        SELECT * 
-        FROM blog n
-        ORDER BY ' . $order . ' 
-        ASC';
+        SELECT b.*, f.alias AS file_alias
+            FROM blog b
+            LEFT JOIN file f ON b.file_id = f.id
+        ORDER BY '. $sort['order'].' '. $sort['desc'];
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $order);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
@@ -152,5 +155,10 @@ WHERE id = :id';
     public function createFilesConnection($categoryId, $fileId)
     {
 
+    }
+
+    public function getFileByEntityId($id)
+    {
+        // TODO: Implement getFileByEntityId() method.
     }
 }

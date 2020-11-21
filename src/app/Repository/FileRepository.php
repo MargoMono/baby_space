@@ -7,6 +7,22 @@ use PDOException;
 
 class FileRepository extends AbstractRepository
 {
+    public function getFileById($id)
+    {
+        $sql = '
+        SELECT 
+            *
+        FROM file 
+        WHERE id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
+
     public function createFile($image)
     {
         $sql = "
@@ -28,19 +44,13 @@ class FileRepository extends AbstractRepository
         }
     }
 
-    public function getFileById($id)
+    public function deleteById($id)
     {
-        $sql = '
-        SELECT 
-            *
-        FROM file 
-        WHERE id = :id';
+        $sql = 'DELETE FROM file WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
 
-        return $result->fetch();
+        return $result->execute();
     }
 }

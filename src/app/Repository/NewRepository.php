@@ -5,22 +5,22 @@ namespace App\Repository;
 use App\Repository\AbstractRepository;
 use PDO;
 
-class NewRepository extends AbstractRepository implements Repository
+class NewRepository extends AbstractRepository implements Entity
 {
-    public function getAll($order = null)
+    public function getAll($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort)) {
+            $sort = 'id';
         }
 
         $sql = '
         SELECT * 
         FROM new 
-        ORDER BY ' . $order . ' 
+        ORDER BY ' . $sort . ' 
         ASC';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $order);
+        $result->bindParam(':order', $sort);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
@@ -169,5 +169,10 @@ WHERE id = :id';
     public function createFilesConnection($id, $fileId)
     {
         // TODO: Implement createFilesConnection() method.
+    }
+
+    public function getFileByEntityId($id)
+    {
+        // TODO: Implement getFileByEntityId() method.
     }
 }

@@ -8,10 +8,10 @@ use App\Repository\UserRepository;
 
 class UserModel extends Model
 {
-    public function getIndexData($order)
+    public function getIndexData($sort)
     {
         $userRepository = new UserRepository();
-        $userList = $userRepository->getUserList($order);
+        $userList = $userRepository->getUserList($sort);
 
         $data['userList'] = $userList;
         $data['is_admin'] = $this->checkIfRoleIsAdmin($_SESSION['user']);

@@ -15,10 +15,10 @@ class PriceListModel extends Model
 {
     private $fileDirectory = 'price-list';
 
-    public function getIndexData($order)
+    public function getIndexData($sort)
     {
         $newRepository = new PriceListRepository();
-        $data['priceList'] = $newRepository->getPriceList($order);
+        $data['priceList'] = $newRepository->getPriceList($sort);
 
         return $data;
     }
@@ -134,10 +134,10 @@ class PriceListModel extends Model
         return $res;
     }
 
-    public function getOrderData($order)
+    public function getOrderData($sort)
     {
         $catalogOrderRepository = new PriceListOrderRepository();
-        $data['clientList'] = $catalogOrderRepository->getClientList($order);
+        $data['clientList'] = $catalogOrderRepository->getClientList($sort);
 
         return $data;
     }

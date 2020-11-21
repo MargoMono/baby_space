@@ -2,13 +2,13 @@
 
 namespace App\Models\Admin;
 
-interface Strategy
+interface ModelStrategy
 {
     public function getFileDirectory(): string;
 
     public function getIndexData($sort = null);
 
-    public function getShowCreatePageData($order = null);
+    public function getShowCreatePageData($sort = null);
 
     public function validation($file, $params);
 

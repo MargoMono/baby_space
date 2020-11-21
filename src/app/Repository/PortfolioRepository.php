@@ -23,10 +23,10 @@ class PortfolioRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function getPortfolioList($order = null)
+    public function getPortfolioList($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort)) {
+            $sort = 'id';
         }
 
         $sql = '
@@ -34,7 +34,7 @@ class PortfolioRepository extends AbstractRepository
             p.*, f.alias AS file_alias
         FROM portfolio p
             LEFT JOIN file f ON p.file_id = f.id
-        ORDER BY ' . $order . ' 
+        ORDER BY ' . $sort . ' 
         ASC';
 
         $result = $this->db->prepare($sql);

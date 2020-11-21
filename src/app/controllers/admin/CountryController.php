@@ -2,22 +2,20 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Models\Admin\CurrencyStrategy;
+use App\Models\Admin\CountryStrategy;
 use App\Models\Admin\ModelContext;
-use App\Models\Admin\LanguageStrategy;
 
-class LanguagesController implements ControllerStrategy
+class CountryController implements ControllerStrategy
 {
     private $controllerContext;
 
-    private $directory = 'language';
+    private $directory = 'country';
 
     public function __construct()
     {
-        $this->controllerContext = new ControllerContext(new LanguageStrategy(),
-            new ModelContext(new LanguageStrategy()), $this->directory);
+        $this->controllerContext = new ControllerContext(new CountryStrategy(),
+            new ModelContext(new CountryStrategy()), $this->directory);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

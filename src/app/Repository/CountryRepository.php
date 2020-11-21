@@ -5,7 +5,7 @@ namespace App\Repository;
 use PDO;
 use PDOException;
 
-class LanguageRepository extends AbstractRepository implements Entity
+class CountryRepository extends AbstractRepository implements Entity
 {
     public function getAll($sort = null)
     {
@@ -18,9 +18,9 @@ class LanguageRepository extends AbstractRepository implements Entity
         }
 
         $sql = '
-        SELECT l.* , f.alias AS file_alias
-            FROM language l
-            LEFT JOIN file f ON l.file_id = f.id
+        SELECT c.* , f.alias AS file_alias
+            FROM country c
+            LEFT JOIN file f ON c.file_id = f.id
         ORDER BY '. $sort['order'].' '. $sort['desc'];
 
         $result = $this->db->prepare($sql);
@@ -34,10 +34,10 @@ class LanguageRepository extends AbstractRepository implements Entity
     public function getById($id)
     {
         $sql = '
-        SELECT l.*, f.alias AS file_alias
-            FROM language l
-            LEFT JOIN file f ON l.file_id = f.id
-        WHERE l.id = :id';
+        SELECT c.*, f.alias AS file_alias
+            FROM country c
+            LEFT JOIN file f ON c.file_id = f.id
+        WHERE c.id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -50,15 +50,16 @@ class LanguageRepository extends AbstractRepository implements Entity
     public function create($data)
     {
         $sql = '
-INSERT INTO language
-    (name, alias, code, file_id) 
+INSERT INTO country
+    (name, iso_code_2, iso_code_3, status, file_id) 
 VALUES 
-    (:name, :alias, :code, :file_id) ';
+    (:name, :iso_code_2, :iso_code_3, :status, :file_id) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
-        $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':code', $data['code']);
+        $result->bindParam(':iso_code_2', $data['iso_code_2']);
+        $result->bindParam(':iso_code_3', $data['iso_code_3']);
+        $result->bindParam(':status', $data['status']);
         $result->bindParam(':file_id', $data['file_id']);
 
         try {
@@ -66,25 +67,27 @@ VALUES
             return $this->db->lastInsertId();
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage(), $data);
-            throw new \RuntimeException('Unable to create product');
+            throw new \RuntimeException('Unable to create country');
         }
     }
 
     public function updateById($data)
     {
         $sql = '
-UPDATE language
+UPDATE country
     SET
     name = :name,
-    alias = :alias,
-    code = :code,
+    iso_code_2 = :iso_code_2,
+    iso_code_3 = :iso_code_3,
+    status = :status,
     file_id = :file_id
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
-        $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':code', $data['code']);
+        $result->bindParam(':iso_code_2', $data['iso_code_2']);
+        $result->bindParam(':iso_code_3', $data['iso_code_3']);
+        $result->bindParam(':status', $data['status']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':id', $data['id']);
 
@@ -93,7 +96,7 @@ WHERE id = :id';
 
     public function deleteById($id)
     {
-        $sql = 'DELETE FROM language WHERE id = :id';
+        $sql = 'DELETE FROM country WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);

@@ -14,10 +14,10 @@ class PortfolioModel extends Model
 {
     private $fileDirectory = 'portfolio';
 
-    public function getIndexData($order)
+    public function getIndexData($sort)
     {
         $portfolioRepository = new PortfolioRepository();
-        $data['portfolioList'] = $portfolioRepository->getPortfolioList($order);
+        $data['portfolioList'] = $portfolioRepository->getPortfolioList($sort);
 
 
         return $data;

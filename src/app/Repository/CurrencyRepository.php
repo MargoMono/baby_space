@@ -23,7 +23,7 @@ class CurrencyRepository extends AbstractRepository
         ORDER BY '. $sort['order'].' '. $sort['desc'];
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $order);
+        $result->bindParam(':order', $sort);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

@@ -4,7 +4,7 @@ namespace App\Models\Admin;
 
 use App\Repository\CurrencyRepository;
 
-class CurrencyStrategy implements Strategy
+class CurrencyStrategy implements ModelStrategy
 {
     private $currencyRepository;
 
@@ -33,9 +33,9 @@ class CurrencyStrategy implements Strategy
         return $data;
     }
 
-    public function getShowCreatePageData($order = null)
+    public function getShowCreatePageData($sort = null)
     {
-        $data['currencyList'] = $this->currencyRepository->getAll($order);
+        $data['currencyList'] = $this->currencyRepository->getAll($sort);
 
         return $data;
     }
@@ -71,7 +71,7 @@ class CurrencyStrategy implements Strategy
 
     public function getFile($id)
     {
-        return $this->currencyRepository->getById($id);
+        return null;
     }
 
     public function getFiles($id)

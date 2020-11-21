@@ -26,10 +26,10 @@ class ProductRecommendationsRepository extends AbstractRepository
         return $result->fetchAll();
     }
 
-    public function getProductList($order = null)
+    public function getProductList($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort)) {
+            $sort = 'id';
         }
 
         $sql = '
@@ -38,7 +38,7 @@ class ProductRecommendationsRepository extends AbstractRepository
         FROM product p
             JOIN file f ON p.file_id = f.id 
             JOIN category c ON p.category_id = c.id 
-        ORDER BY ' . $order;
+        ORDER BY ' . $sort;
 
         $result = $this->db->prepare($sql);
         $result->setFetchMode(PDO::FETCH_ASSOC);

@@ -13,14 +13,14 @@ use RuntimeException;
 class CommentModel extends Model
 {
     /**
-     * @param $order
+     * @param $sort
      * @return array|void
      * @throws Exception
      */
-    public function getIndexData($order)
+    public function getIndexData($sort)
     {
         $commentRepository = new CommentRepository();
-        $commentList = $commentRepository->getCommentList($order);
+        $commentList = $commentRepository->getCommentList($sort);
 
         foreach ($commentList as $key => $comment) {
             $date = new DateTime($comment['date']);

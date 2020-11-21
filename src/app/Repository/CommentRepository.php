@@ -38,21 +38,21 @@ WHERE id = :id';
         return $result->execute();
     }
 
-    public function getCommentList($order = null)
+    public function getCommentList($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort)) {
+            $sort = 'id';
         }
 
         $sql = '
         SELECT c.*, cp.id AS parent_id
         FROM comment c
             LEFT JOIN comment cp ON c.parent_id = cp.id
-        ORDER BY c.' . $order . ' 
+        ORDER BY c.' . $sort . ' 
         ASC';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $order);
+        $result->bindParam(':order', $sort);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

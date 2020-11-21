@@ -9,18 +9,18 @@ class NewStrategy
 {
     public $fileDirectory = 'new';
 
-    public function getIndexData($order = null)
+    public function getIndexData($sort = null)
     {
         $repository = new NewRepository();
-        $data['newList'] = $repository->getAll($order);
+        $data['blogList'] = $repository->getAll($sort);
 
         return $data;
     }
 
-    public function getShowCreatePageData($order = null)
+    public function getShowCreatePageData($sort = null)
     {
         $repository = new NewRepository();
-        $data['newList'] = $repository->getAll($order);
+        $data['blogList'] = $repository->getAll($sort);
 
         return $data;
     }

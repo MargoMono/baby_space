@@ -9,7 +9,7 @@ use App\Repository\ProductDescriptionRepository;
 use App\Repository\ProductRecommendationsRepository;
 use App\Repository\ProductRepository;
 
-class ProductStrategy implements Strategy
+class ProductStrategy implements ModelStrategy
 {
     public $fileDirectory = 'product';
     public $productRepository;
@@ -53,7 +53,7 @@ class ProductStrategy implements Strategy
         var_dump($data);
     }
 
-    public function getShowCreatePageData($order = null)
+    public function getShowCreatePageData($sort = null)
     {
         $categoryList = $this->categoryRepository->getAll();
 

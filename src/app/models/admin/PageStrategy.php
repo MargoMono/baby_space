@@ -9,15 +9,15 @@ class PageStrategy extends AbstractAdminModel
 {
     public $fileDirectory = 'page';
 
-    public function getIndexData($order = null)
+    public function getIndexData($sort = null)
     {
         $repository = new BlogRepository();
-        $data['pageList'] = $repository->getAll($order);
+        $data['pageList'] = $repository->getAll($sort);
 
         return $data;
     }
 
-    public function getShowCreatePageData($order = null)
+    public function getShowCreatePageData($sort = null)
     {
     }
 

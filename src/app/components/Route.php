@@ -8,6 +8,7 @@ use Phroute\Phroute\Dispatcher;
 use Phroute\Phroute\RouteCollector;
 use App\Controllers\Site\IndexController;
 use App\Controllers\Admin;
+use App\Controllers\Admin\BlogController;
 
 class Route
 {
@@ -113,6 +114,16 @@ class Route
         $router->get('admin/currency/delete/{id}', [Admin\CurrencyController::class, 'actionShowDeletePage']);
         $router->post('admin/currency/delete', [Admin\CurrencyController::class, 'delete']);
 
+        // Страны
+        $router->any('admin/country', [Admin\CountryController::class, 'actionIndex']);
+        $router->any('admin/country/sort/{id}?', [Admin\CountryController::class, 'actionIndex']);
+        $router->get('admin/country/create', [Admin\CountryController::class, 'actionShowCreatePage']);
+        $router->post('admin/country/create', [Admin\CountryController::class, 'create']);
+        $router->get('admin/country/update/{id}', [Admin\CountryController::class, 'actionShowUpdatePage']);
+        $router->post('admin/country/update/{id}', [Admin\CountryController::class, 'update']);
+        $router->get('admin/country/delete/{id}', [Admin\CountryController::class, 'actionShowDeletePage']);
+        $router->post('admin/country/delete', [Admin\CountryController::class, 'delete']);
+
         // Страницы категорий
         $router->any('admin/product', [Admin\ProductController::class, 'actionIndex']);
         $router->any('admin/product/sort/{id}?', [Admin\ProductController::class, 'actionIndex']);
@@ -136,13 +147,14 @@ class Route
         $router->get('admin/category/photo/delete/{id}/{photoId}', ['App\\Controllers\\Admin\\CategoryController', 'photoDelete']);
 
         // Страницы новостей
-        $router->any('admin/blog', ['App\\Controllers\\Admin\\BlogController', 'actionIndex']);
-        $router->get('admin/blog/create', ['App\\Controllers\\Admin\\BlogController', 'actionShowCreatePage']);
-        $router->post('admin/blog/create', ['App\\Controllers\\Admin\\BlogController', 'create']);
-        $router->get('admin/blog/update/{id}', ['App\\Controllers\\Admin\\BlogController', 'actionShowUpdatePage']);
-        $router->post('admin/blog/update/{id}', ['App\\Controllers\\Admin\\BlogController', 'update']);
-        $router->get('admin/blog/delete/{id}', ['App\\Controllers\\Admin\\BlogController', 'actionShowDeletePage']);
-        $router->post('admin/blog/delete/{id}', ['App\\Controllers\\Admin\\BlogController', 'delete']);
+        $router->any('admin/blog', [Admin\BlogController::class, 'actionIndex']);
+        $router->any('admin/blog/sort/{id}?', [Admin\BlogController::class, 'actionIndex']);
+        $router->get('admin/blog/create', [Admin\BlogController::class, 'actionShowCreatePage']);
+        $router->post('admin/blog/create', [Admin\BlogController::class, 'create']);
+        $router->get('admin/blog/update/{id}', [Admin\BlogController::class, 'actionShowUpdatePage']);
+        $router->post('admin/blog/update/{id}', [Admin\BlogController::class, 'update']);
+        $router->get('admin/blog/delete/{id}', [Admin\BlogController::class, 'actionShowDeletePage']);
+        $router->post('admin/blog/delete/{id}', [Admin\BlogController::class, 'delete']);
 
         // Страницы новостей
         $router->any('admin/new', ['App\\Controllers\\Admin\\NewController', 'actionIndex']);

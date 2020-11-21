@@ -38,10 +38,10 @@ class Model
         $languagesRepository = new LanguageRepository();
         $data['languages'] = $languagesRepository->getAll();
 
-        $language = new Language();
-        $content = $language->getContent();
+//        $language = new Language();
+//        $content = $language->getContent();
 
-        return array_merge($data, $content);
+        return $data;
     }
 
     protected function getBreadcrumbs($categoryId)

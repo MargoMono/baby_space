@@ -57,3 +57,16 @@ create table product_currency
     constraint product_currency_currency_id_fk
         foreign key (currency_id) references currency (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE TABLE country
+(
+    id         int(11) AUTO_INCREMENT,
+    name       varchar(128) NOT NULL,
+    iso_code_2 varchar(2)   NOT NULL,
+    iso_code_3 varchar(3)   NOT NULL,
+    status     tinyint(1)   NOT NULL DEFAULT '1',
+    file_id    int          NOT NULL,
+    primary key (id),
+    constraint country_file_id_fk
+        foreign key (file_id) references file (id)
+);

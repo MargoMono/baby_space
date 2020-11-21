@@ -10,10 +10,10 @@ class CategoryStrategy
 {
     public $fileDirectory = 'category';
 
-    public function getIndexData($order = null)
+    public function getIndexData($sort = null)
     {
         $repository = new CategoryRepository();
-        $data['categoryList'] = $repository->getAll($order);
+        $data['categoryList'] = $repository->getAll($sort);
 
         foreach ($data['categoryList'] as $key => $category) {
             $data['categoryList'][$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
@@ -22,10 +22,10 @@ class CategoryStrategy
         return $data;
     }
 
-    public function getShowCreatePageData($order = null)
+    public function getShowCreatePageData($sort = null)
     {
         $repository = new CategoryRepository();
-        $data['categoryList'] = $repository->getAll($order);
+        $data['categoryList'] = $repository->getAll($sort);
 
         foreach ($data['categoryList'] as $key => $category) {
             $data['categoryList'][$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);

@@ -24,10 +24,10 @@ class PriceListRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function getPriceList($order = null)
+    public function getPriceList($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort)) {
+            $sort = 'id';
         }
 
         $sql = '
@@ -35,12 +35,12 @@ class PriceListRepository extends AbstractRepository
             pl.*, f.alias AS file_alias
         FROM price_list pl
             LEFT JOIN file f on pl.file_id = f.id
-        ORDER BY ' . $order . ' 
+        ORDER BY ' . $sort . ' 
         ASC';
 
         $result = $this->db->prepare($sql);
 
-        $result->bindParam(':order', $order);
+        $result->bindParam(':order', $sort);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

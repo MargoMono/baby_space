@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Models\Admin\Context;
+use App\Models\Admin\ModelContext;
 use App\Models\Admin\PageModel;
 use App\Models\Admin\PageStrategy;
 
@@ -14,7 +14,7 @@ class PageController extends Controller
     {
         parent::__construct();
         $this->model = new PageModel();
-        $this->context = new Context(new PageStrategy());
+        $this->context = new ModelContext(new PageStrategy());
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

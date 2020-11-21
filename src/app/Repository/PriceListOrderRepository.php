@@ -7,21 +7,21 @@ use PDO;
 
 class PriceListOrderRepository extends AbstractRepository
 {
-    public function getClientList($order = null)
+    public function getClientList($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort)) {
+            $sort = 'id';
         }
 
         $sql = '
         SELECT 
             * 
         FROM price_list_order 
-        ORDER BY ' . $order . ' 
+        ORDER BY ' . $sort . ' 
         ASC';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $order);
+        $result->bindParam(':order', $sort);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

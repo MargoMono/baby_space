@@ -33,7 +33,7 @@ class NewModel extends Model
         }
 
         $params = [
-            'newList' => $newList,
+            'blogList' => $newList,
             'lastPage' => $lastPage,
         ];
 
@@ -74,7 +74,7 @@ class NewModel extends Model
         }
 
         $params = [
-            'newList' => $moreNews,
+            'blogList' => $moreNews,
             'lastPage' => $lastPage,
         ];
 

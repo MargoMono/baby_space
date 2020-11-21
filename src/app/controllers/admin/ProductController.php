@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Models\Admin\Context;
+use App\Models\Admin\ModelContext;
 use App\Models\Admin\ProductStrategy;
 
 class ProductController extends Controller
@@ -13,7 +13,7 @@ class ProductController extends Controller
     {
         parent::__construct();
         $this->strategy = new ProductStrategy();
-        $this->context = new Context($this->strategy);
+        $this->context = new ModelContext($this->strategy);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

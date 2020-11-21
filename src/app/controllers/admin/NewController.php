@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Models\Admin\Context;
+use App\Models\Admin\ModelContext;
 use App\Models\Admin\NewStrategy;
 
 class NewController extends Controller
@@ -12,7 +12,7 @@ class NewController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->context =  new Context(new NewStrategy());
+        $this->context =  new ModelContext(new NewStrategy());
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

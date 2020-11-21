@@ -5,14 +5,14 @@ namespace App\Controllers\Admin;
 use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
 use App\Models\Admin\CategoryStrategy;
-use App\Models\Admin\Context;
+use App\Models\Admin\ModelContext;
 
 class CategoryController extends Controller
 {
     public function __construct()
     {
         parent::__construct();
-        $this->context = new Context(new CategoryStrategy());
+        $this->context = new ModelContext(new CategoryStrategy());
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

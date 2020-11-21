@@ -1,0 +1,88 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="pull-right">
+            <a href="/admin/country/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+        </div>
+        <h1>Страны</h1>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> Список стран</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-country">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <td class="text-center">Изображение</td>
+                                            <td class="text-left"> <a {% if sort.order == 'c.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.name&desc={{ sort.desc }}">Название</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'c.iso_code_2' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.iso_code_2&desc={{ sort.desc }}">Код ISO 2</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'c.iso_code_3' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.iso_code_3&desc={{ sort.desc }}">Код ISO 3</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'c.status' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.status&desc={{ sort.desc }}">Статус</a></td>
+                                            <td class="text-right">Действие</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {% if countryList %}
+                                            {% for country in countryList %}
+                                                <tr id="item-country-{{ country.id }}">
+                                                    <td class="text-center">
+                                                        {% if country.file_alias %} <img src="/upload/images/country/{{ country.file_alias }}" alt="{{ country.name }}" class="img-thumbnail"/>
+                                                        {% else %} <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-left">{{ country.name }}</td>
+                                                    <td class="text-left">{{ country.iso_code_2 }}</td>
+                                                    <td class="text-left">{{ country.iso_code_3 }}</td>
+                                                    <td class="text-left">
+                                                        {% if country.status == 1 %}
+                                                            Отображается
+                                                        {% else %}
+                                                            Скрыта
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {% if country.alias != 'russian' %}
+                                                            <a href="/admin/country/update/{{ country.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                            <a href="/admin/country/delete/{{ country.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td class="text-center" colspan="8">{{ text_no_results }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}

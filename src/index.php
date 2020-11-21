@@ -7,8 +7,8 @@ use App\Components\Route;
 
 session_start();
 
-$languageDetect = new Language();
-$languageDetect->setContent();
+//$languageDetect = new Language();
+//$languageDetect->setContent();
 
 $routing = new Route($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 $routing->upload();

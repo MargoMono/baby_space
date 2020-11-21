@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use PDO;
 
-class PageRepository extends AbstractRepository implements Repository
+class PageRepository extends AbstractRepository implements Entity
 {
     const COMPANY_PAGE_ID = 1;
     const DELIVERY_PAGE_ID = 2;
@@ -26,16 +26,16 @@ class PageRepository extends AbstractRepository implements Repository
         return $result->fetch();
     }
 
-    public function getAll($order = null)
+    public function getAll($sort = null)
     {
-        if (empty($order)) {
-            $order = 'id';
+        if (empty($sort)) {
+            $sort = 'id';
         }
 
         $sql = '
         SELECT * 
         FROM page 
-        ORDER BY ' . $order . ' 
+        ORDER BY ' . $sort . ' 
         ASC';
 
         $result = $this->db->prepare($sql);

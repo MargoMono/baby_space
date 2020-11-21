@@ -2,59 +2,76 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>
-            Панель администратора
-            <small>Статьи</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li class="active">Статьи</li>
-        </ol>
+        <div class="pull-right">
+            <a href="/admin/blog/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+        </div>
+        <h1>Блог</h1>
     </section>
-
     <section class="content">
-        <a href="/admin/blog/create" class="btn btn-default back"><i class="fa fa-plus"></i> Добавить статью</a>
+        <div class="container-fluid">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> Список статей</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-blog">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <td class="text-center">Изображение</td>
+                                            <td class="text-left"> <a {% if sort.order == 'b.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/blog/sort/?order=b.name&desc={{ sort.desc }}">Название</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'b.description' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/blog/sort/?order=b.description&desc={{ sort.desc }}">Ссылка</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'b.created_at' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/blog/sort/?order=b.created_at&desc={{ sort.desc }}">Код</a></td>
+                                            <td class="text-right">Действие</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
 
-        <h4>Список статей</h4>
-
-        <table class="table-bordered table-striped table">
-            <tr>
-                <th>Номер
-                    <form action="/admin/blog" method="post">
-                        <input type="hidden" name="order" value="id">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Название статьи
-                    <form action="/admin/blog" method="post">
-                        <input type="hidden" name="order" value="name">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Краткое описание</th>
-                <th>Дата публикации
-                    <form action="/admin/blog" method="post">
-                        <input type="hidden" name="order" value="created_at">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th></th>
-                <th></th>
-            </tr>
-            {% for new in newList %}
-                <tr>
-                    <td>{{ new.id }}</td>
-                    <td>{{ new.name }}</td>
-                    <td>{{ new.description }}</td>
-                    <td>{{ new.created_at }}</td>
-                    <td><a href="/admin/blog/update/{{ new.id }}" title="Редактировать"><i
-                                    class="fa fa-pencil-square-o"></i></a></td>
-                    <td><a href="/admin/blog/delete/{{ new.id }}" title="Удалить"><i
-                                    class="fa fa-times"></i></a></td>
-                </tr>
-            {% endfor %}
-        </table>
+                                        {% if blogList %}
+                                            {% for blog in blogList %}
+                                                <tr id="item-blog-{{ blog.id }}">
+                                                    <td class="text-center">
+                                                        {% if blog.file_alias %} <img src="/upload/images/blog/{{ blog.file_alias }}" alt="{{ blog.name }}" class="img-thumbnail"/>
+                                                        {% else %} <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-left">{{ blog.name }}</td>
+                                                    <td class="text-left">{{ blog.description }}</td>
+                                                    <td class="text-left">{{ blog.created_at }}</td>
+                                                    <td class="text-right">
+                                                        <a href="/admin/blog/update/{{ blog.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="/admin/blog/delete/{{ blog.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td class="text-center" colspan="8">{{ text_no_results }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
 
 {% include 'admin/includes/footer.twig' %}
-
