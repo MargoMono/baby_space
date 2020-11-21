@@ -176,7 +176,7 @@ UPDATE product
     description = :description,
     content = :content,
     file_id = :file_id,
-    status = :enabled,
+    status = :status,
     alias = :alias,
     sort = :position,
     tag_title = :tag_title,
@@ -190,7 +190,7 @@ WHERE id = :id';
         $result->bindParam(':description', $data['description']);
         $result->bindParam(':content', $data['content']);
         $result->bindParam(':file_id', $data['file_id']);
-        $result->bindParam(':enabled', $data['enabled']);
+        $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);
         $result->bindParam(':position', $data['position']);
         $result->bindParam(':tag_title', $data['tag_title']);

@@ -4,107 +4,85 @@ namespace App\Models\Admin;
 
 use App\Helpers\BreadcrumbsHelper;
 use App\Helpers\TextHelper;
+use App\Repository\BlogRepository;
 use App\Repository\CategoryRepository;
 
-class CategoryStrategy
+class CategoryStrategy implements ModelStrategy
 {
     public $fileDirectory = 'category';
 
+    private $categoryRepository;
+
+
+    public function __construct()
+    {
+        $this->categoryRepository = new CategoryRepository();
+    }
+
+    public function getFileDirectory(): string
+    {
+        return $this->fileDirectory;
+    }
+
     public function getIndexData($sort = null)
     {
-        $repository = new CategoryRepository();
-        $data['categoryList'] = $repository->getAll($sort);
+        $data['categoryList'] = $this->categoryRepository->getAll($sort);
 
-        foreach ($data['categoryList'] as $key => $category) {
-            $data['categoryList'][$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
+        if($sort['desc'] == 'DESC'){
+            $sort['desc'] = 'ASC';
+        } else {
+            $sort['desc'] = 'DESC';
         }
+
+        $data['sort'] = $sort;
 
         return $data;
     }
 
     public function getShowCreatePageData($sort = null)
     {
-        $repository = new CategoryRepository();
-        $data['categoryList'] = $repository->getAll($sort);
+        $data['categoryList'] = $this->categoryRepository->getAll($sort);
 
-        foreach ($data['categoryList'] as $key => $category) {
-            $data['categoryList'][$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
-
-            // удаляем возможность добавления подкатегории более 3 уровня
-            $level = $this->getCategoryLevel($category['id']);
-            if ($level >= 3) {
-                unset($data[$key]);
-            }
-        }
+        return $data;
     }
 
     public function create($data)
     {
-        $repository = new CategoryRepository();
-
-        return $repository->create($data);
+        return $this->categoryRepository->create($data);
     }
 
     public function getShowUpdatePageData($id)
     {
-        $repository = new CategoryRepository();
-
-        $data['category'] = $repository->getById($id);
-        $data['categoryList'] = $repository->getAll();
-        $data['categoryFilesList'] = $repository->getCategoryFilesByCategoryId($id);
-
-        foreach ($data['categoryList'] as $key => $category) {
-            $data['categoryList'][$key]['breadcrumbs'] = BreadcrumbsHelper::getBreadcrumbsInString($category['id']);
-
-            if ($data['categoryList'][$key]['id'] == $id) {
-                unset($data['categoryList'][$key]);
-            }
-
-            // удаляем возможность добавления подкатегории более 3 уровня
-            $level = $this->getCategoryLevel($category['id']);
-            if ($level >= 3) {
-                unset($data['categoryList'][$key]);
-            }
-        }
+        $data['category'] = $this->categoryRepository->getById($id);
 
         return $data;
     }
 
     public function update($data)
     {
-        $repository = new CategoryRepository();
-        return $repository->updateById($data);
+        return $this->categoryRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
     {
-        $categoryRepository = new CategoryRepository();
-        $data['category'] = $categoryRepository->getById($id);
+        $data['category'] = $this->categoryRepository->getById($id);
 
         return $data;
     }
 
+    public function getFile($id)
+    {
+        return $this->categoryRepository->getFileByEntityId($id);
+    }
+
+    public function getFiles($id)
+    {
+        return null;
+    }
+
     public function delete($id)
     {
-        $repository = new CategoryRepository();
-        return $repository->deleteById($id);
-    }
-
-    public function createFilesConnection($id, $fileId)
-    {
-        $repository = new CategoryRepository();
-        return $repository->createFilesConnection($id, $fileId);
-    }
-
-    public function deleteFileConnection($id, $photoId): bool
-    {
-        $categoryRepository = new CategoryRepository();
-
-        if ($categoryRepository->deleteFileConnection($id, $photoId)) {
-            return true;
-        }
-
-        return false;
+        return $this->categoryRepository->deleteById($id);
     }
 
     public function prepareData($params)
@@ -124,18 +102,11 @@ class CategoryStrategy
         ];
     }
 
-    private function getCategoryLevel($id)
+
+    public function validation($file, $params)
     {
-        $categoryRepository = new CategoryRepository();
-        $parent = $categoryRepository->getParentCategoryListById($id);
-
-        $level = 1;
-        while ($parent) {
-            $level++;
-            $parent = $categoryRepository->getParentCategoryListById($parent['id']);
-        }
-
-        return $level;
+        // TODO: Implement validation() method.
     }
+
 
 }

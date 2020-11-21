@@ -8,6 +8,9 @@ use Phroute\Phroute\Dispatcher;
 use Phroute\Phroute\RouteCollector;
 use App\Controllers\Site\IndexController;
 use App\Controllers\Admin;
+use App\Controllers\Admin\NewController;
+use App\Controllers\Admin\CommentController;
+use App\Controllers\Admin\CategoryController;
 
 class Route
 {
@@ -136,14 +139,15 @@ class Route
         $router->get('admin/product/photo/delete/{id}/{photoId}', [Admin\ProductController::class, 'photoDelete']);
 
         // Страницы товаров
-        $router->any('admin/category', ['App\\Controllers\\Admin\\CategoryController', 'actionIndex']);
-        $router->get('admin/category/create', ['App\\Controllers\\Admin\\CategoryController', 'actionShowCreatePage']);
-        $router->post('admin/category/create', ['App\\Controllers\\Admin\\CategoryController', 'createCategory']);
-        $router->get('admin/category/update/{id}', ['App\\Controllers\\Admin\\CategoryController', 'actionShowUpdatePage']);
-        $router->post('admin/category/update/{id}', ['App\\Controllers\\Admin\\CategoryController', 'updateCategory']);
-        $router->get('admin/category/delete/{id}', ['App\\Controllers\\Admin\\CategoryController', 'actionShowDeletePage']);
-        $router->post('admin/category/delete/{id}', ['App\\Controllers\\Admin\\CategoryController', 'deleteCategory']);
-        $router->get('admin/category/photo/delete/{id}/{photoId}', ['App\\Controllers\\Admin\\CategoryController', 'photoDelete']);
+        $router->any('admin/category', [Admin\CategoryController::class, 'actionIndex']);
+        $router->any('admin/category/sort/{id}?', [Admin\CategoryController::class, 'actionIndex']);
+        $router->get('admin/category/create', [Admin\CategoryController::class, 'actionShowCreatePage']);
+        $router->post('admin/category/create', [Admin\CategoryController::class, 'createCategory']);
+        $router->get('admin/category/update/{id}', [Admin\CategoryController::class, 'actionShowUpdatePage']);
+        $router->post('admin/category/update/{id}', [Admin\CategoryController::class, 'updateCategory']);
+        $router->get('admin/category/delete/{id}', [Admin\CategoryController::class, 'actionShowDeletePage']);
+        $router->post('admin/category/delete', [Admin\CategoryController::class, 'deleteCategory']);
+        $router->get('admin/category/photo/delete/{id}/{photoId}', [Admin\CategoryController::class, 'photoDelete']);
 
         // Блог
         $router->any('admin/blog', [Admin\BlogController::class, 'actionIndex']);
@@ -153,24 +157,26 @@ class Route
         $router->get('admin/blog/update/{id}', [Admin\BlogController::class, 'actionShowUpdatePage']);
         $router->post('admin/blog/update/{id}', [Admin\BlogController::class, 'update']);
         $router->get('admin/blog/delete/{id}', [Admin\BlogController::class, 'actionShowDeletePage']);
-        $router->post('admin/blog/delete/{id}', [Admin\BlogController::class, 'delete']);
+        $router->post('admin/blog/delete', [Admin\BlogController::class, 'delete']);
 
         // Страницы новостей
-        $router->any('admin/new', ['App\\Controllers\\Admin\\NewController', 'actionIndex']);
-        $router->get('admin/new/create', ['App\\Controllers\\Admin\\NewController', 'actionShowCreatePage']);
-        $router->post('admin/new/create', ['App\\Controllers\\Admin\\NewController', 'create']);
-        $router->get('admin/new/update/{id}', ['App\\Controllers\\Admin\\NewController', 'actionShowUpdatePage']);
-        $router->post('admin/new/update/{id}', ['App\\Controllers\\Admin\\NewController', 'update']);
-        $router->get('admin/new/delete/{id}', ['App\\Controllers\\Admin\\NewController', 'actionShowDeletePage']);
-        $router->post('admin/new/delete/{id}', ['App\\Controllers\\Admin\\NewController', 'delete']);
+        $router->any('admin/new', [Admin\NewController::class, 'actionIndex']);
+        $router->any('admin/new/sort/{id}?', [Admin\NewController::class, 'actionIndex']);
+        $router->get('admin/new/create', [Admin\NewController::class, 'actionShowCreatePage']);
+        $router->post('admin/new/create', [Admin\NewController::class, 'create']);
+        $router->get('admin/new/update/{id}', [Admin\NewController::class, 'actionShowUpdatePage']);
+        $router->post('admin/new/update/{id}', [Admin\NewController::class, 'update']);
+        $router->get('admin/new/delete/{id}', [Admin\NewController::class, 'actionShowDeletePage']);
+        $router->post('admin/new/delete', [Admin\NewController::class, 'delete']);
 
         // Страницы отзывов
-        $router->any('admin/comments', ['App\\Controllers\\Admin\\CommentController', 'actionIndex']);
-        $router->get('admin/comments/publish/{id}', ['App\\Controllers\\Admin\\CommentController', 'publish']);
-        $router->get('admin/comments/create/{id}', ['App\\Controllers\\Admin\\CommentController', 'actionShowCreatePage']);
-        $router->post('admin/comments/create/{id}', ['App\\Controllers\\Admin\\CommentController', 'create']);
-        $router->get('admin/comments/delete/{id}', ['App\\Controllers\\Admin\\CommentController', 'actionShowDeletePage']);
-        $router->post('admin/comments/delete/{id}', ['App\\Controllers\\Admin\\CommentController', 'delete']);
+        $router->any('admin/comments', [Admin\CommentController::class, 'actionIndex']);
+        $router->any('admin/comments/sort/{id}?', [Admin\CommentController::class, 'actionIndex']);
+        $router->get('admin/comments/publish/{id}', [Admin\CommentController::class, 'publish']);
+        $router->get('admin/comments/create/{id}', [Admin\CommentController::class, 'actionShowCreatePage']);
+        $router->post('admin/comments/create/{id}', [Admin\CommentController::class, 'create']);
+        $router->get('admin/comments/delete/{id}', [Admin\CommentController::class, 'actionShowDeletePage']);
+        $router->post('admin/comments/delete', [Admin\CommentController::class, 'delete']);
 
         $router->any('admin/user', ['App\\Controllers\\Admin\\UserController', 'actionIndex']);
         $router->get('admin/user/create', ['App\\Controllers\\Admin\\UserController', 'actionShowCreatePage']);
@@ -178,7 +184,7 @@ class Route
         $router->get('admin/user/update/{id}', ['App\\Controllers\\Admin\\UserController', 'actionShowUpdatePage']);
         $router->post('admin/user/update/{id}', ['App\\Controllers\\Admin\\UserController', 'update']);
         $router->get('admin/user/delete/{id}', ['App\\Controllers\\Admin\\UserController', 'actionShowDeletePage']);
-        $router->post('admin/user/delete/{id}', ['App\\Controllers\\Admin\\UserController', 'delete']);
+        $router->post('admin/user/delete', ['App\\Controllers\\Admin\\UserController', 'delete']);
     }
 }
 

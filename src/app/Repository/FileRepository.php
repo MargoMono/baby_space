@@ -25,11 +25,11 @@ class FileRepository extends AbstractRepository
 
     public function createFile($image)
     {
-        $sql = "
+        $sql = '
             INSERT INTO file
-                (alias, name, created_at)
+                (alias, name)
             VALUES 
-                (:alias, :name, now())";
+                (:alias, :name)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':alias', $image['alias']);

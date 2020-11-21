@@ -4,14 +4,23 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
+use App\Models\Admin\BlogStrategy;
 use App\Models\Admin\CommentModel;
+use App\Models\Admin\ModelContext;
 
 class CommentController extends Controller
 {
+    private $controllerContext;
+
+    private $directory = 'comment';
+
     public function __construct()
     {
-        parent::__construct();
-        $this->model = new CommentModel();
+        $this->controllerContext = new ControllerContext(new BlogStrategy(),
+            new ModelContext(new BlogStrategy()), $this->directory);
+
+        $adminAuthenticationChecking = new AdminAuthenticationChecking();
+        $adminAuthenticationChecking->handle();
     }
 
     public function actionIndex()

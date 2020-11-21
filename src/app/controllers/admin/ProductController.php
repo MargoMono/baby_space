@@ -2,18 +2,20 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
 use App\Models\Admin\ModelContext;
 use App\Models\Admin\ProductStrategy;
 
-class ProductController extends Controller
+class ProductController implements ControllerStrategy
 {
+    private $controllerContext;
+
+    private $directory = 'product';
+
     public function __construct()
     {
-        parent::__construct();
-        $this->strategy = new ProductStrategy();
-        $this->context = new ModelContext($this->strategy);
+        $this->controllerContext = new ControllerContext(new ProductStrategy(),
+            new ModelContext(new ProductStrategy()), $this->directory);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();
@@ -21,74 +23,37 @@ class ProductController extends Controller
 
     public function actionIndex()
     {
-        $data = $this->context->getIndexData($_GET);
-        $this->view->generate('admin/product/index.twig', $data);
+        $this->controllerContext->actionIndex();
     }
 
     public function actionShowCreatePage()
     {
-        $data = $this->context->getShowCreatePageData();
-        $this->view->generate('admin/product/create.twig', $data);
+        $this->controllerContext->actionShowCreatePage();
     }
 
     public function create()
     {
-        try {
-            $this->context->create($_FILES, $_POST);
-        } catch (\Exception $exception) {
-            $data = $this->context->getShowCreatePageData();
-            $data['error_warning'] = 'Невозможно создать продукт, обратитесь к разработчику и сообщите ему код ошибки (' . $exception->getMessage() . ' )';
-            $this->view->generate('admin/product/create.twig', $data);
-            return;
-        }
-
-        header('Location: /admin/product');
+        $this->controllerContext->create();
     }
 
     public function actionShowUpdatePage($id)
     {
-        $data = $this->context->getShowUpdatePageData($id);
-        $this->view->generate('admin/product/update.twig', $data);
+        $this->controllerContext->actionShowUpdatePage($id);
     }
 
     public function update()
     {
-        $data = $this->context->update($_FILES, $_POST);
-
-        if ($data['errors']) {
-            $data = array_merge($data, $this->context->getShowUpdatePageData($_POST['id']));
-            $this->view->generate('admin/product/update.twig', $data);
-            return;
-        }
-
-        header('Location: /admin/product');
+        $this->controllerContext->update();
     }
 
     public function actionShowDeletePage($id)
     {
-        $data = $this->context->getShowDeletePageData($id);
-        $this->view->generate('admin/product/delete.twig', $data);
+        $this->controllerContext->actionShowDeletePage($id);
     }
 
     public function delete()
     {
-        try {
-            $this->context->delete($_POST);
-        } catch (\Exception $exception) {
-            $data = $this->context->getShowUpdatePageData($_POST['id']);
-            $data['error_warning'] = 'Невозможно удалить продукт, обратитесь к разработчику и сообщите ему код ошибки (' . $exception->getMessage() . ' )';
-            $this->logger->error($exception->getMessage(), $data);
-            $this->view->generate('admin/product/delete.twig', $data);
-            return;
-        }
-
-        header('Location: /admin/product');
-    }
-
-    public function photoDelete($id, $photoId)
-    {
-        $this->context->photoDelete($id, $photoId);
-        $this->view->generate('admin/product/update.twig', $this->context->getShowUpdatePageData($id));
+        $this->controllerContext->delete();
     }
 }
 

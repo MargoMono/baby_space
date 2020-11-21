@@ -72,44 +72,29 @@ class BlogStrategy implements ModelStrategy
         return $this->blogRepository->deleteById($id);
     }
 
+    public function getFile($id)
+    {
+        return $this->blogRepository->getFileByEntityId($id);
+    }
+
+    public function getFiles($id)
+    {
+        return null;
+    }
+
     public function prepareData($params)
     {
         return [
             'id' => $params['id'],
             'name' => $params['name'],
+            'short_description' => $params['short_description'],
             'description' => $params['description'],
-            'content' => $params['content'],
             'file_id' => $params['file_id'],
             'alias' => TextHelper::getTranslit($params['name']),
-            'tag_title' => $params['tag_title'],
-            'tag_description' => $params['tag_description'],
-            'tag_keywords' => $params['tag_keywords'],
+            'tag' =>  $params['tag'],
+            'meta_title' => $params['meta_title'],
+            'meta_description' => $params['meta_description'],
+            'meta_keyword' => $params['meta_keyword'],
         ];
-    }
-
-
-    public function validation($file, $params)
-    {
-        // TODO: Implement validation() method.
-    }
-
-    public function addFileConnection($file)
-    {
-        // TODO: Implement addFileConnection() method.
-    }
-
-    public function updateFileConnection($file, $params)
-    {
-        // TODO: Implement updateFileConnection() method.
-    }
-
-    public function getFile($id)
-    {
-        // TODO: Implement getFile() method.
-    }
-
-    public function getFiles($id)
-    {
-        // TODO: Implement getFiles() method.
     }
 }

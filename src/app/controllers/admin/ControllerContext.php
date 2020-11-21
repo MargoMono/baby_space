@@ -4,9 +4,6 @@ namespace App\Controllers\Admin;
 
 use App\Models\Admin\ModelContext;
 use App\Models\Admin\ModelStrategy;
-use App\Repository\CategoryRepository;
-use App\Repository\LanguageRepository;
-use App\Repository\NewRepository;
 use App\View\View;
 
 class ControllerContext
@@ -37,8 +34,7 @@ class ControllerContext
         $this->modelContext = $modelContext;
         $this->viewDirectory = $viewDirectory;
 
-        $defaultData = $this->getDefaultData();
-        $this->view = new View($defaultData);
+        $this->view = new View();
     }
 
     public function actionIndex()
@@ -62,7 +58,7 @@ class ControllerContext
             return;
         }
 
-        header("Location: /admin/$this->viewDirectory");
+        $this->successAction('добавлено');
     }
 
     public function actionShowUpdatePage($id)
@@ -80,7 +76,7 @@ class ControllerContext
             return;
         }
 
-        header("Location: /admin/$this->viewDirectory");
+        $this->successAction('отредактировано');
     }
 
     public function actionShowDeletePage($id)
@@ -98,7 +94,17 @@ class ControllerContext
             return;
         }
 
-        header("Location: /admin/$this->viewDirectory");
+        $this->successAction('удалено');
+    }
+
+    /**
+     * @param $action
+     */
+    public function successAction($action): void
+    {
+        $data = $this->modelStrategy->getIndexData();
+        $data['success'] = "Успешно $action";
+        $this->view->generate("admin/$this->viewDirectory/index.twig", $data);
     }
 
     /**
@@ -109,32 +115,5 @@ class ControllerContext
         $data = $this->modelStrategy->getIndexData();
         $data['error_warning'] = "Невозможно $action, обратитесь к разработчику";
         $this->view->generate("admin/$this->viewDirectory/index.twig", $data);
-    }
-
-    public function getDefaultData()
-    {
-        $categoryRepository = new CategoryRepository();
-        $mainCategoryList = $categoryRepository->getMainCategoryList();
-
-        foreach ($mainCategoryList as $key => $mainCategory) {
-            $mainCategoryList[$key]['childCategoryList'] = $categoryRepository->getEnableChildCategoryListById($mainCategory['id']);
-        }
-
-        if (!empty($_SESSION['comparison_product'])) {
-            $data['comparison_product_count'] = count($_SESSION['comparison_product']);
-        } else {
-            $data['comparison_product_count'] = 0;
-        }
-
-        $newRepository = new NewRepository();
-        $lastNew = $newRepository->getLastNew();
-
-        $data['lastNew'] = $lastNew;
-        $data['footerCategoryList'] = $mainCategoryList;
-
-        $languagesRepository = new LanguageRepository();
-        $data['languages'] = $languagesRepository->getAll();
-
-        return $data;
     }
 }

@@ -2,9 +2,7 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Models\Admin\CurrencyStrategy;
 use App\Models\Admin\ModelContext;
 use App\Models\Admin\LanguageStrategy;
 

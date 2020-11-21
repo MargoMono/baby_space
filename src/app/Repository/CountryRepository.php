@@ -108,9 +108,9 @@ WHERE id = :id';
     {
         $sql = '
         SELECT f.*
-            FROM language b
-            LEFT JOIN file f ON b.file_id = f.id
-        WHERE b.id = :id';
+            FROM language l
+            LEFT JOIN file f ON l.file_id = f.id
+        WHERE l.id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);

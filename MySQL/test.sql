@@ -1,263 +1,246 @@
 create table file
 (
-    id         int auto_increment,
-    name       varchar(255),
-    alias      varchar(255)           null,
-    author     varchar(255)           null,
-    created_at datetime               null,
-    updated_at datetime default now() null,
-    constraint file_pk
-        primary key (id)
-);
-
-
-create table portfolio
-(
-    id          int auto_increment,
-    name        varchar(255)           null,
-    description varchar(255)           null,
-    file_id     int                    not null,
-    updated_ut  datetime default now() null,
-    created_at  datetime               null,
-    constraint portfolio_pk
-        primary key (id),
-    constraint portfolio_file_id_fk
-        foreign key (file_id) references file (id)
+    `id`    INT AUTO_INCREMENT,
+    `name`  VARCHAR(255) NOT NULL,
+    `alias` VARCHAR(255) NOT NULL,
+    CONSTRAINT file_pk
+        PRIMARY KEY (id)
 );
 
 create table role
 (
-    id         int auto_increment,
-    name       varchar(50) not null,
-    permission int         not null,
-    constraint role_pk
-        primary key (id)
+    `id`         INT AUTO_INCREMENT,
+    `name`       VARCHAR(255) NOT NULL,
+    `permission` INT          NOT NULL,
+    CONSTRAINT role_pk
+        PRIMARY KEY (id)
 );
+
+INSERT INTO role (name, permission)
+VALUES ('Администратор', 100);
 
 create table user
 (
-    id         int auto_increment,
-    name       varchar(255) not null,
-    email      varchar(255) not null,
-    password   varchar(32)  NOT NULL,
-    salt       varchar(32)  not null,
-    active_hex varchar(32)  not null,
-    role_id    int          not null,
-    constraint user_pk
-        primary key (id),
-    constraint user_role_id_fk
-        foreign key (role_id) references role (id)
+    `id`         INT AUTO_INCREMENT,
+    `name`       VARCHAR(255) NOT NULL,
+    `email`      VARCHAR(255) NOT NULL,
+    `password`   VARCHAR(32)  NOT NULL,
+    `salt`       VARCHAR(32)  NOT NULL,
+    `active_hex` VARCHAR(32)  NOT NULL,
+    `role_id`    INT          NOT NULL,
+    CONSTRAINT user_pk
+        PRIMARY KEY (id),
+    CONSTRAINT user_role_id_fk
+        FOREIGN KEY (role_id) REFERENCES role (id)
 );
+
+INSERT INTO user (name, email, password, salt, active_hex, role_id)
+VALUES ('Маргарита Моногарова', 'margomonogarova@gmail.com', '4f03866f3db72e717c88541d53da2af1', '94231654',
+        'de88a3763b1636bec5474c277ee48c7d', 1);
 
 create table blog
 (
-    id              int auto_increment,
-    name            varchar(255)           not null,
-    description     varchar(255)           not null,
-    content         longtext               not null,
-    file_id         int                    not null,
-    alias           varchar(255)           not null,
-    tag_title       mediumtext,
-    tag_description mediumtext,
-    tag_keywords    mediumtext,
-    updated_ut      datetime default now() null,
-    created_at      datetime               null,
-    constraint new_pk
-        primary key (id),
-    constraint new_id_fk
-        foreign key (file_id) references file (id)
+    `id`                INT AUTO_INCREMENT,
+    `name`              VARCHAR(255) NOT NULL,
+    `short_description` VARCHAR(255) NOT NULL,
+    `description`       TEXT         NOT NULL,
+    `file_id`           INT          NOT NULL,
+    `alias`             VARCHAR(255) NOT NULL,
+    `tag`               VARCHAR(255)          DEFAULT NULL,
+    `meta_title`        VARCHAR(255)          DEFAULT NULL,
+    `meta_description`  VARCHAR(255)          DEFAULT NULL,
+    `meta_keyword`      VARCHAR(255)          DEFAULT NULL,
+    `created_at`        DATETIME     NOT NULL DEFAULT now(),
+    CONSTRAINT blog_pk
+        PRIMARY KEY (id),
+    CONSTRAINT blog_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id) ON UPDATE CASCADE
 );
 
 create table category
 (
-    id              int(11) auto_increment,
-    parent_id       int(11)      not null default 0,
-    name            varchar(255) not null,
-    description     longtext,
-    file_id         int          not null,
-    enabled         bool                  default 1,
-    alias           varchar(255) not null,
-    position        int(11),
-    tag_title       mediumtext,
-    tag_description mediumtext,
-    tag_keywords    mediumtext,
-    updated_ut      datetime              default now() null,
-    created_at      datetime     null,
-    constraint category_pk
-        primary key (id),
-    constraint category_file_id_fk
-        foreign key (file_id) references file (id)
-);
-
-create table page
-(
-    id              int(11) auto_increment,
-    name            varchar(255) not null,
-    content         longtext,
-    tag_title       mediumtext,
-    tag_description mediumtext,
-    tag_keywords    mediumtext,
-    constraint page_pk
-        primary key (id)
-);
-
-create table comment
-(
-    id          int(11) auto_increment,
-    parent_id   int(11),
-    user_name   varchar(255) not null,
-    user_email  varchar(255) not null,
-    description varchar(255) not null,
-    content     longtext     not null,
-    allow       bool         not null default 0,
-    created_at  datetime              default now() null,
-    constraint new_pk
-        primary key (id)
-);
-
-create table comment_file
-(
-    id         int(11) auto_increment,
-    file_id    int(11) not null,
-    comment_id int(11) not null,
-    constraint new_pk
-        primary key (id),
-    constraint comment_file_file_id_fk
-        foreign key (file_id) references file (id),
-    constraint comment_file_comment_id_fk
-        foreign key (comment_id) references comment (id)
-            on update cascade on delete cascade
+    `id`               INT(11) AUTO_INCREMENT,
+    `parent_id`        INT(11)               DEFAULT NULL,
+    `name`             VARCHAR(255) NOT NULL,
+    `description`      TEXT,
+    `file_id`          INT          NOT NULL,
+    `status`           BOOL         NOT NULL DEFAULT 1,
+    `alias`            VARCHAR(255) NOT NULL,
+    `tag`              text                  DEFAULT NULL,
+    `meta_title`       VARCHAR(255)          DEFAULT NULL,
+    `meta_description` VARCHAR(255)          DEFAULT NULL,
+    `meta_keyword`     VARCHAR(255)          DEFAULT NULL,
+    CONSTRAINT category_pk
+        PRIMARY KEY (id),
+    CONSTRAINT category_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id) ON UPDATE CASCADE
 );
 
 create table product
 (
-    id              int(11) auto_increment,
-    category_id     int(11)                not null,
-    file_id         int(11)                not null,
-    name            varchar(255)           not null,
-    description     varchar(255)           null,
-    content         longtext               null,
-    enabled         bool     default 1,
-    alias           varchar(255)           not null,
-    position        int(11),
-    tag_title       mediumtext,
-    tag_description mediumtext,
-    tag_keywords    mediumtext,
-    updated_ut      datetime default now() null,
-    created_at      datetime               null,
-    constraint product_pk
-        primary key (id),
-    constraint product_category_id_fk
-        foreign key (category_id) references category (id),
-    constraint product_file_id_fk
-        foreign key (file_id) references file (id)
+    `id`          INT(11) AUTO_INCREMENT,
+    `category_id` INT(11)      NOT NULL,
+    `price`       INT(11)      NOT NULL,
+    `file_id`     INT(11)      NOT NULL,
+    `status`      BOOL         NOT NULL DEFAULT 1,
+    `alias`       VARCHAR(255) NOT NULL,
+    `sort`        INT(11),
+    `updated_ut`  DATETIME              DEFAULT now() NULL,
+    `created_at`  DATETIME     NULL,
+    CONSTRAINT product_pk
+        PRIMARY KEY (id),
+    CONSTRAINT product_category_id_fk
+        FOREIGN KEY (category_id) REFERENCES category (id) ON UPDATE CASCADE,
+    CONSTRAINT product_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id) ON UPDATE CASCADE
+);
+
+CREATE TABLE `product_description`
+(
+    `id`               INT(11) AUTO_INCREMENT,
+    `product_id`       INT(11)      NOT NULL,
+    `language_id`      INT(11)      NOT NULL,
+    `name`             VARCHAR(255) NOT NULL,
+    `description`      text         DEFAULT NULL,
+    `tag`              text         DEFAULT NULL,
+    `meta_title`       VARCHAR(255) DEFAULT NULL,
+    `meta_description` VARCHAR(255) DEFAULT NULL,
+    `meta_keyword`     VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `name` (`name`),
+    CONSTRAINT product_description_product_id_fk
+        FOREIGN KEY (product_id) REFERENCES product (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT product_description_language_id_fk
+        FOREIGN KEY (language_id) REFERENCES language (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table product_recommendations
 (
-    id                int(11) auto_increment,
-    product_id        int(11) not null,
-    recommendation_id int(11) not null,
-    constraint product_recommendations_pk
-        primary key (id),
-    constraint product_id_product_id_fk
-        foreign key (product_id) references product (id)
-            on update cascade on delete cascade,
-    constraint recommendation_id_product_id_fk
-        foreign key (recommendation_id) references product (id)
-            on update cascade on delete cascade
+    `id`                INT(11) AUTO_INCREMENT,
+    `product_id`        INT(11) NOT NULL,
+    `recommendation_id` INT(11) NOT NULL,
+    CONSTRAINT product_recommendations_pk
+        PRIMARY KEY (id),
+    CONSTRAINT product_id_product_id_fk
+        FOREIGN KEY (product_id) REFERENCES product (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT product_id_recommendation_id_fk
+        FOREIGN KEY (recommendation_id) REFERENCES product (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-create table catalog_order
+create table product_currency
 (
-    id         int(11) auto_increment,
-    name       varchar(255) not null,
-    company    varchar(255),
-    created_at datetime     null,
-    constraint product_design_pk
-        primary key (id)
+    `id`          INT(11) AUTO_INCREMENT,
+    `currency_id` INT(11) NOT NULL,
+    `product_id`  INT(11) NOT NULL,
+    CONSTRAINT product_currency_pk
+        PRIMARY KEY (id),
+    CONSTRAINT product_currency_product_id_fk
+        FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT product_currency_currency_id_fk
+        FOREIGN KEY (currency_id) REFERENCES currency (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-create table category_file
+create table product_country
 (
-    id          int(11) auto_increment,
-    file_id     int(11) not null,
-    category_id int(11) not null,
-    constraint category_file_pk
-        primary key (id),
-    constraint category_file_file_id_fk
-        foreign key (file_id) references file (id),
-    constraint category_file_category_id_fk
-        foreign key (category_id) references category (id) ON DELETE CASCADE ON UPDATE CASCADE
+    `id`         INT(11) AUTO_INCREMENT,
+    `country_id` INT(11) NOT NULL,
+    `product_id` INT(11) NOT NULL,
+    CONSTRAINT product_currency_pk
+        PRIMARY KEY (id),
+    CONSTRAINT product_currency_product_id_fk
+        FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT product_currency_currency_id_fk
+        FOREIGN KEY (country_id) REFERENCES currency (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-rename table catalog_order to price_list_order;
-
-create table price_list
+create table comment
 (
-    id      int(11) auto_increment,
-    name    varchar(255) not null,
-    file_id int(11)      not null,
-    constraint price_list_pk
-        primary key (id),
-    constraint price_list_file_id_fk
-        foreign key (file_id) references file (id)
+    `id`          INT(11) AUTO_INCREMENT,
+    `parent_id`   INT(11),
+    `user_name`   VARCHAR(255) NOT NULL,
+    `user_email`  VARCHAR(255) NOT NULL,
+    `description` TEXT         NOT NULL,
+    `allow`       BOOL         NOT NULL DEFAULT 0,
+    `created_at`  DATETIME              DEFAULT now() NULL,
+    CONSTRAINT new_pk
+        PRIMARY KEY (id)
 );
 
-alter table page
-    add file_id int null;
-
-alter table page
-    add constraint page_file_id_fk
-        foreign key (file_id) references file (id);
-
-
-alter table blog
-    drop foreign key new_id_fk;
-
-alter table blog
-    add constraint blog_file_id_fk
-        foreign key (file_id) references file (id);
-
-
-create index blog_id_fk
-    on blog (file_id);
-
+create table comment_file
+(
+    `id`         INT(11) AUTO_INCREMENT,
+    `file_id`    INT(11) NOT NULL,
+    `comment_id` INT(11) NOT NULL,
+    CONSTRAINT new_pk
+        PRIMARY KEY (id),
+    CONSTRAINT comment_file_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id),
+    CONSTRAINT comment_file_comment_id_fk
+        FOREIGN KEY (comment_id) REFERENCES comment (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 create table new
 (
-    id              int auto_increment,
-    name            varchar(255)           not null,
-    description     varchar(255)           not null,
-    content         longtext               not null,
-    file_id         int                    not null,
-    alias           varchar(255)           not null,
-    tag_title       mediumtext,
-    tag_description mediumtext,
-    tag_keywords    mediumtext,
-    updated_ut      datetime default now() null,
-    created_at      datetime               null,
-    constraint new_pk
-        primary key (id),
-    constraint new_id_fk
-        foreign key (file_id) references file (id)
+    `id`          INT AUTO_INCREMENT,
+    `name`        VARCHAR(255)           NOT NULL,
+    `description` VARCHAR(255)           NOT NULL,
+    `file_id`     INT                    NOT NULL,
+    `alias`       VARCHAR(255)           NOT NULL,
+    `created_at`  DATETIME DEFAULT now() NULL,
+    CONSTRAINT new_pk
+        PRIMARY KEY (id),
+    CONSTRAINT new_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id)
 );
 
 create table product_file
 (
-    id         int(11) auto_increment,
-    file_id    int(11) not null,
-    product_id int(11) not null,
-    constraint product_file_pk
-        primary key (id),
-    constraint product_file_file_id_fk
-        foreign key (file_id) references file (id),
-    constraint product_file_product_id_fk
-        foreign key (product_id) references product (id)
+    `id`         INT(11) AUTO_INCREMENT,
+    `file_id`    INT(11) NOT NULL,
+    `product_id` INT(11) NOT NULL,
+    CONSTRAINT product_file_pk
+        PRIMARY KEY (id),
+    CONSTRAINT product_file_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id),
+    CONSTRAINT product_file_product_id_fk
+        FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO `role` (`id`, `name`, `permission`) VALUES (NULL, 'Администратор', '100');
+create table language
+(
+    `id`      INT AUTO_INCREMENT,
+    `name`    VARCHAR(255) NOT NULL,
+    `alias`   VARCHAR(255) NOT NULL,
+    `code`    VARCHAR(255) NOT NULL,
+    `file_id` INT          NOT NULL,
+    CONSTRAINT languages_pk
+        PRIMARY KEY (id),
+    CONSTRAINT languages_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id)
+);
 
-INSERT INTO `user` (`id`, `name`, `email`, `password`, `salt`, `active_hex`, `role_id`)
-VALUES (NULL, 'Маргарита Моногарова', 'margomonogarova@gmail.com', '4f03866f3db72e717c88541d53da2af1', '94231654',
-        'de88a3763b1636bec5474c277ee48c7d', '1')
+INSERT INTO language (name, alias, code, file_id) VALUE ('Русский', 'russian', 'ru,ru_RU.UTF-8,ru_RU,russian', '67');
+
+create table currency
+(
+    `id`    INT AUTO_INCREMENT,
+    `name`  VARCHAR(255) NOT NULL,
+    `code`  VARCHAR(255) NOT NULL,
+    `alias` VARCHAR(255) NOT NULL,
+    CONSTRAINT currency_pk
+        PRIMARY KEY (id)
+);
+
+
+CREATE TABLE country
+(
+    `id`         INT(11) AUTO_INCREMENT,
+    `name`       VARCHAR(128) NOT NULL,
+    `iso_code_2` VARCHAR(2)   NOT NULL,
+    `iso_code_3` VARCHAR(3)   NOT NULL,
+    `status`     BOOL         NOT NULL DEFAULT 1,
+    `file_id`    INT          NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT country_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id)
+);

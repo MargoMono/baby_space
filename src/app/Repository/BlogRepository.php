@@ -20,7 +20,7 @@ class BlogRepository extends AbstractRepository implements Entity
         SELECT b.*, f.alias AS file_alias
             FROM blog b
             LEFT JOIN file f ON b.file_id = f.id
-        ORDER BY '. $sort['order'].' '. $sort['desc'];
+        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
         $result->setFetchMode(PDO::FETCH_ASSOC);
@@ -49,19 +49,20 @@ class BlogRepository extends AbstractRepository implements Entity
     {
         $sql = '
 INSERT INTO blog
-    (name, description, content, file_id, alias, tag_title, tag_description, tag_keywords, created_at) 
+    (name, short_description, description, file_id, alias, tag, meta_title, meta_description, meta_keyword) 
 VALUES 
-    (:name, :description, :content, :file_id, :alias, :tag_title, :tag_description, :tag_keywords, now()) ';
+    (:name, :short_description, :description, :file_id, :alias, :tag, :meta_title, :meta_description, :meta_keyword) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
+        $result->bindParam(':short_description', $data['short_description']);
         $result->bindParam(':description', $data['description']);
-        $result->bindParam(':content', $data['content']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':tag_title', $data['tag_title']);
-        $result->bindParam(':tag_description', $data['tag_description']);
-        $result->bindParam(':tag_keywords', $data['tag_keywords']);
+        $result->bindParam(':tag', $data['tag']);
+        $result->bindParam(':meta_title', $data['meta_title']);
+        $result->bindParam(':meta_description', $data['meta_description']);
+        $result->bindParam(':meta_keyword', $data['meta_keyword']);
 
         if ($result->execute()) {
             return $this->db->lastInsertId();
@@ -76,24 +77,26 @@ VALUES
 UPDATE blog
     SET
     name = :name,
+    short_description = :short_description,
     description = :description,
-    content = :content,
     file_id = :file_id,
     alias = :alias,
-    tag_title = :tag_title,
-    tag_description = :tag_description,
-    tag_keywords = :tag_keywords
+    tag = :tag,
+    meta_title = :meta_title,
+    meta_description = :meta_description,
+    meta_keyword = :meta_keyword
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
+        $result->bindParam(':short_description', $data['short_description']);
         $result->bindParam(':description', $data['description']);
-        $result->bindParam(':content', $data['content']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':tag_title', $data['tag_title']);
-        $result->bindParam(':tag_description', $data['tag_description']);
-        $result->bindParam(':tag_keywords', $data['tag_keywords']);
+        $result->bindParam(':tag', $data['tag']);
+        $result->bindParam(':meta_title', $data['meta_title']);
+        $result->bindParam(':meta_description', $data['meta_description']);
+        $result->bindParam(':meta_keyword', $data['meta_keyword']);
         $result->bindParam(':id', $data['id']);
 
         return $result->execute();
@@ -107,6 +110,22 @@ WHERE id = :id';
         $result->bindParam(':id', $id);
 
         return $result->execute();
+    }
+
+    public function getFileByEntityId($id)
+    {
+        $sql = '
+        SELECT f.*
+            FROM blog b
+            LEFT JOIN file f ON b.file_id = f.id
+        WHERE b.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
     }
 
     public function getLastArticles($count)
@@ -152,13 +171,4 @@ WHERE id = :id';
         return $result->fetchAll();
     }
 
-    public function createFilesConnection($categoryId, $fileId)
-    {
-
-    }
-
-    public function getFileByEntityId($id)
-    {
-        // TODO: Implement getFileByEntityId() method.
-    }
 }

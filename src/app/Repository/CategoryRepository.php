@@ -9,13 +9,22 @@ class CategoryRepository extends AbstractRepository implements Entity
 {
     public function getById($id)
     {
+        if (empty($sort['order'])) {
+            $sort['order'] = 'b.id';
+        }
+
+        if (empty($sort['desc'])) {
+            $sort['desc'] = 'ASC';
+        }
+
         $sql = '
         SELECT 
             c.*, cp.name AS parent_name, f.alias AS file_alias
         FROM category c
             LEFT JOIN category cp ON c.parent_id = cp.id
             LEFT JOIN file f ON c.file_id = f.id
-        WHERE c.id = :id';
+        WHERE c.id = :id
+        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -34,7 +43,7 @@ class CategoryRepository extends AbstractRepository implements Entity
             LEFT JOIN category cp ON c.parent_id = cp.id
             LEFT JOIN file f ON c.file_id = f.id
         WHERE c.id = :id
-        AND c.enabled = 1';
+        AND c.status = 1';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -65,31 +74,15 @@ class CategoryRepository extends AbstractRepository implements Entity
         return $result->fetchAll();
     }
 
-    public function getEnabledCategoryList()
-    {
-        $sql = '
-        SELECT c.*, cp.name AS parent_name 
-            FROM category c
-            LEFT JOIN category cp ON c.parent_id = cp.id
-        WHERE c.enabled = 1
-        ORDER BY c.position ';
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
     public function getMainCategoryList()
     {
         $result = $this->db->query('
         SELECT c.*, f.alias AS file_alias
             FROM category c
             JOIN file f ON c.file_id = f.id 
-        WHERE c.enabled = 1 
+        WHERE c.status = 1 
             AND c.parent_id = 0
-        ORDER BY c.position, c.name'
+        ORDER BY c.name'
         );
 
         $result->setFetchMode(PDO::FETCH_ASSOC);
@@ -124,8 +117,7 @@ class CategoryRepository extends AbstractRepository implements Entity
             JOIN category cp ON cp.parent_id = c.id
             JOIN file f ON cp.file_id = f.id
         WHERE c.id = :id
-            AND cp.enabled = 1
-        ORDER BY position';
+            AND cp.status = 1';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -166,21 +158,21 @@ class CategoryRepository extends AbstractRepository implements Entity
     {
         $sql = '
 INSERT INTO category 
-    (parent_id, name, description, file_id, enabled, alias, position, tag_title, tag_description, tag_keywords) 
+    (parent_id, name, description, file_id, status, alias, tag, meta_title, meta_description, meta_keyword) 
 VALUES 
-    (:parent_id, :name, :description, :file_id, :enabled, :alias, :position, :tag_title, :tag_description, :tag_keywords) ';
+    (:parent_id, :name, :description, :file_id, :status, :alias, :tag, :meta_title, :meta_description, :meta_keyword) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':parent_id', $data['parent']);
         $result->bindParam(':name', $data['name']);
         $result->bindParam(':description', $data['description']);
         $result->bindParam(':file_id', $data['file_id']);
-        $result->bindParam(':enabled', $data['enabled']);
+        $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':position', $data['position']);
-        $result->bindParam(':tag_title', $data['tag_title']);
-        $result->bindParam(':tag_description', $data['tag_description']);
-        $result->bindParam(':tag_keywords', $data['tag_keywords']);
+        $result->bindParam(':tag', $data['tag']);
+        $result->bindParam(':meta_title', $data['meta_title']);
+        $result->bindParam(':meta_description', $data['meta_description']);
+        $result->bindParam(':meta_keyword', $data['meta_keyword']);
 
         if ($result->execute()) {
             return $this->db->lastInsertId();
@@ -198,12 +190,12 @@ UPDATE category
     name = :name,
     description = :description,
     file_id = :file_id,
-    enabled = :enabled,
+    status = :status,
     alias = :alias,
-    position = :position,
-    tag_title = :tag_title,
-    tag_description = :tag_description,
-    tag_keywords = :tag_keywords
+    tag = :tag,
+    meta_title = :meta_title,
+    meta_description = :meta_description,
+    meta_keyword = :meta_keyword
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
@@ -211,67 +203,31 @@ WHERE id = :id';
         $result->bindParam(':name', $data['name']);
         $result->bindParam(':description', $data['description']);
         $result->bindParam(':file_id', $data['file_id']);
-        $result->bindParam(':enabled', $data['enabled']);
+        $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':position', $data['position']);
-        $result->bindParam(':tag_title', $data['tag_title']);
-        $result->bindParam(':tag_description', $data['tag_description']);
-        $result->bindParam(':tag_keywords', $data['tag_keywords']);
+        $result->bindParam(':tag', $data['tag']);
+        $result->bindParam(':meta_title', $data['meta_title']);
+        $result->bindParam(':meta_description', $data['meta_description']);
+        $result->bindParam(':meta_keyword', $data['meta_keyword']);
         $result->bindParam(':id', $data['id']);
 
         return $result->execute();
     }
 
-    public function getCategoryFilesByCategoryId($id)
+
+    public function getFileByEntityId($id)
     {
         $sql = '
-        SELECT 
-            c.*, f.alias AS file_alias, f.id AS file_id
-        FROM category c
-            LEFT JOIN category_file cf ON c.id = cf.category_id
-            LEFT JOIN file f ON cf.file_id = f.id
-        WHERE c.id = :id';
+        SELECT f.*
+            FROM language b
+            LEFT JOIN file f ON b.file_id = f.id
+        WHERE b.id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
-        return $result->fetchAll();
-    }
-
-    public function createFilesConnection($categoryId, $fileId)
-    {
-        $sql = '
-INSERT INTO category_file
-    (category_id, file_id) 
-VALUES 
-    (:category_id, :file_id) ';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':category_id', $categoryId);
-        $result->bindParam(':file_id', $fileId);
-
-        if ($result->execute()) {
-            return $this->db->lastInsertId();
-        }
-
-        return null;
-    }
-
-    public function deleteFileConnection($categoryId, $fileId)
-    {
-        $sql = 'DELETE FROM category_file WHERE category_id = :category_id AND file_id =:file_d';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':category_id', $categoryId);
-        $result->bindParam(':file_d', $fileId);
-
-        return $result->execute();
-    }
-
-    public function getFileByEntityId($id)
-    {
-        // TODO: Implement getFileByEntityId() method.
+        return $result->fetch();
     }
 }

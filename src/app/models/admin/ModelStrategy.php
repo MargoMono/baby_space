@@ -10,8 +10,6 @@ interface ModelStrategy
 
     public function getShowCreatePageData($sort = null);
 
-    public function validation($file, $params);
-
     public function create($data);
 
     public function getShowUpdatePageData($id);

@@ -2,17 +2,20 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
 use App\Models\Admin\CategoryStrategy;
 use App\Models\Admin\ModelContext;
 
-class CategoryController extends Controller
+class CategoryController implements ControllerStrategy
 {
+    private $controllerContext;
+
+    private $directory = 'category';
+
     public function __construct()
     {
-        parent::__construct();
-        $this->context = new ModelContext(new CategoryStrategy());
+        $this->controllerContext = new ControllerContext(new CategoryStrategy(),
+            new ModelContext(new CategoryStrategy()), $this->directory);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();
@@ -20,72 +23,36 @@ class CategoryController extends Controller
 
     public function actionIndex()
     {
-        $data = $this->context->getIndexData($_POST['order']);
-        $this->view->generate('admin/category/index.twig', $data);
+        $this->controllerContext->actionIndex();
     }
 
     public function actionShowCreatePage()
     {
-        $data = $this->context->getShowCreatePageData();
-        $this->view->generate('admin/category/create.twig', $data);
+        $this->controllerContext->actionShowCreatePage();
     }
 
-    public function createCategory()
+    public function create()
     {
-        $data = $this->context->create($_FILES, $_POST);
-
-        if ($data['errors']) {
-            $this->view->generate('admin/category/create.twig', $data);
-            return;
-        }
-
-        header('Location: /admin/category');
+        $this->controllerContext->create();
     }
 
     public function actionShowUpdatePage($id)
     {
-        $data = $this->context->getShowUpdatePageData($id);
-        $this->view->generate('admin/category/update.twig', $data);
+        $this->controllerContext->actionShowUpdatePage($id);
     }
 
-    public function updateCategory()
+    public function update()
     {
-        $data = $this->context->update($_FILES, $_POST);
-
-        if ($data['errors']) {
-            $data = array_merge($data, $this->context->getShowUpdatePageData($_POST['id']));
-            $this->view->generate('admin/category/update.twig', $data);
-            return;
-        }
-
-        header('Location: /admin/category');
+        $this->controllerContext->update();
     }
 
     public function actionShowDeletePage($id)
     {
-        $data = $this->context->getShowDeletePageData($id);
-
-        $this->view->generate('admin/category/delete.twig', $data);
+        $this->controllerContext->actionShowDeletePage($id);
     }
 
-    public function deleteCategory()
+    public function delete()
     {
-        $data = $this->context->delete($_POST);
-
-        if ($data['errors']) {
-            $data = array_merge($data, $this->context->getShowDeletePageData($_POST['id']));
-            $this->view->generate('admin/category/delete.twig', $data);
-            return;
-        }
-
-        header('Location: /admin/category');
-    }
-
-    public function photoDelete($id, $photoId)
-    {
-        $data = $this->context->photoDelete($id, $photoId);
-        $data = array_merge($data, $this->context->getShowUpdatePageData($id));
-
-        $this->view->generate('admin/category/update.twig', $data);
+        $this->controllerContext->delete();
     }
 }

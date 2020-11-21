@@ -2,61 +2,73 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>
-            Панель администратора
-            <small>Обновить статью</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="/admin/blog/">Статьи</a></li>
-            <li class="active">Обновить статью</li>
-        </ol>
+        <div class="pull-right">
+            <button type="submit" form="form-option" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
+            <a href="/admin/blog" data-toggle="tooltip" title="Отменить" class="btn btn-default"><i class="fa fa-reply"></i></a>
+        </div>
+        <h1>Статьи</h1>
     </section>
-
     <section class="content">
-        {% if errors is not empty %}
-            <div class="col-lg-12 mistake">
-                <p>Ошибка:</p>
-                <ul>
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i>Обновить статью</h3>
             </div>
-        {% endif %}
-        <div class="col-lg-12 correct">
-            <div class="login-form">
-                <form action="/admin/blog/update/{{ blog.id }}" enctype="multipart/form-data" method="post">
-
-                    <input type="hidden" name="id" placeholder="" value="{{ blog.id }}">
-
-                    <p class="title-name">Название</p>
-                    <input type="text" name="name" placeholder="" value="{{ blog.name }}" required>
-                    <p class="required">*обязательное поле</p>
-
-                    <p class="title-name">Краткое описание</p>
-                    <textarea name="description" rows="4" cols="150" required>{{ blog.description }}</textarea>
-                    <p class="required">*обязательное поле</p>
-
-                    <p class="title-name">Полное описание</p>
-                    <textarea id="summernote" name="content">{{ blog.content }}</textarea>
-
-                    <input type="hidden" name="file_id" placeholder="" value="{{ blog.file_id }}">
-                    <input type="hidden" name="file_alias" placeholder="" value="{{ blog.file_alias }}">
-
-                    <p class="title-name">Изображение</p>
-                    <img src="/upload/images/blog/{{ blog.file_alias }}" width="150" alt=""/>
-                    <input type="file" name="file" value="">
-
-                    <p class="title-name">Тэг title</p>
-                    <textarea name="tag_title" rows="4" cols="150">{{ blog.tag_title }}</textarea>
-
-                    <p class="title-name">Тэг description</p>
-                    <textarea name="tag_description" rows="4" cols="150">{{ blog.tag_description }}</textarea>
-
-                    <p class="title-name">Тэг keywords</p>
-                    <textarea name="tag_keywords" rows="4" cols="150">{{ blog.tag_keywords }}</textarea>
-                    <br><br>
-                    <input type="submit" name="button" class="btn btn-default" value="Обновить"/>
+            <div class="panel-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-option" class="form-horizontal">
+                    <fieldset>
+                        <input type="hidden" name="id" placeholder="" value="{{ blog.id }}">
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-name">Название</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="name" value="{{ blog.name }}" placeholder="Название" id="input-name" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-short_description">Краткое содержание</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="short_description" value="{{ blog.short_description }}" placeholder="Краткое содержание" id="input-short_description" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-description">Текст</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="description" value="{{ blog.description }}" placeholder="Текст" id="input-description" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-file">Изображение</label>
+                            <div class="col-sm-10">
+                                <img src="/upload/images/blog/{{ blog.file_alias }}" width="150" alt=""/>
+                                <input type="hidden" name="file_id" placeholder="" value="{{ blog.file_id }}">
+                                <input type="hidden" name="file_alias" placeholder="" value="{{ blog.file_alias }}">
+                                <input type="file" name="file" id="input-file" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-meta_title">Мета-тег title (для SEO)</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="meta_title" value="{{ blog.meta_title }}" placeholder="Мета-тег title (для SEO)" id="input-meta_title" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-meta_description">Мета-тег description (для SEO)</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="meta_description" value="{{ blog.meta_description }}" placeholder="Мета-тег description (для SEO))" id="input-meta_description" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-meta_keyword">Мета-теги keywords (для SEO)</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="meta_keyword" value="{{ blog.meta_keyword }}" placeholder="Мета-теги keywords (для SEO)" id="input-meta_keyword" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-tag">Теги (через запятую)</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="tag" value="{{ blog.tag }}" placeholder="Теги (через запятую)" id="input-tag" class="form-control" />
+                            </div>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
         </div>
@@ -64,8 +76,3 @@
 </div>
 
 {% include 'admin/includes/footer.twig' %}
-
-<script>
-
-    console.log($('input[type="file"]').prop('files'))
-</script>
