@@ -10,21 +10,6 @@ create table file
         primary key (id)
 );
 
-
-create table portfolio
-(
-    id          int auto_increment,
-    name        varchar(255)           null,
-    description varchar(255)           null,
-    file_id     int                    not null,
-    updated_ut  datetime default now() null,
-    created_at  datetime               null,
-    constraint portfolio_pk
-        primary key (id),
-    constraint portfolio_file_id_fk
-        foreign key (file_id) references file (id)
-);
-
 create table role
 (
     id         int auto_increment,
@@ -87,18 +72,6 @@ create table category
         primary key (id),
     constraint category_file_id_fk
         foreign key (file_id) references file (id)
-);
-
-create table page
-(
-    id              int(11) auto_increment,
-    name            varchar(255) not null,
-    content         longtext,
-    tag_title       mediumtext,
-    tag_description mediumtext,
-    tag_keywords    mediumtext,
-    constraint page_pk
-        primary key (id)
 );
 
 create table comment
@@ -199,16 +172,6 @@ create table product_coating
             on update cascade on delete cascade
 );
 
-create table catalog_order
-(
-    id         int(11) auto_increment,
-    name       varchar(255) not null,
-    company    varchar(255),
-    created_at datetime     null,
-    constraint catalog_order_pk
-        primary key (id)
-);
-
 create table category_file
 (
     id          int(11) auto_increment,
@@ -220,19 +183,6 @@ create table category_file
         foreign key (file_id) references file (id),
     constraint category_file_category_id_fk
         foreign key (category_id) references category (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-rename table catalog_order to price_list_order;
-
-create table price_list
-(
-    id      int(11) auto_increment,
-    name    varchar(255) not null,
-    file_id int(11)      not null,
-    constraint price_list_pk
-        primary key (id),
-    constraint price_list_file_id_fk
-        foreign key (file_id) references file (id)
 );
 
 alter table page

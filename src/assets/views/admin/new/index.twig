@@ -2,59 +2,76 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>
-            Панель администратора
-            <small>Новости</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li class="active">Новости</li>
-        </ol>
+        <div class="pull-right">
+            <a href="/admin/new/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+        </div>
+        <h1>Новости</h1>
     </section>
-
     <section class="content">
-        <a href="/admin/new/create" class="btn btn-default back"><i class="fa fa-plus"></i> Добавить новость</a>
+        <div class="container-fluid">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> Список новостей</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-new">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <td class="text-center">Изображение</td>
+                                            <td class="text-left"> <a {% if sort.order == 'n.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/new/sort/?order=n.name&desc={{ sort.desc }}">Название</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'n.description' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/new/sort/?order=n.description&desc={{ sort.desc }}">Описание</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'n.created_at' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/new/sort/?order=n.created_at&desc={{ sort.desc }}">Дата новости</a></td>
+                                            <td class="text-right">Действие</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
 
-        <h4>Список статей</h4>
-
-        <table class="table-bordered table-striped table">
-            <tr>
-                <th>Номер
-                    <form action="/admin/new" method="post">
-                        <input type="hidden" name="order" value="id">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Название новости
-                    <form action="/admin/new" method="post">
-                        <input type="hidden" name="order" value="name">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Краткое описание</th>
-                <th>Дата публикации
-                    <form action="/admin/new" method="post">
-                        <input type="hidden" name="order" value="created_at">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th></th>
-                <th></th>
-            </tr>
-            {% for new in blogList %}
-                <tr>
-                    <td>{{ new.id }}</td>
-                    <td>{{ new.name }}</td>
-                    <td>{{ new.description }}</td>
-                    <td>{{ new.created_at }}</td>
-                    <td><a href="/admin/new/update/{{ new.id }}" title="Редактировать"><i
-                                    class="fa fa-pencil-square-o"></i></a></td>
-                    <td><a href="/admin/new/delete/{{ new.id }}" title="Удалить"><i
-                                    class="fa fa-times"></i></a></td>
-                </tr>
-            {% endfor %}
-        </table>
+                                        {% if newList %}
+                                            {% for new in newList %}
+                                                <tr id="item-new-{{ new.id }}">
+                                                    <td class="text-center">
+                                                        {% if new.file_alias %} <img src="/upload/images/new/{{ new.file_alias }}" alt="{{ new.name }}" class="img-thumbnail"/>
+                                                        {% else %} <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-left">{{ new.name }}</td>
+                                                    <td class="text-left">{{ new.description }}</td>
+                                                    <td class="text-left">{{ new.created_at }}</td>
+                                                    <td class="text-right">
+                                                        <a href="/admin/new/update/{{ new.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="/admin/new/delete/{{ new.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td class="text-center" colspan="8">{{ text_no_results }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
 
 {% include 'admin/includes/footer.twig' %}
-

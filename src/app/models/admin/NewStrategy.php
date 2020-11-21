@@ -3,78 +3,86 @@
 namespace App\Models\Admin;
 
 use App\Helpers\TextHelper;
+use App\Repository\LanguageRepository;
 use App\Repository\NewRepository;
 
-class NewStrategy
+class NewStrategy implements ModelStrategy
 {
     public $fileDirectory = 'new';
 
+    private $newRepository;
+
+
+    public function __construct()
+    {
+        $this->newRepository = new NewRepository();
+    }
+
+    public function getFileDirectory(): string
+    {
+        return $this->fileDirectory;
+    }
+
     public function getIndexData($sort = null)
     {
-        $repository = new NewRepository();
-        $data['blogList'] = $repository->getAll($sort);
+        $data['newList'] = $this->newRepository->getAll($sort);
+
+        if($sort['desc'] == 'DESC'){
+            $sort['desc'] = 'ASC';
+        } else {
+            $sort['desc'] = 'DESC';
+        }
+
+        $data['sort'] = $sort;
+
 
         return $data;
     }
 
     public function getShowCreatePageData($sort = null)
     {
-        $repository = new NewRepository();
-        $data['blogList'] = $repository->getAll($sort);
+        $data['newList'] = $this->newRepository->getAll($sort);
 
         return $data;
     }
 
     public function create($data)
     {
-        $repository = new NewRepository();
-
-        return $repository->create($data);
+        return $this->newRepository->create($data);
     }
 
     public function getShowUpdatePageData($id)
     {
-        $repository = new NewRepository();
-        $data['new'] = $repository->getById($id);
+        $data['new'] = $this->newRepository->getById($id);
 
         return $data;
     }
 
     public function update($data)
     {
-        $repository = new NewRepository();
-        return $repository->updateById($data);
+        return $this->newRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
     {
-        $repository = new NewRepository();
-        $data['new'] = $repository->getById($id);
+        $data['new'] = $this->newRepository->getById($id);
 
         return $data;
     }
 
     public function delete($id)
     {
-        $repository = new NewRepository();
-        return $repository->deleteById($id);
+        return $this->newRepository->deleteById($id);
     }
 
-    public function addFilesConnection($files, $id)
+    public function getFile($id)
     {
+        return $this->newRepository->getFileByEntityId($id);
     }
 
-    public function createFilesConnection($id, $fileId)
+    public function getFiles($id)
     {
-    }
-
-    public function updateFilesConnection($files, $id)
-    {
-    }
-
-    public function deleteFileConnection($id, $photoId): bool
-    {
-        return  false;
+        // TODO: Implement getFiles() method.
     }
 
     public function prepareData($params)
@@ -92,4 +100,8 @@ class NewStrategy
         ];
     }
 
+    public function validation($file, $params)
+    {
+        // TODO: Implement validation() method.
+    }
 }

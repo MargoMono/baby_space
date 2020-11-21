@@ -9,18 +9,21 @@ class NewRepository extends AbstractRepository implements Entity
 {
     public function getAll($sort = null)
     {
-        if (empty($sort)) {
-            $sort = 'id';
+        if (empty($sort['order'])) {
+            $sort['order'] = 'n.id';
+        }
+
+        if (empty($sort['desc'])) {
+            $sort['desc'] = 'ASC';
         }
 
         $sql = '
-        SELECT * 
-        FROM new 
-        ORDER BY ' . $sort . ' 
-        ASC';
+        SELECT n.* , f.alias AS file_alias
+            FROM new n
+            LEFT JOIN file f ON n.file_id = f.id
+        ORDER BY '. $sort['order'].' '. $sort['desc'];
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $sort);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
@@ -173,6 +176,17 @@ WHERE id = :id';
 
     public function getFileByEntityId($id)
     {
-        // TODO: Implement getFileByEntityId() method.
+        $sql = '
+        SELECT f.*
+            FROM new n
+            LEFT JOIN file f ON n.file_id = f.id
+        WHERE n.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
     }
 }

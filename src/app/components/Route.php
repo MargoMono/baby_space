@@ -8,7 +8,6 @@ use Phroute\Phroute\Dispatcher;
 use Phroute\Phroute\RouteCollector;
 use App\Controllers\Site\IndexController;
 use App\Controllers\Admin;
-use App\Controllers\Admin\BlogController;
 
 class Route
 {
@@ -146,7 +145,7 @@ class Route
         $router->post('admin/category/delete/{id}', ['App\\Controllers\\Admin\\CategoryController', 'deleteCategory']);
         $router->get('admin/category/photo/delete/{id}/{photoId}', ['App\\Controllers\\Admin\\CategoryController', 'photoDelete']);
 
-        // Страницы новостей
+        // Блог
         $router->any('admin/blog', [Admin\BlogController::class, 'actionIndex']);
         $router->any('admin/blog/sort/{id}?', [Admin\BlogController::class, 'actionIndex']);
         $router->get('admin/blog/create', [Admin\BlogController::class, 'actionShowCreatePage']);
@@ -165,21 +164,6 @@ class Route
         $router->get('admin/new/delete/{id}', ['App\\Controllers\\Admin\\NewController', 'actionShowDeletePage']);
         $router->post('admin/new/delete/{id}', ['App\\Controllers\\Admin\\NewController', 'delete']);
 
-
-        // Страницы контента для остальных страниц
-        $router->any('admin/page', ['App\\Controllers\\Admin\\PageController', 'actionIndex']);
-        $router->get('admin/page/update/{id}', ['App\\Controllers\\Admin\\PageController', 'actionShowUpdatePage']);
-        $router->post('admin/page/update/{id}', ['App\\Controllers\\Admin\\PageController', 'update']);
-
-        // Страницы портфолио
-        $router->any('admin/portfolio', ['App\\Controllers\\Admin\\PortfolioController', 'actionIndex']);
-        $router->get('admin/portfolio/create', ['App\\Controllers\\Admin\\PortfolioController', 'actionShowCreatePage']);
-        $router->post('admin/portfolio/create', ['App\\Controllers\\Admin\\PortfolioController', 'create']);
-        $router->get('admin/portfolio/update/{id}', ['App\\Controllers\\Admin\\PortfolioController', 'actionShowUpdatePage']);
-        $router->post('admin/portfolio/update/{id}', ['App\\Controllers\\Admin\\PortfolioController', 'update']);
-        $router->get('admin/portfolio/delete/{id}', ['App\\Controllers\\Admin\\PortfolioController', 'actionShowDeletePage']);
-        $router->post('admin/portfolio/delete/{id}', ['App\\Controllers\\Admin\\PortfolioController', 'delete']);
-
         // Страницы отзывов
         $router->any('admin/comments', ['App\\Controllers\\Admin\\CommentController', 'actionIndex']);
         $router->get('admin/comments/publish/{id}', ['App\\Controllers\\Admin\\CommentController', 'publish']);
@@ -195,16 +179,6 @@ class Route
         $router->post('admin/user/update/{id}', ['App\\Controllers\\Admin\\UserController', 'update']);
         $router->get('admin/user/delete/{id}', ['App\\Controllers\\Admin\\UserController', 'actionShowDeletePage']);
         $router->post('admin/user/delete/{id}', ['App\\Controllers\\Admin\\UserController', 'delete']);
-
-
-        $router->any('admin/price-list', ['App\\Controllers\\Admin\\PriceListController', 'actionIndex']);
-        $router->get('admin/price-list/create', ['App\\Controllers\\Admin\\PriceListController', 'actionShowCreatePage']);
-        $router->post('admin/price-list/create', ['App\\Controllers\\Admin\\PriceListController', 'create']);
-        $router->get('admin/price-list/update/{id}', ['App\\Controllers\\Admin\\PriceListController', 'actionShowUpdatePage']);
-        $router->post('admin/price-list/update/{id}', ['App\\Controllers\\Admin\\PriceListController', 'update']);
-        $router->get('admin/price-list/delete/{id}', ['App\\Controllers\\Admin\\PriceListController', 'actionShowDeletePage']);
-        $router->post('admin/price-list/delete/{id}', ['App\\Controllers\\Admin\\PriceListController', 'delete']);
-        $router->any('admin/price-list-order', ['App\\Controllers\\Admin\\PriceListController', 'actionOrder']);
     }
 }
 
