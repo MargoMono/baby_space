@@ -40,6 +40,12 @@ class ControllerContext
     public function actionIndex()
     {
         $data = $this->modelStrategy->getIndexData($_GET);
+
+        if (!empty($_SESSION['success'])) {
+            $data['success'] = 'Успешно ' . $_SESSION['success'];
+            unset($_SESSION['success']);
+        }
+
         $this->view->generate("admin/$this->viewDirectory/index.twig", $data);
     }
 
@@ -102,9 +108,8 @@ class ControllerContext
      */
     public function successAction($action): void
     {
-        $data = $this->modelStrategy->getIndexData();
-        $data['success'] = "Успешно $action";
-        $this->view->generate("admin/$this->viewDirectory/index.twig", $data);
+        $_SESSION['success'] = $action;
+        header("Location: /admin/$this->viewDirectory");
     }
 
     /**

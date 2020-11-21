@@ -5,7 +5,7 @@
         <div class="pull-right">
             <a href="/admin/category/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary"><i class="fa fa-plus"></i></a>
         </div>
-        <h1>Страны</h1>
+        <h1>Категории</h1>
     </section>
     <section class="content">
         <div class="container-fluid">
@@ -23,7 +23,7 @@
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-list"></i> Список стран</h3>
+                            <h3 class="panel-title"><i class="fa fa-list"></i> Список статей</h3>
                         </div>
                         <div class="panel-body">
                             <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-category">
@@ -33,16 +33,14 @@
                                         <tr>
                                             <td class="text-center">Изображение</td>
                                             <td class="text-left"> <a {% if sort.order == 'c.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/category/sort/?order=c.name&desc={{ sort.desc }}">Название</a></td>
-                                            <td class="text-left"> <a {% if sort.order == 'c.descr' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/category/sort/?order=c.iso_code_2&desc={{ sort.desc }}">Код ISO 2</a></td>
-                                            <td class="text-left"> <a {% if sort.order == 'c.iso_code_3' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/category/sort/?order=c.iso_code_3&desc={{ sort.desc }}">Код ISO 3</a></td>
-                                            <td class="text-left"> <a {% if sort.order == 'c.status' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/category/sort/?order=c.status&desc={{ sort.desc }}">Статус</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'с.status' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/category/sort/?order=c.status&desc={{ sort.desc }}">Статус</a></td>
                                             <td class="text-right">Действие</td>
                                         </tr>
                                         </thead>
                                         <tbody>
 
-                                        {% if countryList %}
-                                            {% for category in countryList %}
+                                        {% if categoryList %}
+                                            {% for category in categoryList %}
                                                 <tr id="item-category-{{ category.id }}">
                                                     <td class="text-center">
                                                         {% if category.file_alias %} <img src="/upload/images/category/{{ category.file_alias }}" alt="{{ category.name }}" class="img-thumbnail"/>
@@ -50,20 +48,10 @@
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-left">{{ category.name }}</td>
-                                                    <td class="text-left">{{ category.iso_code_2 }}</td>
-                                                    <td class="text-left">{{ category.iso_code_3 }}</td>
-                                                    <td class="text-left">
-                                                        {% if category.status == 1 %}
-                                                            Отображается
-                                                        {% else %}
-                                                            Скрыта
-                                                        {% endif %}
-                                                    </td>
+                                                    <td class="text-left">{% if category.status == 1 %} Отбражается {% else %} Скрыта {% endif %}</td>
                                                     <td class="text-right">
-                                                        {% if category.alias != 'russian' %}
-                                                            <a href="/admin/category/update/{{ category.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
-                                                            <a href="/admin/category/delete/{{ category.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
-                                                        {% endif %}
+                                                        <a href="/admin/category/update/{{ category.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="/admin/category/delete/{{ category.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -73,7 +61,6 @@
                                             </tr>
                                         {% endif %}
                                         </tbody>
-
                                     </table>
                                 </div>
                             </form>

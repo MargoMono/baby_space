@@ -7,10 +7,10 @@ use PDO;
 
 class CategoryRepository extends AbstractRepository implements Entity
 {
-    public function getById($id)
+    public function getAll($sort = null)
     {
         if (empty($sort['order'])) {
-            $sort['order'] = 'b.id';
+            $sort['order'] = 'c.id';
         }
 
         if (empty($sort['desc'])) {
@@ -19,12 +19,29 @@ class CategoryRepository extends AbstractRepository implements Entity
 
         $sql = '
         SELECT 
+            c.*, cp.name AS parent_name, cp.id AS parent_id, f.alias AS file_alias
+        FROM category c
+            LEFT JOIN category cp ON c.parent_id = cp.id
+            LEFT JOIN file f ON c.file_id = f.id
+        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':order', $sort);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getById($id)
+    {
+        $sql = '
+        SELECT 
             c.*, cp.name AS parent_name, f.alias AS file_alias
         FROM category c
             LEFT JOIN category cp ON c.parent_id = cp.id
             LEFT JOIN file f ON c.file_id = f.id
-        WHERE c.id = :id
-        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
+        WHERE c.id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -53,26 +70,6 @@ class CategoryRepository extends AbstractRepository implements Entity
         return $result->fetch();
     }
 
-    public function getAll($sort = null)
-    {
-        if (empty($sort)) {
-            $sort = 'id';
-        }
-
-        $sql = '
-        SELECT 
-            c.*, cp.name AS parent_name, cp.id AS parent_id
-        FROM category c
-            LEFT JOIN category cp ON c.parent_id = cp.id
-        ORDER BY ' . $sort;
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $sort);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
 
     public function getMainCategoryList()
     {
@@ -214,14 +211,13 @@ WHERE id = :id';
         return $result->execute();
     }
 
-
     public function getFileByEntityId($id)
     {
         $sql = '
         SELECT f.*
-            FROM language b
-            LEFT JOIN file f ON b.file_id = f.id
-        WHERE b.id = :id';
+            FROM category c
+            LEFT JOIN file f ON c.file_id = f.id
+        WHERE c.id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);

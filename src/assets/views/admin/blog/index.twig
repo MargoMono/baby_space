@@ -33,7 +33,7 @@
                                         <tr>
                                             <td class="text-center">Изображение</td>
                                             <td class="text-left"> <a {% if sort.order == 'b.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/blog/sort/?order=b.name&desc={{ sort.desc }}">Название</a></td>
-                                            <td class="text-left"> <a {% if sort.order == 'b.description' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/blog/sort/?order=b.description&desc={{ sort.desc }}">Описание</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'b.short_description' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/blog/sort/?order=b.short_description&desc={{ sort.desc }}">Краткое содержание</a></td>
                                             <td class="text-left"> <a {% if sort.order == 'b.created_at' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/blog/sort/?order=b.created_at&desc={{ sort.desc }}">Дата</a></td>
                                             <td class="text-right">Действие</td>
                                         </tr>
@@ -49,7 +49,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-left">{{ blog.name }}</td>
-                                                    <td class="text-left">{{ blog.description }}</td>
+                                                    <td class="text-left">{{ blog.short_description }}</td>
                                                     <td class="text-left">{{ blog.created_at }}</td>
                                                     <td class="text-right">
                                                         <a href="/admin/blog/update/{{ blog.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>

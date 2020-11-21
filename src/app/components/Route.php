@@ -142,12 +142,11 @@ class Route
         $router->any('admin/category', [Admin\CategoryController::class, 'actionIndex']);
         $router->any('admin/category/sort/{id}?', [Admin\CategoryController::class, 'actionIndex']);
         $router->get('admin/category/create', [Admin\CategoryController::class, 'actionShowCreatePage']);
-        $router->post('admin/category/create', [Admin\CategoryController::class, 'createCategory']);
+        $router->post('admin/category/create', [Admin\CategoryController::class, 'create']);
         $router->get('admin/category/update/{id}', [Admin\CategoryController::class, 'actionShowUpdatePage']);
-        $router->post('admin/category/update/{id}', [Admin\CategoryController::class, 'updateCategory']);
+        $router->post('admin/category/update/{id}', [Admin\CategoryController::class, 'update']);
         $router->get('admin/category/delete/{id}', [Admin\CategoryController::class, 'actionShowDeletePage']);
-        $router->post('admin/category/delete', [Admin\CategoryController::class, 'deleteCategory']);
-        $router->get('admin/category/photo/delete/{id}/{photoId}', [Admin\CategoryController::class, 'photoDelete']);
+        $router->post('admin/category/delete', [Admin\CategoryController::class, 'delete']);
 
         // Блог
         $router->any('admin/blog', [Admin\BlogController::class, 'actionIndex']);
