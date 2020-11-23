@@ -9,6 +9,7 @@ use App\Models\Admin\ModelContext;
 class CommentController implements ControllerStrategy
 {
     private $controllerContext;
+    private $model;
 
     private $directory = 'comment';
 
@@ -16,6 +17,7 @@ class CommentController implements ControllerStrategy
     {
         $this->controllerContext = new ControllerContext(new CommentModel(),
             new ModelContext(new CommentModel()), $this->directory);
+        $this->model = new CommentModel();
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();
@@ -57,5 +59,10 @@ class CommentController implements ControllerStrategy
     public function imageDelete($id, $imageId)
     {
         $this->controllerContext->imageDelete($id, $imageId);
+    }
+
+    public function commentAnswerImageDelete($commentId, $commentAnswerId, $imageId)
+    {
+        $this->model->commentAnswerImageDelete($commentId, $commentAnswerId, $imageId);
     }
 }
