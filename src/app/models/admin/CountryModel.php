@@ -2,16 +2,16 @@
 
 namespace App\Models\Admin;
 
-use App\Repository\LanguageRepository;
+use App\Repository\CountryRepository;
 
-class LanguageStrategy implements ModelStrategy
+class CountryModel implements ModelStrategy
 {
-    public $fileDirectory = 'language';
-    private $languageRepository;
+    public $fileDirectory = 'country';
+    private $countryRepository;
 
     public function __construct()
     {
-        $this->languageRepository = new LanguageRepository();
+        $this->countryRepository = new CountryRepository();
     }
 
     public function getFileDirectory(): string
@@ -21,7 +21,7 @@ class LanguageStrategy implements ModelStrategy
 
     public function getIndexData($sort = null)
     {
-        $data['languageList'] = $this->languageRepository->getAll($sort);
+        $data['countryList'] = $this->countryRepository->getAll($sort);
 
         if($sort['desc'] == 'DESC'){
             $sort['desc'] = 'ASC';
@@ -37,43 +37,43 @@ class LanguageStrategy implements ModelStrategy
 
     public function getShowCreatePageData($sort = null)
     {
-        $data['languageList'] = $this->languageRepository->getAll($sort);
+        $data['countryList'] = $this->countryRepository->getAll($sort);
 
         return $data;
     }
 
     public function create($data)
     {
-        return $this->languageRepository->create($data);
+        return $this->countryRepository->create($data);
     }
 
     public function getShowUpdatePageData($id)
     {
-        $data['language'] = $this->languageRepository->getById($id);
+        $data['country'] = $this->countryRepository->getById($id);
 
         return $data;
     }
 
     public function update($data)
     {
-        return $this->languageRepository->updateById($data);
+        return $this->countryRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
     {
-        $data['language'] = $this->languageRepository->getById($id);
+        $data['country'] = $this->countryRepository->getById($id);
 
         return $data;
     }
 
     public function delete($id)
     {
-        return $this->languageRepository->deleteById($id);
+        return $this->countryRepository->deleteById($id);
     }
 
     public function getFile($id)
     {
-        return $this->languageRepository->getFileByEntityId($id);
+        return $this->countryRepository->getFileByEntityId($id);
     }
 
     public function getFiles($id)
@@ -86,8 +86,9 @@ class LanguageStrategy implements ModelStrategy
         return [
             'id' => $params['id'],
             'name' => $params['name'],
-            'code' => $params['code'],
-            'alias' => $params['alias'],
+            'iso_code_2' => $params['iso_code_2'],
+            'iso_code_3' => $params['iso_code_3'],
+            'status' => $params['status'],
             'file_id' => $params['file_id'],
         ];
     }
@@ -95,5 +96,15 @@ class LanguageStrategy implements ModelStrategy
     public function validation($file, $params)
     {
         // TODO: Implement validation() method.
+    }
+
+    public function createFilesConnection($id, $fileId)
+    {
+        // TODO: Implement createFilesConnection() method.
+    }
+
+    public function deleteFileConnection($id, $imageId)
+    {
+        // TODO: Implement deleteFileConnection() method.
     }
 }

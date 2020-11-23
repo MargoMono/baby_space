@@ -3,19 +3,17 @@
 namespace App\Models\Admin;
 
 use App\Helpers\TextHelper;
-use App\Repository\LanguageRepository;
-use App\Repository\NewRepository;
+use App\Repository\BlogRepository;
 
-class NewStrategy implements ModelStrategy
+class BlogModel implements ModelStrategy
 {
-    public $fileDirectory = 'new';
+    public $fileDirectory = 'blog';
 
-    private $newRepository;
-
+    private $blogRepository;
 
     public function __construct()
     {
-        $this->newRepository = new NewRepository();
+        $this->blogRepository = new BlogRepository();
     }
 
     public function getFileDirectory(): string
@@ -25,7 +23,7 @@ class NewStrategy implements ModelStrategy
 
     public function getIndexData($sort = null)
     {
-        $data['newList'] = $this->newRepository->getAll($sort);
+        $data['blogList'] = $this->blogRepository->getAll($sort);
 
         if($sort['desc'] == 'DESC'){
             $sort['desc'] = 'ASC';
@@ -35,54 +33,61 @@ class NewStrategy implements ModelStrategy
 
         $data['sort'] = $sort;
 
-
         return $data;
     }
 
     public function getShowCreatePageData($sort = null)
     {
-        $data['newList'] = $this->newRepository->getAll($sort);
+        $data['blogList'] = $this->blogRepository->getAll($sort);
 
         return $data;
     }
 
     public function create($data)
     {
-        return $this->newRepository->create($data);
+        return $this->blogRepository->create($data);
     }
 
     public function getShowUpdatePageData($id)
     {
-        $data['new'] = $this->newRepository->getById($id);
+        $data['blog'] = $this->blogRepository->getById($id);
 
         return $data;
     }
 
     public function update($data)
     {
-        return $this->newRepository->updateById($data);
+        return $this->blogRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
     {
-        $data['new'] = $this->newRepository->getById($id);
+        $data['blog'] = $this->blogRepository->getById($id);
 
         return $data;
     }
 
     public function delete($id)
     {
-        return $this->newRepository->deleteById($id);
+        return $this->blogRepository->deleteById($id);
+    }
+
+    public function createFilesConnection($id, $fileId)
+    {
+    }
+
+    public function deleteFileConnection($id, $imageId)
+    {
     }
 
     public function getFile($id)
     {
-        return $this->newRepository->getFileByEntityId($id);
+        return $this->blogRepository->getFileByEntityId($id);
     }
 
     public function getFiles($id)
     {
-        // TODO: Implement getFiles() method.
+        return null;
     }
 
     public function prepareData($params)
@@ -90,18 +95,14 @@ class NewStrategy implements ModelStrategy
         return [
             'id' => $params['id'],
             'name' => $params['name'],
+            'short_description' => $params['short_description'],
             'description' => $params['description'],
-            'content' => $params['content'],
             'file_id' => $params['file_id'],
             'alias' => TextHelper::getTranslit($params['name']),
-            'tag_title' => $params['tag_title'],
-            'tag_description' => $params['tag_description'],
-            'tag_keywords' => $params['tag_keywords'],
+            'tag' =>  $params['tag'],
+            'meta_title' => $params['meta_title'],
+            'meta_description' => $params['meta_description'],
+            'meta_keyword' => $params['meta_keyword'],
         ];
-    }
-
-    public function validation($file, $params)
-    {
-        // TODO: Implement validation() method.
     }
 }

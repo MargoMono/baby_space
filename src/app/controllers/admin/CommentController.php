@@ -2,13 +2,11 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Models\Admin\BlogStrategy;
 use App\Models\Admin\CommentModel;
 use App\Models\Admin\ModelContext;
 
-class CommentController extends Controller
+class CommentController implements ControllerStrategy
 {
     private $controllerContext;
 
@@ -16,8 +14,8 @@ class CommentController extends Controller
 
     public function __construct()
     {
-        $this->controllerContext = new ControllerContext(new BlogStrategy(),
-            new ModelContext(new BlogStrategy()), $this->directory);
+        $this->controllerContext = new ControllerContext(new CommentModel(),
+            new ModelContext(new CommentModel()), $this->directory);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();
@@ -25,77 +23,39 @@ class CommentController extends Controller
 
     public function actionIndex()
     {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
-
-        $data = $this->model->getIndexData($_POST['order']);
-
-        $this->view->generate('admin/comment/index.twig', $data);
+        $this->controllerContext->actionIndex();
     }
 
-    public function publish($id)
+    public function actionShowCreatePage()
     {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
-
-        $data = $this->model->publish($id);
-
-        if ($data['errors']) {
-            $this->view->generate('admin/comment/index.twig', $data);
-            return;
-        }
-
-        header("Location: /admin/comments");
-    }
-
-    public function actionShowCreatePage($id)
-    {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
-
-        $data = $this->model->getShowCreatePageData($id);
-
-        $this->view->generate('admin/comment/create.twig', $data);
     }
 
     public function create()
     {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
+    }
 
-        $data = $this->model->create($_FILES, $_POST);
+    public function actionShowUpdatePage($id)
+    {
+        $this->controllerContext->actionShowUpdatePage($id);
+    }
 
-        if ($data['errors']) {
-            $this->view->generate('admin/comment/create.twig', $data);
-            return;
-        }
-
-        header("Location: /admin/comments");
+    public function update()
+    {
+        $this->controllerContext->update();
     }
 
     public function actionShowDeletePage($id)
     {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
-
-        $data = $this->model->getShowDeletePageData($id);
-
-        $this->view->generate('admin/comment/delete.twig', $data);
+        $this->controllerContext->actionShowDeletePage($id);
     }
 
     public function delete()
     {
-        $adminAuthenticationChecking = new AdminAuthenticationChecking();
-        $adminAuthenticationChecking->handle();
-
-        $data = $this->model->delete($_POST);
-
-        if ($data['errors']) {
-            $this->view->generate('admin/comment/delete.twig', $data);
-            return;
-        }
-
-        header("Location: /admin/comments");
+        $this->controllerContext->delete();
     }
 
+    public function imageDelete($id, $imageId)
+    {
+        $this->controllerContext->imageDelete($id, $imageId);
+    }
 }

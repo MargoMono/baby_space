@@ -5,7 +5,7 @@ namespace App\Models\Admin;
 use App\Helpers\TextHelper;
 use App\Repository\CategoryRepository;
 
-class CategoryStrategy implements ModelStrategy
+class CategoryModel implements ModelStrategy
 {
     public $fileDirectory = 'category';
 
@@ -67,6 +67,19 @@ class CategoryStrategy implements ModelStrategy
         return $data;
     }
 
+    public function delete($id)
+    {
+        return $this->categoryRepository->deleteById($id);
+    }
+
+    public function createFilesConnection($id, $fileId)
+    {
+    }
+
+    public function deleteFileConnection($id, $imageId)
+    {
+    }
+
     public function getFile($id)
     {
         return $this->categoryRepository->getFileByEntityId($id);
@@ -75,11 +88,6 @@ class CategoryStrategy implements ModelStrategy
     public function getFiles($id)
     {
         return null;
-    }
-
-    public function delete($id)
-    {
-        return $this->categoryRepository->deleteById($id);
     }
 
     public function prepareData($params)

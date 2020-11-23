@@ -51,7 +51,7 @@
                                                     <td class="text-left">{{ blog.name }}</td>
                                                     <td class="text-left">{{ blog.short_description }}</td>
                                                     <td class="text-left">{{ blog.created_at }}</td>
-                                                    <td class="text-right">
+                                                    <td class="text-right td-action">
                                                         <a href="/admin/blog/update/{{ blog.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
                                                         <a href="/admin/blog/delete/{{ blog.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
                                                     </td>
@@ -59,7 +59,7 @@
                                             {% endfor %}
                                         {% else %}
                                             <tr>
-                                                <td class="text-center" colspan="8">{{ text_no_results }}</td>
+                                                <td class="text-center" colspan="8">Ничего не найдено</td>
                                             </tr>
                                         {% endif %}
                                         </tbody>

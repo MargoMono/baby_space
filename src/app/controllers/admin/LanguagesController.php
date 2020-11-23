@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Middleware\AdminAuthenticationChecking;
 use App\Models\Admin\ModelContext;
-use App\Models\Admin\LanguageStrategy;
+use App\Models\Admin\LanguageModel;
 
 class LanguagesController implements ControllerStrategy
 {
@@ -14,8 +14,8 @@ class LanguagesController implements ControllerStrategy
 
     public function __construct()
     {
-        $this->controllerContext = new ControllerContext(new LanguageStrategy(),
-            new ModelContext(new LanguageStrategy()), $this->directory);
+        $this->controllerContext = new ControllerContext(new LanguageModel(),
+            new ModelContext(new LanguageModel()), $this->directory);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

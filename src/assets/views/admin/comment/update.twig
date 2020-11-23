@@ -2,74 +2,78 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>
-            Панель администратора
-            <small>Добавить категорию</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="/admin/category/">Категории товаров</a></li>
-            <li class="active">Добавить категорию</li>
-        </ol>
+        <div class="pull-right">
+            <button type="submit" form="form-option" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
+            <a href="/admin/comment" data-toggle="tooltip" title="Отменить" class="btn btn-default"><i class="fa fa-reply"></i></a>
+        </div>
+        <h1>Отзывы</h1>
     </section>
-
     <section class="content">
-        {% if errors is not empty %}
-            <div class="col-lg-12 mistake">
-                <p>Ошибка:</p>
-                <ul>
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
+        <div class="panel panel-default">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i>Изменить отзыв</h3>
             </div>
-        {% endif %}
-        <div class="col-lg-12 correct">
-            <div class="login-form">
-                <form action="/admin/category/update/{{ category.id }}" enctype="multipart/form-data" method="post">
-
-                    <input type="hidden" name="id" placeholder="" value="{{ category.id }}">
-
-                    <p class="title-name">Родительская категория</p>
-                    <select name="parent">
-                        <option value="{{ category.parent_id }}" selected="selected">{{ category.parent_name }}</option>
-                        {% for category in categoryList %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select>
-
-                    <p class="title-name">Название</p>
-                    <input type="text" name="name" placeholder="" value="{{ category.name }}" required>
-                    <p class="required">*обязательное поле</p>
-
-                    <p class="title-name">Описание</p>
-                    <textarea id="summernote" name="description">{{ category.description }}</textarea>
-
-                    <input type="hidden" name="file_id" placeholder="" value="{{ category.file_id }}">
-                    <input type="hidden" name="file_alias" placeholder="" value="{{ category.file_alias }}">
-
-                    <p class="title-name">Изображение</p>
-                    <img src="/upload/images/category/{{ category.file_alias }}" width="150" alt=""/>
-                    <input type="file" name="file" value="">
-
-                    <p class="title-name">Статус</p>
-                    <select name="enabled">
-                        <option value="1" selected="selected">Отображается</option>
-                        <option value="0">Скрыта</option>
-                    </select>
-
-                    <p class="title-name">Порядковый номер</p>
-                    <input type="text" name="position" placeholder="" value="{{ category.position }}">
-
-                    <p class="title-name">Тэг title</p>
-                    <textarea name="tag_title" rows="4" cols="150">{{ category.tag_title }}</textarea>
-
-                    <p class="title-name">Тэг description</p>
-                    <textarea name="tag_description" rows="4" cols="150">{{ category.tag_description }}</textarea>
-
-                    <p class="title-name">Тэг keywords</p>
-                    <textarea name="tag_keywords" rows="4" cols="150">{{ category.tag_keywords }}</textarea>
-                    <br><br>
-                    <input type="submit" name="button" class="btn btn-default" value="Обновить"/>
+            <div class="panel-body">
+                <form action="" method="post" enctype="multipart/form-data" id="form-option" class="form-horizontal">
+                    <fieldset>
+                        <legend>Отзыв</legend>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-user_name">Имя клиента</label>
+                            <div class="col-sm-10">
+                                <input type="text" required value="{{ comment.user_name }}" name="user_name" placeholder="Имя клиента" id="input-user_name" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-user_email">Эл. почта клиента</label>
+                            <div class="col-sm-10">
+                                <input type="text" required value="{{ comment.user_email }}" name="user_email" placeholder="Эл. почта клиента" id="input-user_email" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-description">Текст отзыва</label>
+                            <div class="col-sm-10">
+                                <input type="text" required value="{{ comment.description }}" name="description" placeholder="Текст отзыва" id="input-description" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-status">Статус</label>
+                            <div class="col-sm-10">
+                                <select name="status" id="input-status" class="form-control">
+                                    <option value="1" {% if comment.status == 1 %} selected {% endif %}>Отображается</option>
+                                    <option value="0" {% if comment.status == 0 %} selected {% endif %}>Скрыт</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-files">Изображения к отзыву</label>
+                            <div class="col-sm-10">
+                                {% for image in commentImages %}
+                                    <img src="/upload/images/comment/{{ image.file_alias }}" width="150" alt=""/>
+                                    <a href="/admin/comment/image/delete/{{ image.id }}/{{ image.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
+                                    <br><br>
+                                {% endfor %}
+                                <input type='file' name='files[]' multiple id="input-files" class="form-control"  >
+                            </div>
+                        </div>
+                        <legend>Ответ на отзыв</legend>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-answer_description">Ответ на отзыв</label>
+                            <div class="col-sm-10">
+                                <input type="text" value="{{ answer.description }}" name="answer_description" placeholder="Текст отзыва" id="input-answer_description" class="form-control" />
+                            </div>
+                        </div>
+                        <input type="hidden" value="{{ comment.id }}" name="id" />
+                    </fieldset>
                 </form>
             </div>
         </div>
@@ -77,8 +81,3 @@
 </div>
 
 {% include 'admin/includes/footer.twig' %}
-
-<script>
-
-    console.log($('input[type="file"]').prop('files'))
-</script>

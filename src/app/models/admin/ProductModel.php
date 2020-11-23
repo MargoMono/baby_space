@@ -9,7 +9,7 @@ use App\Repository\ProductDescriptionRepository;
 use App\Repository\ProductRecommendationsRepository;
 use App\Repository\ProductRepository;
 
-class ProductStrategy implements ModelStrategy
+class ProductModel implements ModelStrategy
 {
     public $fileDirectory = 'product';
     public $productRepository;
@@ -152,9 +152,9 @@ class ProductStrategy implements ModelStrategy
         $this->productRepository->createFilesConnection($id, $fileId);
     }
 
-    public function deleteFileConnection($id, $photoId)
+    public function deleteFileConnection($id, $imageId)
     {
-        $this->productRepository->deleteFileConnection($id, $photoId);
+        $this->productRepository->deleteFileConnection($id, $imageId);
     }
 
     public function prepareData($params)

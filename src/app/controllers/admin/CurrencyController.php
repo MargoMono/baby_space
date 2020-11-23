@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Middleware\AdminAuthenticationChecking;
 use App\Models\Admin\ModelContext;
-use App\Models\Admin\CurrencyStrategy;
+use App\Models\Admin\CurrencyModel;
 
 class CurrencyController implements ControllerStrategy
 {
@@ -14,8 +14,8 @@ class CurrencyController implements ControllerStrategy
 
     public function __construct()
     {
-        $this->controllerContext = new ControllerContext(new CurrencyStrategy(),
-            new ModelContext(new CurrencyStrategy()), $this->directory);
+        $this->controllerContext = new ControllerContext(new CurrencyModel(),
+            new ModelContext(new CurrencyModel()), $this->directory);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

@@ -3,7 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Middleware\AdminAuthenticationChecking;
-use App\Models\Admin\CountryStrategy;
+use App\Models\Admin\CountryModel;
 use App\Models\Admin\ModelContext;
 
 class CountryController implements ControllerStrategy
@@ -14,8 +14,8 @@ class CountryController implements ControllerStrategy
 
     public function __construct()
     {
-        $this->controllerContext = new ControllerContext(new CountryStrategy(),
-            new ModelContext(new CountryStrategy()), $this->directory);
+        $this->controllerContext = new ControllerContext(new CountryModel(),
+            new ModelContext(new CountryModel()), $this->directory);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

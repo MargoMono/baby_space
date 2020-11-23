@@ -8,43 +8,6 @@ use PDOException;
 
 class ProductRepository extends AbstractRepository
 {
-    public function getById($id)
-    {
-        $sql = '
-        SELECT 
-            c.*, cp.name AS category_name, f.alias AS file_alias
-        FROM product c
-            JOIN category cp ON c.category_id = cp.id
-            JOIN file f ON c.file_id = f.id
-        WHERE c.id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetch();
-    }
-
-    public function getEnableProductById($id)
-    {
-        $sql = '
-        SELECT 
-            p.*, cp.name AS category_name, f.alias AS file_alias
-        FROM product p
-            JOIN category cp ON p.category_id = cp.id
-            JOIN file f ON p.file_id = f.id
-        WHERE p.id = :id
-        AND p.status = 1';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetch();
-    }
-
     public function getAll($sort = null)
     {
         if (empty($sort['order'])) {
@@ -54,7 +17,7 @@ class ProductRepository extends AbstractRepository
         if (empty($sort['desc'])) {
             $sort['desc'] = 'ASC';
         }
-        
+
         $languageId = Language::DEFAUL_LANGUGE_ID;
 
         $sql = '
@@ -79,67 +42,22 @@ class ProductRepository extends AbstractRepository
         return $result->fetchAll();
     }
 
-    public function getAllEnabledProductListByCategory($categoryId)
+    public function getById($id)
     {
         $sql = '
         SELECT 
-            p.*, f.alias as file_alias
-        FROM product p 
-            JOIN category c ON p.category_id = c.id 
-            JOIN file f ON p.file_id = f.id 
-        WHERE p.status = 1 
-            AND p.category_id = :category_id 
-        ORDER BY p.sort ASC ';
+            c.*, cp.name AS category_name, f.alias AS file_alias
+        FROM product c
+            JOIN category cp ON c.category_id = cp.id
+            JOIN file f ON c.file_id = f.id
+        WHERE c.id = :id';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+        $result->bindParam(':id', $id);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
-        return $result->fetchAll();
-    }
-
-    public function getEnabledProductListByCategory($categoryId, $limit)
-    {
-        $sql = '
-        SELECT 
-            p.*, f.alias as file_alias
-        FROM product p 
-            JOIN category c ON p.category_id = c.id 
-            JOIN file f ON p.file_id = f.id 
-        WHERE p.status = 1 
-            AND p.category_id = :category_id 
-        ORDER BY p.sort ASC 
-        LIMIT :limit';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
-        $result->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getMoreEnabledProductsByCategory($categoryId, $count, $limit)
-    {
-        $sql = '
-        SELECT 
-            p.*, f.alias as file_alias
-        FROM product p 
-            JOIN category c ON p.category_id = c.id 
-            JOIN file f ON p.file_id = f.id 
-        WHERE p.status = 1 
-            AND p.category_id = :category_id 
-        ORDER BY p.sort ASC 
-        LIMIT ' . $limit . ' OFFSET ' . $count;
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
+        return $result->fetch();
     }
 
     public function create($data)
@@ -216,44 +134,6 @@ WHERE id = :id';
         }
     }
 
-    public function getEnabledProductListByIds($ids, $limit)
-    {
-        $sql = '
-        SELECT 
-            p.*, f.alias as file_alias
-        FROM product p 
-            JOIN file f ON p.file_id = f.id 
-        WHERE p.status = 1 
-            AND p.id IN (' . $ids . ') 
-        ORDER BY p.position ASC 
-        LIMIT :limit';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getAllEnabledProductListByIds($ids)
-    {
-        $sql = '
-        SELECT 
-            p.*, f.alias as file_alias
-        FROM product p 
-            JOIN file f ON p.file_id = f.id 
-        WHERE p.status = 1 
-             AND p.id IN (' . $ids . ') 
-        ORDER BY p.position ASC ';
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
     public function createFilesConnection($productId, $fileId)
     {
         $sql = '
@@ -291,16 +171,6 @@ VALUES
         $result->execute();
 
         return $result->fetchAll();
-    }
-
-    public function deleteFilesProductConnectionByProductId($id)
-    {
-        $sql = 'DELETE FROM product_file WHERE product_id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-
-        return $result->execute();
     }
 
     public function deleteFileConnection($productId, $fileId)

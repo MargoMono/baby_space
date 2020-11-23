@@ -3,7 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Middleware\AdminAuthenticationChecking;
-use App\Models\Admin\CategoryStrategy;
+use App\Models\Admin\CategoryModel;
 use App\Models\Admin\ModelContext;
 
 class CategoryController implements ControllerStrategy
@@ -14,8 +14,8 @@ class CategoryController implements ControllerStrategy
 
     public function __construct()
     {
-        $this->controllerContext = new ControllerContext(new CategoryStrategy(),
-            new ModelContext(new CategoryStrategy()), $this->directory);
+        $this->controllerContext = new ControllerContext(new CategoryModel(),
+            new ModelContext(new CategoryModel()), $this->directory);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

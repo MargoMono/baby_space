@@ -5312,3 +5312,6 @@ table.text-center, table.text-center td, table.text-center th {
     max-height: 40px;
 }
 
+.td-action{
+    min-width: 100px;
+}

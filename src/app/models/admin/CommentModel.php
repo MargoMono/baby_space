@@ -2,161 +2,114 @@
 
 namespace App\Models\Admin;
 
-use App\Models\Model;
 use App\Helpers\FileUploaderHelper;
 use App\Repository\CommentRepository;
-use App\Repository\FileRepository;
-use DateTime;
-use Exception;
-use RuntimeException;
 
-class CommentModel extends Model
+class CommentModel implements ModelStrategy
 {
-    /**
-     * @param $sort
-     * @return array|void
-     * @throws Exception
-     */
-    public function getIndexData($sort)
-    {
-        $commentRepository = new CommentRepository();
-        $commentList = $commentRepository->getCommentList($sort);
+    public $fileDirectory = 'comment';
 
-        foreach ($commentList as $key => $comment) {
-            $date = new DateTime($comment['date']);
-            $commentList[$key]['created_at'] = $date->format('d/m/Y');
-            $commentList[$key]['photos'] = $commentRepository->getCommentPhotos($comment['id']);
+    private $commentRepository;
+
+    public function __construct()
+    {
+        $this->commentRepository = new CommentRepository();
+    }
+
+    public function getFileDirectory(): string
+    {
+        return $this->fileDirectory;
+    }
+
+    public function getIndexData($sort = null)
+    {
+        $data['commentList'] = $this->commentRepository->getAll($sort);
+
+        if ($sort['desc'] == 'DESC') {
+            $sort['desc'] = 'ASC';
+        } else {
+            $sort['desc'] = 'DESC';
         }
 
-        $data['commentList'] = $commentList;
+        $data['sort'] = $sort;
 
         return $data;
     }
 
-    public function publish($id)
+    public function getShowCreatePageData($sort = null)
     {
-        $res['result'] = false;
-
-        $commentRepository = new CommentRepository();
-
-        if (!$commentRepository->publishCommentById($id)) {
-            $res['errors'][] = "Не удалось опубликовать отзыв";
-            return $res;
-        }
-
-        $res['result'] = true;
-        return $res;
     }
 
-
-    /**
-     * @param $id
-     * @return array
-     */
-    public function getShowCreatePageData($id)
+    public function create($data)
     {
-        $categoryRepository = new CommentRepository();
-        $data['comment'] = $categoryRepository->getCommentById($id);
+    }
+
+    public function getShowUpdatePageData($id)
+    {
+        $data['comment'] = $this->commentRepository->getById($id);
+        $data['answer'] = $this->commentRepository->getAnswerByCommentId($id);
+        $data['commentImages'] = $this->commentRepository->getFilesByCommentId($id);
 
         return $data;
     }
 
-    public function create($files, $params)
+    public function update($data)
     {
-        $res['result'] = false;
+        $this->commentRepository->updateById($data['comment']);
 
-        $fileUploader = new FileUploaderHelper();
-
-        $params['user_name'] = "Администратор";
-        $params['user_email'] = $_SESSION['user']['email'];
-        $params['allow'] = 1;
-
-        if(!empty($files)){
-            try {
-                $imageList = $fileUploader->uploadSeveral($files, 'comment');
-            } catch (RuntimeException $e) {
-                $res['errors'][] = $e->getMessage();
-                return $res;
-            }
-
-            if (empty($imageList)) {
-                $res['errors'][] = 'Ошибка при загрузке изображения';
-                return $res;
-            }
+        if (empty($this->commentRepository->getAnswerByCommentId($data['comment']['id']))) {
+            $this->commentRepository->createAnswer($data['comment_answer']);
+        } else {
+            $this->commentRepository->updateAnswerById($data['comment_answer']);
         }
-
-        $commentRepository = new CommentRepository();
-        $newCommentId = $commentRepository->createComment($params);
-
-        if (empty($newCommentId)) {
-            $res['errors'][] = 'Не удалось создать комментарий';
-            return $res;
-        }
-
-
-        if (!empty($imageList)) {
-
-            foreach ($imageList as $image) {
-
-                $fileRepository = new FileRepository();
-                $fileId = $fileRepository->createFile($image);
-
-                if (empty($fileId)) {
-                    $res['errors'][] = 'Не удалось создать файл';
-                    return $res;
-                }
-
-                $fileCommentConnection = $commentRepository->createFileCommentConnection($newCommentId, $fileId);
-
-                if (empty($fileCommentConnection)) {
-
-                    $res['errors'][] = 'Не удалось создать связь между фото и комментарием';
-                    return $res;
-                }
-            }
-
-        }
-
-        $res['result'] = true;
-        return $res;
     }
 
     public function getShowDeletePageData($id)
     {
-        $categoryRepository = new CommentRepository();
-        $data['comment'] = $categoryRepository->getCommentById($id);
+        $data['comment'] = $this->commentRepository->getById($id);
 
         return $data;
     }
 
-    public function delete($data)
+    public function delete($id)
     {
-        $res['result'] = false;
+        return $this->commentRepository->deleteById($id);
+    }
 
-        $commentRepository = new CommentRepository();
+    public function createFilesConnection($id, $fileId)
+    {
+        $this->commentRepository->createFilesConnection($id, $fileId);
+    }
 
-        $childCommentList = $commentRepository->getChildCommentListById($data['id']);
+    public function deleteFileConnection($id, $imageId)
+    {
+        $this->commentRepository->deleteFileConnection($id, $imageId);
+    }
 
-        $childCategoryId = [];
+    public function getFile($id)
+    {
+        return null;
+    }
 
-        foreach ($childCommentList as $childComment) {
-            $childCategoryId[] = $childComment['id'];
-        }
+    public function getFiles($id)
+    {
+        return $this->commentRepository->getFilesByCommentId($id);
+    }
 
-        $childCategoryId = implode(', ', $childCategoryId);
-
-        if (!empty($childCategoryId)) {
-            $res['errors'][] = "невозможно удалить отзыв при наличии ответа на него - ($childCategoryId)";
-            return $res;
-        }
-
-        if ($commentRepository->deleteCommentById($data['id'])) {
-            $res['result'] = true;
-            return $res;
-        }
-
-        $res['errors'][] = "ошибка при удалении комментария";
-
-        return $res;
+    public function prepareData($params)
+    {
+        return [
+            'comment' => [
+                'id' => $params['id'],
+                'user_name' => $params['user_name'],
+                'user_email' => $params['user_email'],
+                'description' => $params['description'],
+                'status' => $params['status'],
+            ],
+            'comment_answer' => [
+                'comment_id' => $params['id'],
+                'description' => $params['answer_description'],
+            ]
+        ];
     }
 }

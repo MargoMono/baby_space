@@ -49,7 +49,7 @@
                                                     </td>
                                                     <td class="text-left">{{ category.name }}</td>
                                                     <td class="text-left">{% if category.status == 1 %} Отбражается {% else %} Скрыта {% endif %}</td>
-                                                    <td class="text-right">
+                                                    <td class="text-right  td-action">
                                                         <a href="/admin/category/update/{{ category.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
                                                         <a href="/admin/category/delete/{{ category.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
                                                     </td>
@@ -57,7 +57,7 @@
                                             {% endfor %}
                                         {% else %}
                                             <tr>
-                                                <td class="text-center" colspan="8">{{ text_no_results }}</td>
+                                                <td class="text-center" colspan="8">Ничего не найдено</td>
                                             </tr>
                                         {% endif %}
                                         </tbody>

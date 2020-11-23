@@ -54,6 +54,7 @@ class FileUploaderHelper
 
         $image['alias'] = $alias;
         $image['name'] = $filename;
+        $image['type'] = $file["type"];
 
         return $image;
     }
@@ -95,6 +96,7 @@ class FileUploaderHelper
 
             $imageList[$i]['alias'] = $alias;
             $imageList[$i]['name'] = $filename;
+            $imageList[$i]['type'] = $fileList["type"][$i];
         }
 
         return $imageList;

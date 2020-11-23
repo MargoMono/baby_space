@@ -169,13 +169,17 @@ class Route
         $router->post('admin/new/delete', [Admin\NewController::class, 'delete']);
 
         // Страницы отзывов
-        $router->any('admin/comments', [Admin\CommentController::class, 'actionIndex']);
-        $router->any('admin/comments/sort/{id}?', [Admin\CommentController::class, 'actionIndex']);
-        $router->get('admin/comments/publish/{id}', [Admin\CommentController::class, 'publish']);
-        $router->get('admin/comments/create/{id}', [Admin\CommentController::class, 'actionShowCreatePage']);
-        $router->post('admin/comments/create/{id}', [Admin\CommentController::class, 'create']);
-        $router->get('admin/comments/delete/{id}', [Admin\CommentController::class, 'actionShowDeletePage']);
-        $router->post('admin/comments/delete', [Admin\CommentController::class, 'delete']);
+        $router->any('admin/comment', [Admin\CommentController::class, 'actionIndex']);
+        $router->any('admin/comment/sort/{id}?', [Admin\CommentController::class, 'actionIndex']);
+        $router->get('admin/comment/publish/{id}', [Admin\CommentController::class, 'publish']);
+        $router->get('admin/comment/create', [Admin\CommentController::class, 'actionShowCreatePage']);
+        $router->post('admin/comment/create', [Admin\CommentController::class, 'create']);
+        $router->get('admin/comment/update/{id}', [Admin\CommentController::class, 'actionShowUpdatePage']);
+        $router->post('admin/comment/update/{id}', [Admin\CommentController::class, 'update']);
+        $router->get('admin/comment/delete/{id}', [Admin\CommentController::class, 'actionShowDeletePage']);
+        $router->post('admin/comment/delete', [Admin\CommentController::class, 'delete']);
+        $router->get('admin/comment/image/delete/{id}/{photoId}', [Admin\CommentController::class, 'imageDelete']);
+
 
         $router->any('admin/user', ['App\\Controllers\\Admin\\UserController', 'actionIndex']);
         $router->get('admin/user/create', ['App\\Controllers\\Admin\\UserController', 'actionShowCreatePage']);

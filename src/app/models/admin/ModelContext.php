@@ -56,7 +56,7 @@ class ModelContext
 
         $newEntityId = $this->strategy->create($this->strategy->prepareData($params));
 
-        if (!empty($file['files'])) {
+        if (!empty($file['files'] && $file['files']['error'][0] != FileUploaderHelper::UPLOAD_ERR_NO_FILE)) {
             $this->addFilesConnection($file['files'], $newEntityId);
         }
     }
@@ -68,13 +68,18 @@ class ModelContext
     public function update($file, $params)
     {
         if (!empty($file['file']) && $file['file']['error'] != FileUploaderHelper::UPLOAD_ERR_NO_FILE) {
+            $oldFileId = $params['file_id'];
             $params['file_id'] = $this->updateFile($file['file'], $params);
         }
 
-        $newEntityId = $this->strategy->update($this->strategy->prepareData($params));
+        $this->strategy->update($this->strategy->prepareData($params));
 
-        if (!empty($file['files'])) {
-            $this->updateFilesConnection($file['files'], $newEntityId);
+        if (!empty($oldFileId)) {
+            $this->fileRepository->deleteById($oldFileId);
+        }
+
+        if (!empty($file['files'] && $file['files']['error'][0] != FileUploaderHelper::UPLOAD_ERR_NO_FILE)) {
+            $this->updateFilesConnection($file['files'], $params['id']);
         }
     }
 
@@ -103,7 +108,7 @@ class ModelContext
         }
     }
 
-    public function photoDelete($id, $photoId): void
+    public function imageDelete($id, $photoId): void
     {
         $file = $this->fileRepository->getFileById($photoId);
         $this->fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);

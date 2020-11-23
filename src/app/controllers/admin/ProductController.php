@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Middleware\AdminAuthenticationChecking;
 use App\Models\Admin\ModelContext;
-use App\Models\Admin\ProductStrategy;
+use App\Models\Admin\ProductModel;
 
 class ProductController implements ControllerStrategy
 {
@@ -14,8 +14,8 @@ class ProductController implements ControllerStrategy
 
     public function __construct()
     {
-        $this->controllerContext = new ControllerContext(new ProductStrategy(),
-            new ModelContext(new ProductStrategy()), $this->directory);
+        $this->controllerContext = new ControllerContext(new ProductModel(),
+            new ModelContext(new ProductModel()), $this->directory);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

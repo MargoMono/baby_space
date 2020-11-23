@@ -27,4 +27,8 @@ interface ModelStrategy
     public function getFile($id);
 
     public function getFiles($id);
+
+    public function createFilesConnection($id, $fileId);
+
+    public function deleteFileConnection($id, $imageId);
 }

@@ -3,6 +3,7 @@ create table file
     `id`    INT AUTO_INCREMENT,
     `name`  VARCHAR(255) NOT NULL,
     `alias` VARCHAR(255) NOT NULL,
+    `type`  VARCHAR(255) NOT NULL,
     CONSTRAINT file_pk
         PRIMARY KEY (id)
 );
@@ -156,7 +157,6 @@ create table product_country
 create table comment
 (
     `id`          INT(11) AUTO_INCREMENT,
-    `parent_id`   INT(11),
     `user_name`   VARCHAR(255) NOT NULL,
     `user_email`  VARCHAR(255) NOT NULL,
     `description` TEXT         NOT NULL,
@@ -164,6 +164,18 @@ create table comment
     `created_at`  DATETIME              DEFAULT now() NULL,
     CONSTRAINT new_pk
         PRIMARY KEY (id)
+);
+
+create table comment_answer
+(
+    `id`          INT(11) AUTO_INCREMENT,
+    `comment_id`  INT(11)                NOT NULL,
+    `description` TEXT                   NOT NULL,
+    `created_at`  DATETIME DEFAULT now() NULL,
+    CONSTRAINT comment_pk
+        PRIMARY KEY (id),
+    CONSTRAINT comment_answer_comment_id_fk
+        FOREIGN KEY (comment_id) REFERENCES comment (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 create table comment_file

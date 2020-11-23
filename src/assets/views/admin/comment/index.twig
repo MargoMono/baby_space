@@ -2,98 +2,71 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>
-            Панель администратора
-            <small>Отзывы</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li class="active">Отзывы</li>
-        </ol>
+        <div class="pull-right">
+        </div>
+        <h1>Отзывы</h1>
     </section>
-
     <section class="content">
-        <h4>Список отзывов</h4>
-        {% if errors is not empty %}
-            <div class="col-lg-12 mistake">
-                <p>Ошибка:</p>
-                <ul>
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
+        <div class="container-fluid">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> Список отзывов</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-comment">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <td class="text-left"> <a {% if sort.order == 'user_name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/comment/sort/?order=user_name&desc={{ sort.desc }}">Имя</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'user_email' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/comment/sort/?order=user_email&desc={{ sort.desc }}">Эл. почта</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'description' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/comment/sort/?order=description&desc={{ sort.desc }}">Описание</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'status' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/comment/sort/?order=status&desc={{ sort.desc }}">Статус</a></td>
+                                            <td class="text-right">Действие</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {% if commentList %}
+                                            {% for comment in commentList %}
+                                                <tr id="item-comment-{{ comment.id }}">
+                                                    <td class="text-left">{{ comment.user_name }}</td>
+                                                    <td class="text-left">{{ comment.user_email }}</td>
+                                                    <td class="text-left">{{ comment.description }}</td>
+                                                    <td class="text-left">{% if comment.status == 1 %} Отбражается {% else %} На модерации {% endif %}</td>
+                                                    <td class="text-right td-action">
+                                                        <a href="/admin/comment/update/{{ comment.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="/admin/comment/delete/{{ comment.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td class="text-center" colspan="8">Ничего не найдено</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-        {% endif %}
-        <table class="table-bordered table-striped table">
-            <tr>
-                <th>Номер
-                    <form action="/admin/comments" method="post">
-                        <input type="hidden" name="order" value="id">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Родительский отзыв
-                    <form action="/admin/comments" method="post">
-                        <input type="hidden" name="order" value="parent_id">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Имя, почта клиента
-                    <form action="/admin/comments" method="post">
-                        <input type="hidden" name="order" value="user_name">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Тема отзыва
-                    <form action="/admin/comments" method="post">
-                        <input type="hidden" name="order" value="description">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Текст отзыва
-                </th>
-                <th>
-                </th>
-            </tr>
-            {% for comment in commentList %}
-                <tr>
-                    <td>{{ comment.id }}</td>
-                    <td>{{ comment.parent_id }}</td>
-                    <td>{{ comment.user_name }} </br> {{ comment.user_email }}</td>
-                    <td>{{ comment.description }}</td>
-                    <td>
-                        {% for photo in comment.photos %}
-                            <a href="/upload/images/comment/{{ photo.file_alias|e }}">
-                                <img class="comment_img" src="/upload/images/comment/{{ photo.file_alias|e }}" alt=""/>
-                            </a>
-                        {% endfor %}
-                        </br>
-                        {{ comment.content }}
-                    </td>
-                    <td>
-                        {% if comment.allow == 0 %}<b>Не опубликован</b>
-                            <br>
-                            <br>
-                            <a href="/admin/comments/publish/{{ comment.id }}" class="btn btn-default back">
-                                <i class="fa fa-check"></i> Опубликовать
-                            </a>
-                        {% elseif comment.parent_id is empty %} <b>Опубликован</b>
-                            <br>
-                            <br>
-                            <a href="/admin/comments/create/{{ comment.id }}" class="btn btn-default back">
-                                <i class="fa fa-times"></i> Ответить
-                            </a>
-                        {% endif %}
-                        <br>
-                        <br>
-                        <a href="/admin/comments/delete/{{ comment.id }}" class="btn btn-default back">
-                            <i class="fa fa-times"></i> Удалить
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+        </div>
     </section>
 </div>
 
 {% include 'admin/includes/footer.twig' %}
-

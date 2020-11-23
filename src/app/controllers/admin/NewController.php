@@ -4,9 +4,9 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
 use App\Middleware\AdminAuthenticationChecking;
-use App\Models\Admin\BlogStrategy;
+use App\Models\Admin\BlogModel;
 use App\Models\Admin\ModelContext;
-use App\Models\Admin\NewStrategy;
+use App\Models\Admin\NewModel;
 
 class NewController implements ControllerStrategy
 {
@@ -16,8 +16,8 @@ class NewController implements ControllerStrategy
 
     public function __construct()
     {
-        $this->controllerContext = new ControllerContext(new NewStrategy(),
-            new ModelContext(new NewStrategy()), $this->directory);
+        $this->controllerContext = new ControllerContext(new NewModel(),
+            new ModelContext(new NewModel()), $this->directory);
 
         $adminAuthenticationChecking = new AdminAuthenticationChecking();
         $adminAuthenticationChecking->handle();

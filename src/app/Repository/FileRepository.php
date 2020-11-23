@@ -27,13 +27,14 @@ class FileRepository extends AbstractRepository
     {
         $sql = '
             INSERT INTO file
-                (alias, name)
+                (alias, name, type)
             VALUES 
-                (:alias, :name)';
+                (:alias, :name, :type)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':alias', $image['alias']);
         $result->bindParam(':name', $image['name']);
+        $result->bindParam(':type', $image['type']);
 
         try {
             $result->execute();

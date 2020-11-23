@@ -2,17 +2,36 @@
 
 namespace App\Repository;
 
-use App\Repository\AbstractRepository;
 use PDO;
+use PDOException;
 
 class CommentRepository extends AbstractRepository
 {
-    public function getCommentById($id)
+    public function getAll($sort = null)
+    {
+        if (empty($sort['order'])) {
+            $sort['order'] = 'id';
+        }
+
+        if (empty($sort['desc'])) {
+            $sort['desc'] = 'ASC';
+        }
+
+        $sql = 'SELECT * FROM comment 
+        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
+
+        $result = $this->db->prepare($sql);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getById($id)
     {
         $sql = '
-        SELECT 
-            *
-        FROM comment
+        SELECT *
+            FROM comment 
         WHERE id = :id';
 
         $result = $this->db->prepare($sql);
@@ -23,59 +42,19 @@ class CommentRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function publishCommentById($id)
-    {
-        $sql = '
-UPDATE 
-    comment    
-    SET
-    allow = 1
-WHERE id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-
-        return $result->execute();
-    }
-
-    public function getCommentList($sort = null)
-    {
-        if (empty($sort)) {
-            $sort = 'id';
-        }
-
-        $sql = '
-        SELECT c.*, cp.id AS parent_id
-        FROM comment c
-            LEFT JOIN comment cp ON c.parent_id = cp.id
-        ORDER BY c.' . $sort . ' 
-        ASC';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $sort);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function createComment($data)
+    public function create($data)
     {
         $sql = '
 INSERT INTO comment
-    (parent_id, user_name, user_email, description, allow, content, created_at) 
+    (user_name, user_email, description, status) 
 VALUES 
-    (:parent_id, :user_name, :user_email, :description, :allow, :content, now()) ';
-
-        $allow = (int)$data['allow'];
+    ( :user_name, :user_email, :description, :status) ';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':parent_id', $data['parent_id']);
         $result->bindParam(':user_name', $data['user_name']);
         $result->bindParam(':user_email', $data['user_email']);
         $result->bindParam(':description', $data['description']);
-        $result->bindParam(':allow', $allow);
-        $result->bindParam(':content', $data['content']);
+        $result->bindParam(':status', $data['status']);
 
         if ($result->execute()) {
             return $this->db->lastInsertId();
@@ -84,36 +63,28 @@ VALUES
         return null;
     }
 
-    public function updateNew($data)
+    public function updateById($data)
     {
         $sql = '
-UPDATE blog
+UPDATE comment
     SET
-    name = :name,
+    user_email = :user_email,
+    user_name = :user_name,
     description = :description,
-    content = :content,
-    file_id = :file_id,
-    alias = :alias,
-    tag_title = :tag_title,
-    tag_description = :tag_description,
-    tag_keywords = :tag_keywords
+    status = :status
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':name', $data['name']);
+        $result->bindParam(':user_email', $data['user_email']);
+        $result->bindParam(':user_name', $data['user_name']);
         $result->bindParam(':description', $data['description']);
-        $result->bindParam(':content', $data['content']);
-        $result->bindParam(':file_id', $data['file_id']);
-        $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':tag_title', $data['tag_title']);
-        $result->bindParam(':tag_description', $data['tag_description']);
-        $result->bindParam(':tag_keywords', $data['tag_keywords']);
+        $result->bindParam(':status', $data['status']);
         $result->bindParam(':id', $data['id']);
 
         return $result->execute();
     }
 
-    public function deleteCommentById($id)
+    public function deleteById($id)
     {
         $sql = 'DELETE FROM comment WHERE id = :id';
 
@@ -123,31 +94,15 @@ WHERE id = :id';
         return $result->execute();
     }
 
-    public function getLastAllowedComments($count)
+    public function getFilesByCommentId($id)
     {
-        $sql = "
+        $sql = '
         SELECT 
-            *
-        FROM comment
-        WHERE allow = 1
-        ORDER BY created_at DESC
-        LIMIT " . $count;
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getCommentPhotos($id)
-    {
-        $sql = "
-        SELECT 
-             f.alias AS file_alias
-        FROM comment_file cf
-            LEFT JOIN file f ON cf.file_id = f.id
-        WHERE cf.comment_id = :id";
+            c.*, f.alias AS file_alias, f.id AS file_id
+        FROM comment c
+            JOIN comment_file cf ON c.id = cf.comment_id
+            JOIN file f ON cf.file_id = f.id
+        WHERE c.id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -157,56 +112,7 @@ WHERE id = :id';
         return $result->fetchAll();
     }
 
-    public function getLimitCommentPhotos($id, $count)
-    {
-        $sql = "
-        SELECT 
-           f.alias AS file_alias
-        FROM comment_file cf
-            LEFT JOIN file f ON cf.file_id = f.id
-        WHERE cf.comment_id = :id   
-        LIMIT " . $count;
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetch();
-    }
-
-    public function getAllAllowedComments()
-    {
-        $sql = '
-        SELECT 
-            * 
-        FROM comment
-        WHERE allow = 1';
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getMoreAllowedComments($count, $limit)
-    {
-        $sql = '
-        SELECT *
-            FROM comment 
-        WHERE allow = 1
-        ORDER BY created_at DESC 
-        LIMIT ' . $limit . ' OFFSET ' . $count;
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function createFileCommentConnection($commentId, $fileId)
+    public function createFilesConnection($commentId, $fileId)
     {
         $sql = '
 INSERT INTO comment_file
@@ -218,6 +124,58 @@ VALUES
         $result->bindParam(':comment_id', $commentId);
         $result->bindParam(':file_id', $fileId);
 
+        try {
+            $result->execute();
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), [$commentId, $fileId]);
+            throw new \RuntimeException('Unable to create product');
+        }
+    }
+
+    public function deleteFileConnection($commentId, $fileId)
+    {
+        $sql = 'DELETE FROM comment_file WHERE comment_id = :comment_id AND file_id =:file_d';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':comment_id', $commentId);
+        $result->bindParam(':file_d', $fileId);
+
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), [$commentId, $fileId]);
+            throw new \RuntimeException('Unable to delete product-file connection');
+        }
+    }
+
+    public function getAnswerByCommentId($commentId)
+    {
+        $sql = '
+        SELECT *
+            FROM comment_answer 
+        WHERE comment_id = :comment_id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':comment_id', $commentId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
+
+    public function createAnswer($data)
+    {
+        $sql = '
+INSERT INTO comment_answer
+    (comment_id, description) 
+VALUES 
+    ( :comment_id, :description) ';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':comment_id', $data['comment_id']);
+        $result->bindParam(':description', $data['description']);
+
         if ($result->execute()) {
             return $this->db->lastInsertId();
         }
@@ -225,55 +183,18 @@ VALUES
         return null;
     }
 
-    public function getChildCommentListById($id)
+    public function updateAnswerById($data)
     {
         $sql = '
-        SELECT cp.*
-            FROM comment c
-            LEFT JOIN comment cp ON cp.parent_id = c.id
-        WHERE c.id = :id';
+UPDATE comment_answer
+    SET
+    description = :description
+WHERE comment_id = :comment_id';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
+        $result->bindParam(':description', $data['description']);
+        $result->bindParam(':comment_id', $data['comment_id']);
 
-        return $result->fetchAll();
-    }
-
-    public function getLastComments($count)
-    {
-        $sql = "
-        SELECT 
-            *
-        FROM comment 
-        WHERE allow = 1
-        AND parent_id IS NULL
-        ORDER BY created_at 
-        LIMIT " . $count;
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getClientByEmail($userEmail)
-    {
-        $sql = '
-        SELECT 
-            * 
-        FROM comment 
-        WHERE 
-            user_email = :user_email
-        ORDER BY created_at DESC ';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':user_email', $userEmail);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetch();
+        return $result->execute();
     }
 }

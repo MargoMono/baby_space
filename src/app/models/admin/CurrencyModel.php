@@ -2,26 +2,25 @@
 
 namespace App\Models\Admin;
 
-use App\Repository\CountryRepository;
+use App\Repository\CurrencyRepository;
 
-class CountryStrategy implements ModelStrategy
+class CurrencyModel implements ModelStrategy
 {
-    public $fileDirectory = 'country';
-    private $countryRepository;
+    private $currencyRepository;
 
     public function __construct()
     {
-        $this->countryRepository = new CountryRepository();
+        $this->currencyRepository = new CurrencyRepository();
     }
 
     public function getFileDirectory(): string
     {
-        return $this->fileDirectory;
+        return null;
     }
 
     public function getIndexData($sort = null)
     {
-        $data['countryList'] = $this->countryRepository->getAll($sort);
+        $data['currencyList'] = $this->currencyRepository->getAll($sort);
 
         if($sort['desc'] == 'DESC'){
             $sort['desc'] = 'ASC';
@@ -31,49 +30,48 @@ class CountryStrategy implements ModelStrategy
 
         $data['sort'] = $sort;
 
-
         return $data;
     }
 
     public function getShowCreatePageData($sort = null)
     {
-        $data['countryList'] = $this->countryRepository->getAll($sort);
+        $data['currencyList'] = $this->currencyRepository->getAll($sort);
 
         return $data;
     }
 
     public function create($data)
     {
-        return $this->countryRepository->create($data);
+        return $this->currencyRepository->create($data);
     }
 
     public function getShowUpdatePageData($id)
     {
-        $data['country'] = $this->countryRepository->getById($id);
+        $data['currency'] = $this->currencyRepository->getById($id);
 
         return $data;
     }
 
     public function update($data)
     {
-        return $this->countryRepository->updateById($data);
+        return $this->currencyRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
     {
-        $data['country'] = $this->countryRepository->getById($id);
+        $data['currency'] = $this->currencyRepository->getById($id);
 
         return $data;
     }
 
     public function delete($id)
     {
-        return $this->countryRepository->deleteById($id);
+        return $this->currencyRepository->deleteById($id);
     }
 
     public function getFile($id)
     {
-        return $this->countryRepository->getFileByEntityId($id);
+        return null;
     }
 
     public function getFiles($id)
@@ -86,15 +84,23 @@ class CountryStrategy implements ModelStrategy
         return [
             'id' => $params['id'],
             'name' => $params['name'],
-            'iso_code_2' => $params['iso_code_2'],
-            'iso_code_3' => $params['iso_code_3'],
-            'status' => $params['status'],
-            'file_id' => $params['file_id'],
+            'code' => $params['code'],
+            'alias' => $params['alias'],
         ];
     }
 
     public function validation($file, $params)
     {
         // TODO: Implement validation() method.
+    }
+
+    public function createFilesConnection($id, $fileId)
+    {
+        // TODO: Implement createFilesConnection() method.
+    }
+
+    public function deleteFileConnection($id, $imageId)
+    {
+        // TODO: Implement deleteFileConnection() method.
     }
 }
