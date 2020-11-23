@@ -179,6 +179,7 @@ class Route
         $router->get('admin/comment/delete/{id}', [Admin\CommentController::class, 'actionShowDeletePage']);
         $router->post('admin/comment/delete', [Admin\CommentController::class, 'delete']);
         $router->get('admin/comment/image/delete/{id}/{photoId}', [Admin\CommentController::class, 'imageDelete']);
+        $router->get('admin/comment-answer/image/delete/{commentId}/{commentAnswerId}/{photoId}', [Admin\CommentController::class, 'commentAnswerImageDelete']);
 
 
         $router->any('admin/user', ['App\\Controllers\\Admin\\UserController', 'actionIndex']);

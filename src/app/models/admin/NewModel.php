@@ -58,7 +58,7 @@ class NewModel implements ModelStrategy
         return $data;
     }
 
-    public function update($data)
+    public function update($file, $data)
     {
         return $this->newRepository->updateById($data);
     }

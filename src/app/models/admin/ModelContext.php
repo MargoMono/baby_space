@@ -72,7 +72,7 @@ class ModelContext
             $params['file_id'] = $this->updateFile($file['file'], $params);
         }
 
-        $this->strategy->update($this->strategy->prepareData($params));
+        $this->strategy->update($file, $this->strategy->prepareData($params));
 
         if (!empty($oldFileId)) {
             $this->fileRepository->deleteById($oldFileId);
@@ -153,7 +153,7 @@ class ModelContext
         return $this->fileRepository->createFile($image);
     }
 
-    private function updateFilesConnection($files, $categoryId): void
+    private function updateFilesConnection($files, $id): void
     {
         $imageList = $this->fileUploader->uploadSeveral($files, $this->strategy->getFileDirectory());
 
@@ -163,7 +163,7 @@ class ModelContext
 
         foreach ($imageList as $image) {
             $fileId = $this->fileRepository->createFile($image);
-            $this->strategy->createFilesConnection($categoryId, $fileId);
+            $this->strategy->createFilesConnection($id, $fileId);
         }
     }
 }

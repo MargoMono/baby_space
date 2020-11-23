@@ -50,7 +50,7 @@
                             <div class="col-sm-10">
                                 <select name="status" id="input-status" class="form-control">
                                     <option value="1" {% if comment.status == 1 %} selected {% endif %}>Отображается</option>
-                                    <option value="0" {% if comment.status == 0 %} selected {% endif %}>Скрыт</option>
+                                    <option value="0" {% if comment.status == 0 %} selected {% endif %}>На модерации</option>
                                 </select>
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                             <div class="col-sm-10">
                                 {% for image in commentImages %}
                                     <img src="/upload/images/comment/{{ image.file_alias }}" width="150" alt=""/>
-                                    <a href="/admin/comment/image/delete/{{ image.id }}/{{ image.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
+                                    <a href="/admin/comment/image/delete/{{ comment.id }}/{{ image.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
                                     <br><br>
                                 {% endfor %}
                                 <input type='file' name='files[]' multiple id="input-files" class="form-control"  >
@@ -69,10 +69,26 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="input-answer_description">Ответ на отзыв</label>
                             <div class="col-sm-10">
-                                <input type="text" value="{{ answer.description }}" name="answer_description" placeholder="Текст отзыва" id="input-answer_description" class="form-control" />
+                                <input type="text" value="{{ commentAnswer.description }}" name="answer_description" placeholder="Текст отзыва" id="input-answer_description" class="form-control" />
                             </div>
                         </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-files">Изображения к ответу на отзыв</label>
+                            <div class="col-sm-10">
+                                {% for image in commentAnswerImages %}
+                                    <img src="/upload/images/comment/{{ image.file_alias }}" width="150" alt=""/>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <a href="/admin/comment-answer/image/delete/{{ comment.id }}/{{ commentAnswer.id }}/{{ image.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
+
+                                    <br><br>
+                                {% endfor %}
+                                <input type='file' name='files_answer[]' multiple id="input-files" class="form-control"  >
+                            </div>
+                        </div>
+
                         <input type="hidden" value="{{ comment.id }}" name="id" />
+                        <input type="hidden" value="{{ commentAnswer.id }}" name="answer_id" />
+
                     </fieldset>
                 </form>
             </div>
@@ -81,3 +97,28 @@
 </div>
 
 {% include 'admin/includes/footer.twig' %}
+
+<script>
+    $(function() {
+        $('.delete_image').click(function(e) {
+            e.preventDefault();
+            let count = $('.one-photo').length;
+            $.ajax({
+                url: '/portfolio/show-more/' + count,
+                type: 'GET',
+                success: function(res) {
+                    $('.photo-list').append(res);
+                },
+                error: function() {
+                },
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        let lastPage = {{ lastPage }};
+        if (lastPage) {
+            $('.show-more').hide();
+        }
+    });
+</script>

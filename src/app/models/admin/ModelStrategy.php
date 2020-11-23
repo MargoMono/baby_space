@@ -14,7 +14,7 @@ interface ModelStrategy
 
     public function getShowUpdatePageData($id);
 
-    public function update($data);
+    public function update($file, $data);
 
     public function getShowDeletePageData($id);
 

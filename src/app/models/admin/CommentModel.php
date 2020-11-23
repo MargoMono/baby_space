@@ -4,16 +4,21 @@ namespace App\Models\Admin;
 
 use App\Helpers\FileUploaderHelper;
 use App\Repository\CommentRepository;
+use App\Repository\FileRepository;
 
 class CommentModel implements ModelStrategy
 {
     public $fileDirectory = 'comment';
 
     private $commentRepository;
+    private $fileUploader;
+    private $fileRepository;
 
     public function __construct()
     {
         $this->commentRepository = new CommentRepository();
+        $this->fileUploader = new FileUploaderHelper();
+        $this->fileRepository = new FileRepository();
     }
 
     public function getFileDirectory(): string
@@ -47,20 +52,39 @@ class CommentModel implements ModelStrategy
     public function getShowUpdatePageData($id)
     {
         $data['comment'] = $this->commentRepository->getById($id);
-        $data['answer'] = $this->commentRepository->getAnswerByCommentId($id);
         $data['commentImages'] = $this->commentRepository->getFilesByCommentId($id);
+
+        $commentAnswer = $this->commentRepository->getAnswerByCommentId($id);
+
+        $data['commentAnswer'] = $commentAnswer;
+        $data['commentAnswerImages'] = $this->commentRepository->getAnswerFilesByAnswerCommentId($commentAnswer['id']);
 
         return $data;
     }
 
-    public function update($data)
+    public function update($file, $data)
     {
         $this->commentRepository->updateById($data['comment']);
 
-        if (empty($this->commentRepository->getAnswerByCommentId($data['comment']['id']))) {
-            $this->commentRepository->createAnswer($data['comment_answer']);
+        if (empty($data['comment_answer']['id'])) {
+            $answerId = $this->commentRepository->createAnswer($data['comment_answer']);
         } else {
+            $answerId = $data['comment_answer']['id'];
             $this->commentRepository->updateAnswerById($data['comment_answer']);
+        }
+
+        if (!empty($file['files_answer'] && $file['files_answer']['error'][0] != FileUploaderHelper::UPLOAD_ERR_NO_FILE)) {
+            $imageList = $this->fileUploader->uploadSeveral($file['files_answer'], $this->getFileDirectory());
+
+            if (empty($imageList)) {
+                throw new \RuntimeException('Can\'t create files connection - information about uploaded files is empty');
+            }
+
+
+            foreach ($imageList as $image) {
+                $fileId = $this->fileRepository->createFile($image);
+                $this->commentRepository->createCommentAnswerFile($answerId, $fileId);
+            }
         }
     }
 
@@ -69,6 +93,20 @@ class CommentModel implements ModelStrategy
         $data['comment'] = $this->commentRepository->getById($id);
 
         return $data;
+    }
+
+    public function commentAnswerImageDelete($commentId, $commentAnswerId, $imageId)
+    {
+        try {
+            $file = $this->fileRepository->getFileById($imageId);
+            $this->fileUploader->deleteFile($file['alias'], $this->fileDirectory);
+            $this->commentRepository->deleteAnswerFileConnection($commentAnswerId, $imageId);
+            $_SESSION['success'] = 'Изображение удалено успешно';
+            header("Location: /admin/$this->fileDirectory/update/$commentId");
+        } catch (\Exception $exception) {
+            $_SESSION['error_warning'] = 'Не удалось удалить изображение, обратитесь к разработчику';
+            header("Location: /admin/$this->fileDirectory/update/$commentId");
+        }
     }
 
     public function delete($id)
@@ -107,6 +145,7 @@ class CommentModel implements ModelStrategy
                 'status' => $params['status'],
             ],
             'comment_answer' => [
+                'id' => $params['answer_id'],
                 'comment_id' => $params['id'],
                 'description' => $params['answer_description'],
             ]

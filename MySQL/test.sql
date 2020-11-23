@@ -191,6 +191,19 @@ create table comment_file
         FOREIGN KEY (comment_id) REFERENCES comment (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+create table comment_answer_file
+(
+    `id`         INT(11) AUTO_INCREMENT,
+    `file_id`    INT(11) NOT NULL,
+    `comment_answer_id` INT(11) NOT NULL,
+    CONSTRAINT new_pk
+        PRIMARY KEY (id),
+    CONSTRAINT comment_answer_file_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id),
+    CONSTRAINT comment_answer_file_comment_id_fk
+        FOREIGN KEY (comment_answer_id) REFERENCES comment_answer (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 create table new
 (
     `id`          INT AUTO_INCREMENT,

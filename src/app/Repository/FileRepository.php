@@ -41,7 +41,7 @@ class FileRepository extends AbstractRepository
             return $this->db->lastInsertId();
         } catch (PDOException $e){
             $this->logger->error($e->getMessage(), $image);
-            throw new \RuntimeException('Unable to create product');
+            throw new \RuntimeException('Unable to create file');
         }
     }
 

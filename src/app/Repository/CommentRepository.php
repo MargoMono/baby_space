@@ -197,4 +197,59 @@ WHERE comment_id = :comment_id';
 
         return $result->execute();
     }
+
+    public function getAnswerFilesByAnswerCommentId($id)
+    {
+        $sql = '
+        SELECT 
+            ca.*, f.alias AS file_alias, f.id AS file_id
+        FROM comment_answer ca
+            JOIN comment_answer_file caf ON ca.id = caf.comment_answer_id
+            JOIN file f ON caf.file_id = f.id
+        WHERE ca.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function createCommentAnswerFile($id, $fileId)
+    {
+        $sql = '
+INSERT INTO comment_answer_file
+    (comment_answer_id, file_id) 
+VALUES 
+    (:comment_answer_id, :file_id) ';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':comment_answer_id', $id);
+        $result->bindParam(':file_id', $fileId);
+
+        try {
+            $result->execute();
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), [$id, $fileId]);
+            throw new \RuntimeException('Unable to create product');
+        }
+    }
+
+    public function deleteAnswerFileConnection($commentAnswerId, $fileId)
+    {
+        $sql = 'DELETE FROM comment_answer_file WHERE comment_answer_id = :comment_answer_id AND file_id =:file_d';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':comment_answer_id', $commentAnswerId);
+        $result->bindParam(':file_d', $fileId);
+
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), [$commentAnswerId, $fileId]);
+            throw new \RuntimeException('Unable to delete product-file connection');
+        }
+    }
 }

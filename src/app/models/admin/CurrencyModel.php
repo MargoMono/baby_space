@@ -52,7 +52,7 @@ class CurrencyModel implements ModelStrategy
         return $data;
     }
 
-    public function update($data)
+    public function update($file, $data)
     {
         return $this->currencyRepository->updateById($data);
     }
