@@ -68,14 +68,15 @@ class ModelContext
     public function update($file, $params)
     {
         if (!empty($file['file']) && $file['file']['error'] != FileUploaderHelper::UPLOAD_ERR_NO_FILE) {
-            $oldFileId = $params['file_id'];
+            $oldFile =  $this->fileRepository->getFileById($params['file_id']);
             $params['file_id'] = $this->updateFile($file['file'], $params);
         }
 
         $this->strategy->update($file, $this->strategy->prepareData($params));
 
-        if (!empty($oldFileId)) {
-            $this->fileRepository->deleteById($oldFileId);
+        if (!empty($oldFile)) {
+            $this->fileUploader->deleteFile($oldFile['alias'], $this->strategy->fileDirectory);
+            $this->fileRepository->deleteById($oldFile['id']);
         }
 
         if (!empty($file['files'] && $file['files']['error'][0] != FileUploaderHelper::UPLOAD_ERR_NO_FILE)) {

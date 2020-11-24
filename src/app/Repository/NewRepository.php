@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Repository\AbstractRepository;
 use PDO;
+use PDOException;
 
 class NewRepository extends AbstractRepository implements Entity
 {
@@ -50,25 +51,22 @@ class NewRepository extends AbstractRepository implements Entity
     {
         $sql = '
 INSERT INTO new
-    (name, description, content, file_id, alias, tag_title, tag_description, tag_keywords, created_at) 
+    (name, description, file_id) 
 VALUES 
-    (:name, :description, :content, :file_id, :alias, :tag_title, :tag_description, :tag_keywords, now()) ';
+    (:name, :description, :file_id) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
         $result->bindParam(':description', $data['description']);
-        $result->bindParam(':content', $data['content']);
         $result->bindParam(':file_id', $data['file_id']);
-        $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':tag_title', $data['tag_title']);
-        $result->bindParam(':tag_description', $data['tag_description']);
-        $result->bindParam(':tag_keywords', $data['tag_keywords']);
 
-        if ($result->execute()) {
+        try {
+            $result->execute();
             return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to create new');
         }
-
-        return null;
     }
 
     public function updateById($data)
@@ -78,23 +76,13 @@ UPDATE new
     SET
     name = :name,
     description = :description,
-    content = :content,
-    file_id = :file_id,
-    alias = :alias,
-    tag_title = :tag_title,
-    tag_description = :tag_description,
-    tag_keywords = :tag_keywords
+    file_id = :file_id
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
         $result->bindParam(':description', $data['description']);
-        $result->bindParam(':content', $data['content']);
         $result->bindParam(':file_id', $data['file_id']);
-        $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':tag_title', $data['tag_title']);
-        $result->bindParam(':tag_description', $data['tag_description']);
-        $result->bindParam(':tag_keywords', $data['tag_keywords']);
         $result->bindParam(':id', $data['id']);
 
         return $result->execute();

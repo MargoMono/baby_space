@@ -91,17 +91,22 @@ class NewModel implements ModelStrategy
             'id' => $params['id'],
             'name' => $params['name'],
             'description' => $params['description'],
-            'content' => $params['content'],
             'file_id' => $params['file_id'],
-            'alias' => TextHelper::getTranslit($params['name']),
-            'tag_title' => $params['tag_title'],
-            'tag_description' => $params['tag_description'],
-            'tag_keywords' => $params['tag_keywords'],
         ];
     }
 
     public function validation($file, $params)
     {
         // TODO: Implement validation() method.
+    }
+
+    public function createFilesConnection($id, $fileId)
+    {
+        // TODO: Implement createFilesConnection() method.
+    }
+
+    public function deleteFileConnection($id, $imageId)
+    {
+        // TODO: Implement deleteFileConnection() method.
     }
 }

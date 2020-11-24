@@ -2,56 +2,39 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>
-            Панель администратора
-            <small>Добавить новость</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="/admin/new/">Статьи</a></li>
-            <li class="active">Добавить новость</li>
-        </ol>
+        <div class="pull-right">
+            <button type="submit" form="form-option" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
+            <a href="/admin/new" data-toggle="tooltip" title="Отменить" class="btn btn-default"><i class="fa fa-reply"></i></a>
+        </div>
+        <h1>Новости</h1>
     </section>
-
     <section class="content">
-        {% if errors is not empty %}
-            <div class="col-lg-12 mistake">
-                <p>Ошибка:</p>
-                <ul>
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i>Добавить новость</h3>
             </div>
-        {% endif %}
-        <div class="col-lg-12 correct">
-            <div class="login-form">
-                <form action="#" enctype="multipart/form-data" method="post">
-
-                    <p class="title-name">Название</p>
-                    <input type="text" name="name" placeholder="" value="" required>
-                    <p class="required">*обязательное поле</p>
-
-                    <p class="title-name">Краткое описание</p>
-                    <textarea name="description" rows="4" cols="150" required></textarea>
-                    <p class="required">*обязательное поле</p>
-
-                    <p class="title-name">Полное описание</p>
-                    <textarea id="summernote" name="content"></textarea>
-
-                    <p class="title-name">Изображение</p>
-                    <input type="file" name="file" required>
-                    <p class="required">*обязательное поле</p>
-
-                    <p class="title-name">Тэг title</p>
-                    <textarea name="tag_title" rows="4" cols="150"></textarea>
-
-                    <p class="title-name">Тэг description</p>
-                    <textarea name="tag_description" rows="4" cols="150"></textarea>
-
-                    <p class="title-name">Тэг keywords</p>
-                    <textarea name="tag_keywords" rows="4" cols="150"></textarea>
-                    <br><br>
-                    <input type="submit" name="button" class="btn btn-default" value="Сохранить"/>
+            <div class="panel-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-option" class="form-horizontal">
+                    <fieldset>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-name">Название</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="name" placeholder="Название" id="input-name" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-description">Текст</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="description"  placeholder="Текст" id="input-description" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-file">Изображение</label>
+                            <div class="col-sm-10">
+                                <input type="file" required name="file" id="input-file" class="form-control" />
+                            </div>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
         </div>
