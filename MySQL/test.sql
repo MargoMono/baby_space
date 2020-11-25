@@ -193,8 +193,8 @@ create table comment_file
 
 create table comment_answer_file
 (
-    `id`         INT(11) AUTO_INCREMENT,
-    `file_id`    INT(11) NOT NULL,
+    `id`                INT(11) AUTO_INCREMENT,
+    `file_id`           INT(11) NOT NULL,
     `comment_answer_id` INT(11) NOT NULL,
     CONSTRAINT new_pk
         PRIMARY KEY (id),
@@ -268,4 +268,38 @@ CREATE TABLE country
     PRIMARY KEY (id),
     CONSTRAINT country_file_id_fk
         FOREIGN KEY (file_id) REFERENCES file (id)
+);
+
+CREATE TABLE `order`
+(
+    `id`                 INT(11) AUTO_INCREMENT,
+    `first_name`         VARCHAR(32)    NOT NULL,
+    `last_name`          VARCHAR(32)    NOT NULL,
+    `email`              VARCHAR(96)    NOT NULL,
+    `telephone`          VARCHAR(32)    NOT NULL,
+    `country`            VARCHAR(128)   NOT NULL,
+    `city`               VARCHAR(128)   NOT NULL,
+    `postcode`           VARCHAR(128)   NOT NULL,
+    `address`            VARCHAR(128)   NOT NULL,
+    `payment_method_id`  VARCHAR(128)   NOT NULL,
+    `shipping_method_id` VARCHAR(128)   NOT NULL,
+    `comment`            TEXT           NOT NULL,
+    `total`              DECIMAL(15, 2) NOT NULL DEFAULT '0.00',
+    `status_id`          INT(11)        NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `oc_order_product`
+(
+    `id`         INT(11) AUTO_INCREMENT,
+    `order_id`   int(11)        NOT NULL,
+    `product_id` int(11)        NOT NULL,
+    `name`       varchar(255)   NOT NULL,
+    `quantity`   int(4)         NOT NULL,
+    `price`      decimal(15, 4) NOT NULL DEFAULT '0.0000',
+    `sale`       decimal(15, 4) NOT NULL DEFAULT '0.0000',
+    `total`      decimal(15, 4) NOT NULL DEFAULT '0.0000',
+    PRIMARY KEY (`id`),
+    CONSTRAINT country_file_id_fk
+        FOREIGN KEY (order_id) REFERENCES `order` (id)
 );

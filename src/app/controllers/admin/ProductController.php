@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Middleware\AdminAuthenticationChecking;
 use App\Models\Admin\ModelContext;
 use App\Models\Admin\ProductModel;
+use App\Repository\ProductRepository;
 
 class ProductController implements ControllerStrategy
 {
@@ -54,6 +55,11 @@ class ProductController implements ControllerStrategy
     public function delete()
     {
         $this->controllerContext->delete();
+    }
+
+    public function imageDelete($id, $imageId)
+    {
+        $this->controllerContext->imageDelete($id, $imageId);
     }
 }
 

@@ -136,7 +136,9 @@ class Route
         $router->post('admin/product/update/{id}', [Admin\ProductController::class, 'update']);
         $router->get('admin/product/delete/{id}', [Admin\ProductController::class, 'actionShowDeletePage']);
         $router->post('admin/product/delete', [Admin\ProductController::class, 'delete']);
-        $router->get('admin/product/photo/delete/{id}/{photoId}', [Admin\ProductController::class, 'photoDelete']);
+        $router->get('admin/product/image/delete/{id}/{photoId}', [Admin\ProductController::class, 'imageDelete']);
+        $router->post('admin/product/reccomend', [Admin\ProductController::class, 'reccomend']);
+
 
         // Страницы товаров
         $router->any('admin/category', [Admin\CategoryController::class, 'actionIndex']);

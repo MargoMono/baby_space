@@ -3,10 +3,8 @@
 <div class="content-wrapper">
     <section class="content-header">
         <div class="pull-right">
-            <button type="button" data-toggle="tooltip" title="{{ button_filter }}" onclick="$('#filter-product').toggleClass('hidden-sm hidden-xs');" class="btn btn-default hidden-md hidden-lg"><i class="fa fa-filter"></i></button>
-            <a href="{{ add }}" data-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-            <button type="submit" form="form-product" formaction="{{ copy }}" data-toggle="tooltip" title="{{ button_copy }}" class="btn btn-default"><i class="fa fa-copy"></i></button>
-            <button type="button" form="form-product" formaction="{{ delete }}" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
+            <button type="button" data-toggle="tooltip" title="Фильтр" onclick="$('#filter-product').toggleClass('hidden-sm hidden-xs');" class="btn btn-stile hidden-md hidden-lg"><i class="fa fa-filter"></i></button>
+            <a href="/admin/product/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary"><i class="fa fa-plus"></i></a>
         </div>
         <h1>Товары</h1>
     </section>
@@ -50,7 +48,7 @@
                                 </select>
                             </div>
                             <div class="form-group text-right">
-                                <button type="button" id="button-filter" class="btn btn-default"><i class="fa fa-filter"></i>Фильтровать</button>
+                                <button type="button" id="button-filter" class="btn btn-stile"><i class="fa fa-filter"></i>Фильтровать</button>
                             </div>
                         </div>
                     </div>
@@ -66,7 +64,6 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
                                             <td class="text-center">Изображение</td>
                                             <td class="text-left"> <a {% if sort.order == 'pd.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/product/sort/?order=pd.name&desc={{ sort.desc }}">Название</a></td>
                                             <td class="text-left"> <a {% if sort.order == 'c.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/product/sort/?order=c.name&desc={{ sort.desc }}">Категория</a></td>
@@ -79,16 +76,14 @@
                                         {% if productList %}
                                             {% for product in productList %}
                                                 <tr>
-                                                    <td class="text-center">{% if product.product_id in selected %}
-                                                            <input type="checkbox" name="selected[]" value="{{ product.product_id }}" checked="checked" />
-                                                        {% else %}
-                                                            <input type="checkbox" name="selected[]" value="{{ product.product_id }}" />
-                                                        {% endif %}</td>
-                                                    <td class="text-center">{% if product.image %} <img src="{{ product.image }}" alt="{{ product.product_name }}" class="img-thumbnail" /> {% else %} <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span> {% endif %}</td>
+                                                    <td class="text-center">{% if product.file_alias %} <img src="/upload/images/product/{{ product.file_alias }}" alt="{{ product.product_name }}" class="img-thumbnail" /> {% else %} <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span> {% endif %}</td>
                                                     <td class="text-left">{{ product.product_name }}</td>
                                                     <td class="text-left">{{ product.category_name }}</td>
-                                                    <td class="text-left">{{ product.status }}</td>
-                                                    <td class="text-right"><a href="{{ product.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                                                    <td class="text-left">{% if product.status == 1 %} Отбражается {% else %} Скрыт {% endif %}</td>
+                                                    <td class="text-right  td-action">
+                                                        <a href="/admin/product/update/{{ product.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="/admin/product/delete/{{ product.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
+                                                    </td>
                                                 </tr>
                                             {% endfor %}
                                         {% else %}

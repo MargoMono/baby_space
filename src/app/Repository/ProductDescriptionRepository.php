@@ -57,5 +57,35 @@ VALUES
             throw new \RuntimeException('Unable to create product description');
         }
     }
+
+    public function updateById($data)
+    {
+        $sql = '
+UPDATE product_description
+    SET
+    name = :name,
+    description = :description,
+    tag = :tag,
+    meta_title = :meta_title,
+    meta_description = :meta_description,
+    meta_keyword = :meta_keyword
+WHERE id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':name', $data['name']);
+        $result->bindParam(':description', $data['description']);
+        $result->bindParam(':tag', $data['tag']);
+        $result->bindParam(':meta_title', $data['meta_title']);
+        $result->bindParam(':meta_description', $data['meta_description']);
+        $result->bindParam(':meta_keyword', $data['meta_keyword']);
+        $result->bindParam(':id', $data['id']);
+
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update product');
+        }
+    }
 }
 

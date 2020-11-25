@@ -143,7 +143,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 a {
-    color: rgb(182, 3, 43)
+    color: #fe5407
 }
 
 a:hover, a:active, a:focus {
@@ -287,7 +287,7 @@ a:hover, a:active, a:focus {
 .main-header .logo .logo-lg {
     display: block;
     height: inherit;
-    text-align: left;
+    text-align: center;
 }
 
 .small-icon {
@@ -298,6 +298,9 @@ a:hover, a:active, a:focus {
     max-height: 80%;
 }
 
+.logo-mini img {
+    max-height: 32px;
+}
 .main-header .logo .logo-mini {
     display: none
 }
@@ -1313,7 +1316,7 @@ a:hover, a:active, a:focus {
 }
 
 .form-control:focus {
-    border-color: rgb(182, 3, 43);
+    border-color: #fe5407;
     box-shadow: none
 }
 
@@ -1465,7 +1468,7 @@ a:hover, a:active, a:focus {
 }
 
 .progress-bar-light-blue, .progress-bar-primary {
-    background-color: rgb(182, 3, 43)
+    background-color: #fe5407
 }
 
 .progress-striped .progress-bar-light-blue, .progress-striped .progress-bar-primary {
@@ -1612,7 +1615,7 @@ a:hover, a:active, a:focus {
 }
 
 .box.box-primary {
-    border-top-color: rgb(182, 3, 43)
+    border-top-color: #fe5407
 }
 
 .box.box-info {
@@ -1688,13 +1691,13 @@ a:hover, a:active, a:focus {
 }
 
 .box.box-solid.box-primary {
-    border: 1px solid rgb(182, 3, 43)
+    border: 1px solid #fe5407
 }
 
 .box.box-solid.box-primary > .box-header {
     color: #fff;
-    background: rgb(182, 3, 43);
-    background-color: rgb(182, 3, 43)
+    background: #fe5407;
+    background-color: #fe5407
 }
 
 .box.box-solid.box-primary > .box-header a, .box.box-solid.box-primary > .box-header .btn {
@@ -2065,7 +2068,7 @@ a:hover, a:active, a:focus {
 }
 
 .todo-list .primary {
-    border-left-color: rgb(182, 3, 43)
+    border-left-color: #fe5407
 }
 
 .todo-list .handle {
@@ -2386,24 +2389,24 @@ a:hover, a:active, a:focus {
     display: block
 }
 
-.btn-default {
-    background-color: rgb(182, 3, 43);
+.btn-stile {
+    background-color: #fe5407;
     color: #fff;
-    border-color: rgb(182, 3, 43)
+    border-color: #fe5407
 }
 
-.btn-default:active, .btn-default.hover {
+.btn-stile:active, .btn-stile.hover {
     background-color: rgb(239, 65, 54);
     color: #fff;
 }
 
 .btn-primary {
-    background-color: rgb(182, 3, 43);
-    border-color: rgb(182, 3, 43)
+    background-color: #fe5407;
+    border-color: #fe5407
 }
 
 .btn-primary:hover, .btn-primary:active, .btn-primary.hover {
-    background-color: rgb(182, 3, 43)
+    background-color: #fe5407
 }
 
 .btn-success {
@@ -2607,7 +2610,7 @@ a:hover, a:active, a:focus {
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
-    border-top-color: rgb(182, 3, 43)
+    border-top-color: #fe5407
 }
 
 .nav-pills > li.active > a {
@@ -2625,7 +2628,7 @@ a:hover, a:active, a:focus {
     background: transparent;
     color: #444;
     border-top: 0;
-    border-left-color: rgb(182, 3, 43)
+    border-left-color: #fe5407
 }
 
 .nav-stacked > li.header {
@@ -2683,7 +2686,7 @@ a:hover, a:active, a:focus {
 }
 
 .nav-tabs-custom > .nav-tabs > li.active {
-    border-top-color: rgb(182, 3, 43)
+    border-top-color: #fe5407
 }
 
 .nav-tabs-custom > .nav-tabs > li.active > a, .nav-tabs-custom > .nav-tabs > li.active:hover > a {
@@ -2750,7 +2753,7 @@ a:hover, a:active, a:focus {
 }
 
 .nav-tabs-custom.tab-primary > .nav-tabs > li.active {
-    border-top-color: rgb(182, 3, 43)
+    border-top-color: #fe5407
 }
 
 .nav-tabs-custom.tab-info > .nav-tabs > li.active {
@@ -3088,13 +3091,13 @@ table.text-center, table.text-center td, table.text-center th {
 }
 
 .direct-chat-primary .right > .direct-chat-text {
-    background: rgb(182, 3, 43);
-    border-color: rgb(182, 3, 43);
+    background: #fe5407;
+    border-color: #fe5407;
     color: #fff
 }
 
 .direct-chat-primary .right > .direct-chat-text:after, .direct-chat-primary .right > .direct-chat-text:before {
-    border-left-color: rgb(182, 3, 43)
+    border-left-color: #fe5407
 }
 
 .direct-chat-warning .right > .direct-chat-text {
@@ -4508,7 +4511,7 @@ table.text-center, table.text-center td, table.text-center th {
 }
 
 .select2-container--default.select2-container--open {
-    border-color: rgb(182, 3, 43)
+    border-color: #fe5407
 }
 
 .select2-dropdown {
@@ -4517,7 +4520,7 @@ table.text-center, table.text-center td, table.text-center th {
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: rgb(182, 3, 43);
+    background-color: #fe5407;
     color: white
 }
 
@@ -4557,7 +4560,7 @@ table.text-center, table.text-center td, table.text-center th {
 }
 
 .select2-container--default.select2-container--focus .select2-selection--multiple, .select2-container--default .select2-search--dropdown .select2-search__field {
-    border-color: rgb(182, 3, 43) !important
+    border-color: #fe5407 !important
 }
 
 .select2-container--default .select2-results__option[aria-disabled=true] {
@@ -4578,7 +4581,7 @@ table.text-center, table.text-center td, table.text-center th {
 }
 
 .select2-container--default .select2-selection--multiple:focus {
-    border-color: rgb(182, 3, 43)
+    border-color: #fe5407
 }
 
 .select2-container--default.select2-container--focus .select2-selection--multiple {
@@ -4586,8 +4589,8 @@ table.text-center, table.text-center td, table.text-center th {
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: rgb(182, 3, 43);
-    border-color: rgb(182, 3, 43);
+    background-color: #fe5407;
+    border-color: #fe5407;
     padding: 1px 10px;
     color: #fff
 }
@@ -4696,7 +4699,7 @@ table.text-center, table.text-center td, table.text-center th {
 }
 
 .bg-light-blue, .label-primary, .modal-primary .modal-body {
-    background-color: rgb(182, 3, 43) !important
+    background-color: #fe5407 !important
 }
 
 .bg-green, .callout.callout-success, .alert-success, .label-success, .modal-success .modal-body {
@@ -4761,7 +4764,7 @@ table.text-center, table.text-center td, table.text-center th {
 }
 
 .bg-light-blue-active, .modal-primary .modal-header, .modal-primary .modal-footer {
-    background-color: rgb(182, 3, 43) !important
+    background-color: #fe5407 !important
 }
 
 .bg-green-active, .modal-success .modal-header, .modal-success .modal-footer {
@@ -4826,7 +4829,7 @@ table.text-center, table.text-center td, table.text-center th {
 }
 
 .text-light-blue {
-    color: rgb(182, 3, 43) !important
+    color: #fe5407 !important
 }
 
 .text-green {
@@ -4948,11 +4951,11 @@ table.text-center, table.text-center td, table.text-center th {
 }
 
 .bg-light-blue-gradient {
-    background: rgb(182, 3, 43) !important;
-    background: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(182, 3, 43)), color-stop(1, #67a8ce)) !important;
-    background: -ms-linear-gradient(bottom, rgb(182, 3, 43), #67a8ce) !important;
-    background: -moz-linear-gradient(center bottom, rgb(182, 3, 43) 0, #67a8ce 100%) !important;
-    background: -o-linear-gradient(#67a8ce, rgb(182, 3, 43)) !important;
+    background: #fe5407 !important;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #fe5407), color-stop(1, #67a8ce)) !important;
+    background: -ms-linear-gradient(bottom, #fe5407, #67a8ce) !important;
+    background: -moz-linear-gradient(center bottom, #fe5407 0, #67a8ce 100%) !important;
+    background: -o-linear-gradient(#67a8ce, #fe5407) !important;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#67a8ce', endColorstr='rgb(182,3,43)', GradientType=0) !important;
     color: #fff
 }
@@ -5315,3 +5318,7 @@ table.text-center, table.text-center td, table.text-center th {
 .td-action{
     min-width: 100px;
 }
+.tab-content {
+    margin-top: 20px;
+}
+

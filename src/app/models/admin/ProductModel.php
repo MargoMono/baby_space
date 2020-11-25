@@ -67,6 +67,7 @@ class ProductModel implements ModelStrategy
 
         $data['categoryList'] = $categoryList;
         $data['languages'] = $this->languageRepository->getAll();
+        $data['productRecommendationList'] = $this->productRepository->getAll();
 
         return $data;
     }
@@ -79,8 +80,8 @@ class ProductModel implements ModelStrategy
             $this->productDescriptionRepository->create($newProductId, $description);
         }
 
-        if (!empty($params['recommendation_ids'])) {
-            foreach ($params['recommendation_ids'] as $recommendation) {
+        if (!empty($data['product_recommendation'])) {
+            foreach ($data['product_recommendation'] as $recommendation) {
                 $this->productRecommendationsRepository->create($newProductId, $recommendation);
             }
         }
@@ -98,41 +99,32 @@ class ProductModel implements ModelStrategy
                 $language['id']);
         }
 
+        $data['product'] = $product;
         $data['languages'] = $languages;
-        $data['categoryList'] = $this->categoryRepository->getAll();;
+
+        $data['categoryList'] = $this->categoryRepository->getAll();
         $data['productFilesList'] = $this->productRepository->getProductFilesByProductId($id);
+        $data['productRecommendationList'] = $this->productRepository->getRecomendations($id);
+        $data['productRecommendationListActual'] = $this->productRecommendationsRepository->getProductRecommendationsIdsByProductId($id);
 
         return $data;
     }
 
     public function update($file, $data)
     {
-        $newCategory = $this->productRepository->updateById($data);
+        $this->productRepository->updateById($data);
 
-        if (empty($newCategory)) {
-            $res['errors'][] = 'Ошибка сохранения товара';
-            return $res;
+        foreach ($data['description'] as $productDescription){
+            $this->productDescriptionRepository->updateById($productDescription);
         }
 
-        $productRecommendations = $this->productRecommendationsRepository->getProductRecommendationsIdsByProductId($params['id']);
+        $this->productRecommendationsRepository->deleteByProductId($data['id']);
 
-        foreach ($productRecommendations as $product) {
-            $this->productRecommendationsRepository->deleteProductRecommendations($product['id'], $params['id']);
-        }
-
-        if (!empty($params['recommendation_ids'])) {
-            foreach ($params['recommendation_ids'] as $recommendation) {
-                $productRecommendation = $this->productRecommendationsRepository->create($params['id'],
-                    $recommendation);
-
-                if (empty($productRecommendation)) {
-                    $res['errors'][] = 'Ошибка сохранения рекомендаций';
-                    return $res;
-                }
+        if (!empty($data['product_recommendation'])) {
+            foreach ($data['product_recommendation'] as $recommendation) {
+                $this->productRecommendationsRepository->create($data['id'], $recommendation);
             }
         }
-
-        return $newCategory;
     }
 
     public function getShowDeletePageData($id)
@@ -157,6 +149,16 @@ class ProductModel implements ModelStrategy
         $this->productRepository->deleteFileConnection($id, $imageId);
     }
 
+    public function getFile($id)
+    {
+        return $this->productRepository->getFile($id);
+    }
+
+    public function getFiles($id)
+    {
+        return $this->productRepository->getFiles($id);
+    }
+
     public function prepareData($params)
     {
         $languages = $this->languageRepository->getAll();
@@ -166,6 +168,7 @@ class ProductModel implements ModelStrategy
         foreach ($languages as $language) {
             $paramsDescription[$language['id']] = [
                 'language_id' => $language['id'],
+                'id' => $params['id-' . $language['id']],
                 'name' => $params['name-' . $language['id']],
                 'description' => $params['description-' . $language['id']],
                 'meta_title' => $params['meta_title-' . $language['id']],
@@ -181,8 +184,9 @@ class ProductModel implements ModelStrategy
             'status' => $params['status'],
             'sort' => $params['sort'],
             'file_id' => $params['file_id'],
-            'alias' => TextHelper::getTranslit($params['name']),
+            'alias' => TextHelper::getTranslit($params['name-1']),
             'description' => $paramsDescription,
+            'product_recommendation' => $params['product_recommendation'],
         ];
     }
 
@@ -191,14 +195,6 @@ class ProductModel implements ModelStrategy
         // TODO: Implement validation() method.
     }
 
-    public function getFile($id)
-    {
-        return $this->productRepository->getById($id);
-    }
 
-    public function getFiles($id)
-    {
-        return $this->productRepository->getProductFilesByProductId($id);
-    }
 }
 

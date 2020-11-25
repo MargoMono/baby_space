@@ -96,12 +96,12 @@ class ModelContext
 
         $this->strategy->delete($id);
 
-        if (!empty($file)) {
+        if (!empty($file) && $file['file']['error'] != FileUploaderHelper::UPLOAD_ERR_NO_FILE) {
             $this->fileRepository->deleteById($file['id']);
             $this->fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);
         }
 
-        if (!empty($files)) {
+        if (!empty($files) && $file['files']['error'][0] != FileUploaderHelper::UPLOAD_ERR_NO_FILE) {
             foreach ($files as $file) {
                 $this->fileRepository->deleteById($file['id']);
                 $this->fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);

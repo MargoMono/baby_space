@@ -42,15 +42,42 @@ class ProductRepository extends AbstractRepository
         return $result->fetchAll();
     }
 
+    public function getRecomendations($id)
+    {
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
+        $sql = '
+        SELECT 
+            p.*, 
+            f.alias AS file_alias, 
+            c.name AS category_name,
+            pd.description as description, pd.name as product_name
+        FROM product p
+            JOIN file f ON p.file_id = f.id 
+            JOIN category c ON p.category_id = c.id 
+            JOIN product_description pd ON p.id = pd.product_id
+        WHERE language_id = :language_id
+        AND p.id != :id';
+
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
     public function getById($id)
     {
         $sql = '
         SELECT 
-            c.*, cp.name AS category_name, f.alias AS file_alias
-        FROM product c
-            JOIN category cp ON c.category_id = cp.id
-            JOIN file f ON c.file_id = f.id
-        WHERE c.id = :id';
+            p.*, cp.id as category_id, cp.name AS category_name, f.alias AS file_alias
+        FROM product p
+            JOIN category cp ON p.category_id = cp.id
+            JOIN file f ON p.file_id = f.id
+        WHERE p.id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -90,33 +117,26 @@ VALUES
 UPDATE product
     SET
     category_id = :category_id,
-    name = :name,
-    description = :description,
-    content = :content,
     file_id = :file_id,
     status = :status,
     alias = :alias,
-    sort = :position,
-    tag_title = :tag_title,
-    tag_description = :tag_description,
-    tag_keywords = :tag_keywords
+    sort = :sort
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
-        $result->bindParam(':name', $data['name']);
-        $result->bindParam(':description', $data['description']);
-        $result->bindParam(':content', $data['content']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':position', $data['position']);
-        $result->bindParam(':tag_title', $data['tag_title']);
-        $result->bindParam(':tag_description', $data['tag_description']);
-        $result->bindParam(':tag_keywords', $data['tag_keywords']);
+        $result->bindParam(':sort', $data['sort']);
         $result->bindParam(':id', $data['id']);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update product');
+        }
     }
 
     public function deleteById($id)
@@ -161,8 +181,8 @@ VALUES
         SELECT 
             p.*, f.alias AS file_alias, f.id AS file_id
         FROM product p
-            LEFT JOIN product_file pf ON p.id = pf.product_id
-            LEFT JOIN file f ON pf.file_id = f.id
+            JOIN product_file pf ON p.id = pf.product_id
+            JOIN file f ON pf.file_id = f.id
         WHERE p.id = :id';
 
         $result = $this->db->prepare($sql);
@@ -187,6 +207,41 @@ VALUES
             $this->logger->error($e->getMessage(), [$productId, $fileId]);
             throw new \RuntimeException('Unable to delete product-file connection');
         }
+    }
+
+    public function getFile($id)
+    {
+        $sql = '
+        SELECT 
+            f.*
+        FROM product p
+            JOIN file f ON p.file_id = f.id
+        WHERE p.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getFiles($id)
+    {
+        $sql = '
+        SELECT 
+            f.*
+        FROM product p
+            JOIN product_file pf ON p.id = pf.product_id
+            JOIN file f ON pf.file_id = f.id
+        WHERE p.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
     }
 }
 
