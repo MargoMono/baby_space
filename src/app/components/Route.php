@@ -129,7 +129,7 @@ class Route
         // Страницы категорий
         $router->any('admin/product', [Admin\ProductController::class, 'actionIndex']);
         $router->any('admin/product/sort/{id}?', [Admin\ProductController::class, 'actionIndex']);
-        $router->any('admin/product/filter/{id}?', [Admin\ProductController::class, 'actionFilter']);
+        $router->any('admin/product/filter', [Admin\ProductController::class, 'actionFilter']);
         $router->get('admin/product/create', [Admin\ProductController::class, 'actionShowCreatePage']);
         $router->post('admin/product/create', [Admin\ProductController::class, 'create']);
         $router->get('admin/product/update/{id}', [Admin\ProductController::class, 'actionShowUpdatePage']);
@@ -137,7 +137,6 @@ class Route
         $router->get('admin/product/delete/{id}', [Admin\ProductController::class, 'actionShowDeletePage']);
         $router->post('admin/product/delete', [Admin\ProductController::class, 'delete']);
         $router->get('admin/product/image/delete/{id}/{photoId}', [Admin\ProductController::class, 'imageDelete']);
-        $router->post('admin/product/reccomend', [Admin\ProductController::class, 'reccomend']);
 
 
         // Страницы товаров

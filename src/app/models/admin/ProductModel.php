@@ -45,12 +45,14 @@ class ProductModel implements ModelStrategy
 
         $data['sort'] = $sort;
 
+        $data['categoryList'] = $this->categoryRepository->getAll();
+
         return $data;
     }
 
     public function getFilteredData($data)
     {
-        var_dump($data);
+        return $this->productRepository->getFilteredData($data);
     }
 
     public function getShowCreatePageData($sort = null)

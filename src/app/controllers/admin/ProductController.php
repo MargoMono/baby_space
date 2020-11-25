@@ -10,11 +10,13 @@ use App\Repository\ProductRepository;
 class ProductController implements ControllerStrategy
 {
     private $controllerContext;
+    private $model;
 
     private $directory = 'product';
 
     public function __construct()
     {
+        $this->model = new ProductModel();
         $this->controllerContext = new ControllerContext(new ProductModel(),
             new ModelContext(new ProductModel()), $this->directory);
 
@@ -60,6 +62,11 @@ class ProductController implements ControllerStrategy
     public function imageDelete($id, $imageId)
     {
         $this->controllerContext->imageDelete($id, $imageId);
+    }
+
+    public function actionFilter()
+    {
+        $this->controllerContext->actionFilter();
     }
 }
 

@@ -31,7 +31,7 @@ class ProductRepository extends AbstractRepository
             JOIN category c ON p.category_id = c.id 
             JOIN product_description pd ON p.id = pd.product_id
         WHERE language_id = :language_id
-        ORDER BY '. $sort['order'].' '. $sort['desc'];
+        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
 
         $result = $this->db->prepare($sql);
@@ -238,6 +238,42 @@ VALUES
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getFilteredData($data)
+    {
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
+        $filter = '';
+
+        if (!empty($data['name'])) {
+            $filter .= ' AND pd.name like \'%' . $data['name'] . '%\'';
+        }
+
+        if (!empty($data['category'])) {
+            $filter .= ' AND c.id = ' . $data['category'];
+        }
+
+        if ($data['status'] !== '') {
+            $filter .= ' AND p.status = ' . $data['status'];
+        }
+
+        $sql = "
+        SELECT 
+            p.id
+        FROM product p
+            JOIN file f ON p.file_id = f.id 
+            JOIN category c ON p.category_id = c.id 
+            JOIN product_description pd ON p.id = pd.product_id
+        WHERE language_id = :language_id
+        $filter";
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

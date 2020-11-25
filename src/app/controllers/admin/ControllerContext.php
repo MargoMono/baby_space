@@ -154,4 +154,10 @@ class ControllerContext
         $data['error_warning'] = "Невозможно $action, обратитесь к разработчику";
         $this->view->generate("admin/$this->viewDirectory/index.twig", $data);
     }
+
+    public function actionFilter()
+    {
+        $data = $this->modelStrategy->getFilteredData($_POST);
+        $this->view->generateAjax($data);
+    }
 }
