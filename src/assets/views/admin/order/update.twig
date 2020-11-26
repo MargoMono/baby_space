@@ -5,9 +5,9 @@
 <div class="content-wrapper">
     <section class="content-header">
         <div class="pull-right">
-            <button type="submit" form="form-product" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
-            <a href="/admin/product" data-toggle="tooltip" title="Отменить" class="btn btn-stile"><i class="fa fa-reply"></i></a></div>
-        <h1>Изменить товар</h1>
+            <button type="submit" form="form-order" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
+            <a href="/admin/order" data-toggle="tooltip" title="Отменить" class="btn btn-stile"><i class="fa fa-reply"></i></a></div>
+        <h1>Изменить заказ</h1>
     </section>
     <section class="content">
         {% if error_warning %}
@@ -20,7 +20,7 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
         {% endif %}
-        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-product" class="form-horizontal">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-order" class="form-horizontal">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab-general" data-toggle="tab">Основное</a></li>
                 <li><a href="#tab-data" data-toggle="tab">Данные</a></li>
@@ -41,42 +41,42 @@
                                 <div class="form-group required">
                                     <label class="col-sm-2 control-label" for="input-name">Название</label>
                                     <div class="col-sm-10">
-                                        <input required type="text" name="name-{{ language.id }}" value="{{ language.product.name }}" id="input-name" class="form-control"/>
+                                        <input required type="text" name="name-{{ language.id }}" value="{{ language.order.name }}" id="input-name" class="form-control"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label" for="input-description">Описание</label>
                                     <div class="col-sm-10">
-                                        <textarea data-toggle="summernote" id="input-description" name="description-{{ language.id }}">{{ language.product.description }}</textarea>
+                                        <textarea data-toggle="summernote" id="input-description" name="description-{{ language.id }}">{{ language.order.description }}</textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label" for="input-meta_title">Мета-тег Title</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="meta_title-{{ language.id }}" value="{{ language.product.meta_title }}" id="input-meta_title" class="form-control"/>
+                                        <input type="text" name="meta_title-{{ language.id }}" value="{{ language.order.meta_title }}" id="input-meta_title" class="form-control"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label" for="input-meta_description">Мета-тег Description</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="meta_description-{{ language.id }}" value="{{ language.product.meta_description }}" id="input-meta_description" class="form-control"/>
+                                        <input type="text" name="meta_description-{{ language.id }}" value="{{ language.order.meta_description }}" id="input-meta_description" class="form-control"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label" for="input-meta_keyword">Мета-тег Keyword</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="meta_keyword-{{ language.id }}" value="{{ language.product.meta_keyword }}" id="input-meta_keyword" class="form-control"/>
+                                        <input type="text" name="meta_keyword-{{ language.id }}" value="{{ language.order.meta_keyword }}" id="input-meta_keyword" class="form-control"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="input-tag">Теги товара</label>
+                                    <label class="col-sm-2 control-label" for="input-tag">Теги заказа</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="tag-{{ language.id }}" value="{{ language.product.tag }}" id="input-tag" class="form-control"/>
+                                        <input type="text" name="tag-{{ language.id }}" value="{{ language.order.tag }}" id="input-tag" class="form-control"/>
                                     </div>
                                 </div>
                             </div>
 
-                            <input type="hidden" name="id-{{ language.id }}" placeholder="" value="{{ language.product.id }}">
+                            <input type="hidden" name="id-{{ language.id }}" placeholder="" value="{{ language.order.id }}">
 
                         {% endfor %}
                     </div>
@@ -87,67 +87,42 @@
                         <div class="col-sm-10">
                             <select required name="category_id" id="input-category" class="form-control">
                                 {% for category in categoryList %}
-                                    <option {% if category.id == product.category_id %} selected {% endif %} value="{{ category.id }}">{{ category.name }}</option>
+                                    <option {% if category.id == order.category_id %} selected {% endif %} value="{{ category.id }}">{{ category.name }}</option>
                                 {% endfor %}
                             </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-price">Цена, руб.</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="price" value="{{ product.price }}" id="input-price" class="form-control"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-status">Статус</label>
                         <div class="col-sm-10">
                             <select name="status" id="input-status" class="form-control">
-                                <option value="1" {% if product.status == 1 %} selected {% endif %}>Отображается</option>
-                                <option value="0" {% if product.status == 0 %} selected {% endif %}>Скрыт</option>
+                                <option value="1" {% if order.status == 1 %} selected {% endif %}>Отображается</option>
+                                <option value="0" {% if order.status == 0 %} selected {% endif %}>Скрыт</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-sort">Порядок сортировки</label>
                         <div class="col-sm-10">
-                            <input type="text" name="sort" value="{{ product.sort }}" id="input-sort" class="form-control"/>
+                            <input type="text" name="sort" value="{{ order.sort }}" id="input-sort" class="form-control"/>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane" id="tab-links">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-recommendation">Рекомендуемые товары</label>
+                        <label class="col-sm-2 control-label" for="input-recommendation">Рекомендуемые заказы</label>
                         <div class="col-sm-10">
                             <select name="exapmle-select" id="input-recommendation" class="form-control">
                                 <option value="default">Не выбрано</option>
-                                {% for product in productRecommendationList %}
-                                    <option value="{{ product.id }}">{{ product.product_name }}</option>
+                                {% for order in orderRecommendationList %}
+                                    <option value="{{ order.id }}">{{ order.order_name }}</option>
                                 {% endfor %}
                             </select>
-                            <div id="product-recommendation-list" class="well well-sm" style="height: 150px; overflow: auto;">
-                                {% for product in productRecommendationListActual %}
-                                    <div id="product-recommendation{{ product.id }}">
-                                        <i class="fa fa-minus-circle"></i> {{ product.product_name }}
-                                        <input type="hidden" name="product_recommendation[]" value="{{ product.id }}">
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-country">Страны продажи</label>
-                        <div class="col-sm-10">
-                            <select id="input-country" class="form-control">
-                                <option value="default">Не выбрано</option>
-                                {% for country in countryList %}
-                                    <option value="{{ country.id }}">{{ country.name }}</option>
-                                {% endfor %}
-                            </select>
-                            <div id="product-country-list" class="well well-sm" style="height: 150px; overflow: auto;">
-                                {% for country in countryListActual %}
-                                    <div id="product-country{{ country.id }}">
-                                        <i class="fa fa-minus-circle"></i> {{ country.name }}
-                                        <input type="hidden" name="product_country[]" value="{{ country.id }}">
+                            <div id="order-recommendation-list" class="well well-sm" style="height: 150px; overflow: auto;">
+                                {% for order in orderRecommendationListActual %}
+                                    <div id="order-recommendation{{ order.id }}">
+                                        <i class="fa fa-minus-circle"></i> {{ order.order_name }}
+                                        <input type="hidden" name="order_recommendation[]" value="{{ order.id }}">
                                     </div>
                                 {% endfor %}
                             </div>
@@ -155,23 +130,23 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="tab-image">
-                    <p class="title-name">Главное изображение товара</p>
-                    <img src="/upload/images/product/{{ product.file_alias }}" width="150" alt=""/>
+                    <p class="title-name">Главное изображение заказа</p>
+                    <img src="/upload/images/order/{{ order.file_alias }}" width="150" alt=""/>
                     <input type="file" name="file" value="">
 
                     <p class="title-name">Дополнительные изображения</p>
-                    {% for photo in productFilesList %}
-                        <img src="/upload/images/product/{{ photo.file_alias }}" width="150" alt=""/>
-                        <a href="/admin/product/image/delete/{{ product.id }}/{{ photo.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
+                    {% for photo in orderFilesList %}
+                        <img src="/upload/images/order/{{ photo.file_alias }}" width="150" alt=""/>
+                        <a href="/admin/order/image/delete/{{ order.id }}/{{ photo.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
                         <br><br>
                     {% endfor %}
                     <input type='file' name='files[]' multiple >
                 </div>
             </div>
 
-            <input type="hidden" name="id" placeholder="" value="{{ product.id }}">
-            <input type="hidden" name="file_id" placeholder="" value="{{ product.file_id }}">
-            <input type="hidden" name="file_alias" placeholder="" value="{{ product.file_alias }}">
+            <input type="hidden" name="id" placeholder="" value="{{ order.id }}">
+            <input type="hidden" name="file_id" placeholder="" value="{{ order.file_id }}">
+            <input type="hidden" name="file_alias" placeholder="" value="{{ order.file_alias }}">
 
         </form>
     </section>
@@ -185,7 +160,7 @@
 
 <script type="text/javascript">
 
-    // Product recommendations
+    // order recommendations
     const recommendationSelect = document.querySelector('#input-recommendation');
 
     recommendationSelect.addEventListener('change', () => {
@@ -197,33 +172,12 @@
             return;
         }
 
-        $('#product-recommendation' + value).remove();
-        $('#product-recommendation-list').append('<div id="product-recommendation' + value + '"><i class="fa fa-minus-circle"></i> ' + text + '<input type="hidden" name="product_recommendation[]" value="' + value + '" /></div>');
+        $('#order-recommendation' + value).remove();
+        $('#order-recommendation-list').append('<div id="order-recommendation' + value + '"><i class="fa fa-minus-circle"></i> ' + text + '<input type="hidden" name="order_recommendation[]" value="' + value + '" /></div>');
 
     });
 
-    $('#product-recommendation-list').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    // Product country
-    const countrySelect = document.querySelector('#input-country');
-
-    countrySelect.addEventListener('click', () => {
-        let index = countrySelect.options.selectedIndex;
-        let text = countrySelect.options[index].text;
-        let value = countrySelect.options[index].value;
-
-        if (value == 'default'){
-            return;
-        }
-
-        $('#product-country' + value).remove();
-        $('#product-country-list').append('<div id="product-country' + value + '"><i class="fa fa-minus-circle"></i> ' + text + '<input type="hidden" name="product_country[]" value="' + value + '" /></div>');
-
-    });
-
-    $('#product-country-list').delegate('.fa-minus-circle', 'click', function() {
+    $('#order-recommendation-list').delegate('.fa-minus-circle', 'click', function() {
         $(this).parent().remove();
     });
 

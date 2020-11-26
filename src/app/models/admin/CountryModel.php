@@ -86,8 +86,8 @@ class CountryModel implements ModelStrategy
         return [
             'id' => $params['id'],
             'name' => $params['name'],
-            'iso_code_2' => $params['iso_code_2'],
-            'iso_code_3' => $params['iso_code_3'],
+            'alpha2' => $params['alpha2'],
+            'alpha3' => $params['alpha3'],
             'status' => $params['status'],
             'file_id' => $params['file_id'],
         ];

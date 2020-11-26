@@ -4,33 +4,27 @@ namespace App\Models\Admin;
 
 use App\Helpers\TextHelper;
 use App\Repository\CategoryRepository;
-use App\Repository\CountryRepository;
 use App\Repository\LanguageRepository;
-use App\Repository\ProductCountryRepository;
+use App\Repository\OrderRepository;
 use App\Repository\ProductDescriptionRepository;
 use App\Repository\ProductRecommendationsRepository;
-use App\Repository\ProductRepository;
 
-class ProductModel implements ModelStrategy
+class OrderModel implements ModelStrategy
 {
-    public $fileDirectory = 'product';
-    public $productRepository;
+    public $fileDirectory = 'order';
+    public $orderRepository;
     public $categoryRepository;
     public $productDescriptionRepository;
     public $productRecommendationsRepository;
     public $languageRepository;
-    public $countryRepository;
-    public $productCountryRepository;
 
     public function __construct()
     {
-        $this->productRepository = new ProductRepository();
+        $this->orderRepository = new OrderRepository();
         $this->categoryRepository = new CategoryRepository();
-        $this->languageRepository = new LanguageRepository();
-        $this->countryRepository = new CountryRepository();
         $this->productDescriptionRepository = new ProductDescriptionRepository();
         $this->productRecommendationsRepository = new ProductRecommendationsRepository();
-        $this->productCountryRepository = new ProductCountryRepository();
+        $this->languageRepository = new LanguageRepository();
     }
 
     public function getFileDirectory(): string
@@ -40,7 +34,7 @@ class ProductModel implements ModelStrategy
 
     public function getIndexData($sort = null)
     {
-        $productList = $this->productRepository->getAll($sort);
+        $productList = $this->orderRepository->getAll($sort);
         $data['productList'] = $productList;
 
         if($sort['desc'] == 'DESC'){
@@ -56,6 +50,11 @@ class ProductModel implements ModelStrategy
         return $data;
     }
 
+    public function getFilteredData($data)
+    {
+        return $this->orderRepository->getFilteredData($data);
+    }
+
     public function getShowCreatePageData($sort = null)
     {
         $categoryList = $this->categoryRepository->getAll();
@@ -69,30 +68,23 @@ class ProductModel implements ModelStrategy
         }
 
         $data['categoryList'] = $categoryList;
-        $data['countryList'] = $this->countryRepository->getAll();
         $data['languages'] = $this->languageRepository->getAll();
-        $data['productRecommendationList'] = $this->productRepository->getAll();
+        $data['productRecommendationList'] = $this->orderRepository->getAll();
 
         return $data;
     }
 
     public function create($data)
     {
-        $newProductId = $this->productRepository->create($data);
+        $newProductId = $this->orderRepository->create($data);
 
         foreach ($data['description'] as $description) {
             $this->productDescriptionRepository->create($newProductId, $description);
         }
 
         if (!empty($data['product_recommendation'])) {
-            foreach ($data['product_recommendation'] as $country) {
-                $this->productRecommendationsRepository->create($newProductId, $country);
-            }
-        }
-
-        if (!empty($data['product_country'])) {
-            foreach ($data['product_country'] as $country) {
-                $this->productCountryRepository->create($newProductId, $country);
+            foreach ($data['product_recommendation'] as $recommendation) {
+                $this->productRecommendationsRepository->create($newProductId, $recommendation);
             }
         }
 
@@ -101,7 +93,7 @@ class ProductModel implements ModelStrategy
 
     public function getShowUpdatePageData($id)
     {
-        $product = $this->productRepository->getById($id);
+        $product = $this->orderRepository->getById($id);
         $languages = $this->languageRepository->getAll();
 
         foreach ($languages as $key => $language) {
@@ -113,19 +105,16 @@ class ProductModel implements ModelStrategy
         $data['languages'] = $languages;
 
         $data['categoryList'] = $this->categoryRepository->getAll();
-        $data['productFilesList'] = $this->productRepository->getProductFilesByProductId($id);
-        $data['productRecommendationList'] = $this->productRepository->getRecomendations($id);
+        $data['productFilesList'] = $this->orderRepository->getProductFilesByProductId($id);
+        $data['productRecommendationList'] = $this->orderRepository->getRecomendations($id);
         $data['productRecommendationListActual'] = $this->productRecommendationsRepository->getProductRecommendationsIdsByProductId($id);
-
-        $data['countryList'] = $this->countryRepository->getAll();
-        $data['countryListActual'] = $this->productCountryRepository->getProductCountryIdsByProductId($id);
 
         return $data;
     }
 
     public function update($file, $data)
     {
-        $this->productRepository->updateById($data);
+        $this->orderRepository->updateById($data);
 
         foreach ($data['description'] as $productDescription){
             $this->productDescriptionRepository->updateById($productDescription);
@@ -138,51 +127,38 @@ class ProductModel implements ModelStrategy
                 $this->productRecommendationsRepository->create($data['id'], $recommendation);
             }
         }
-
-        $this->productCountryRepository->deleteByProductId($data['id']);
-
-        if (!empty($data['product_country'])) {
-            foreach ($data['product_country'] as $country) {
-                $this->productCountryRepository->create($data['id'], $country);
-            }
-        }
     }
 
     public function getShowDeletePageData($id)
     {
-        $data['product'] = $this->productRepository->getById($id);
+        $data['product'] = $this->orderRepository->getById($id);
 
         return $data;
     }
 
     public function delete($id)
     {
-        $this->productRepository->deleteById($id);
+        $this->orderRepository->deleteById($id);
     }
 
     public function createFilesConnection($id, $fileId)
     {
-        $this->productRepository->createFilesConnection($id, $fileId);
+        $this->orderRepository->createFilesConnection($id, $fileId);
     }
 
     public function deleteFileConnection($id, $imageId)
     {
-        $this->productRepository->deleteFileConnection($id, $imageId);
+        $this->orderRepository->deleteFileConnection($id, $imageId);
     }
 
     public function getFile($id)
     {
-        return $this->productRepository->getFile($id);
+        return $this->orderRepository->getFile($id);
     }
 
     public function getFiles($id)
     {
-        return $this->productRepository->getFiles($id);
-    }
-
-    public function getFilteredData($data)
-    {
-        return $this->productRepository->getFilteredData($data);
+        return $this->orderRepository->getFiles($id);
     }
 
     public function prepareData($params)
@@ -207,14 +183,12 @@ class ProductModel implements ModelStrategy
         return [
             'id' => $params['id'],
             'category_id' => $params['category_id'],
-            'price' => $params['price'],
             'status' => $params['status'],
             'sort' => $params['sort'],
             'file_id' => $params['file_id'],
             'alias' => TextHelper::getTranslit($params['name-1']),
             'description' => $paramsDescription,
             'product_recommendation' => $params['product_recommendation'],
-            'product_country' => $params['product_country'],
         ];
     }
 

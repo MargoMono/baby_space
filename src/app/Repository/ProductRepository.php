@@ -91,12 +91,13 @@ class ProductRepository extends AbstractRepository
     {
         $sql = '
 INSERT INTO product 
-    (category_id, file_id, status, alias, sort) 
+    (category_id, price, file_id, status, alias, sort) 
 VALUES 
-    (:category_id, :file_id, :status, :alias, :sort) ';
+    (:category_id, :price, :file_id, :status, :alias, :sort) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
+        $result->bindParam(':price', $data['price']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);
@@ -117,6 +118,7 @@ VALUES
 UPDATE product
     SET
     category_id = :category_id,
+    price = :price,
     file_id = :file_id,
     status = :status,
     alias = :alias,
@@ -125,6 +127,7 @@ WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
+        $result->bindParam(':price', $data['price']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);
@@ -256,6 +259,10 @@ VALUES
 
         if (!empty($data['category'])) {
             $filter .= ' AND c.id = ' . $data['category'];
+        }
+
+        if (!empty($data['price'])) {
+            $filter .= ' AND p.price = ' . $data['price'];
         }
 
         if ($data['status'] !== '') {

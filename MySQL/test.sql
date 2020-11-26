@@ -80,14 +80,13 @@ create table category
 create table product
 (
     `id`          INT(11) AUTO_INCREMENT,
-    `category_id` INT(11)      NOT NULL,
-    `price`       INT(11)      NOT NULL,
-    `file_id`     INT(11)      NOT NULL,
-    `status`      BOOL         NOT NULL DEFAULT 1,
-    `alias`       VARCHAR(255) NOT NULL,
+    `category_id` INT(11)        NOT NULL,
+    `price`       DECIMAL(15, 2) NOT NULL,
+    `file_id`     INT(11)        NOT NULL,
+    `status`      BOOL           NOT NULL DEFAULT 1,
+    `alias`       VARCHAR(255)   NOT NULL,
     `sort`        INT(11),
-    `updated_ut`  DATETIME              DEFAULT now() NULL,
-    `created_at`  DATETIME     NULL,
+    `created_at`  DATETIME       NULL,
     CONSTRAINT product_pk
         PRIMARY KEY (id),
     CONSTRAINT product_category_id_fk
@@ -126,19 +125,6 @@ create table product_recommendations
         FOREIGN KEY (product_id) REFERENCES product (id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT product_id_recommendation_id_fk
         FOREIGN KEY (recommendation_id) REFERENCES product (id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-create table product_currency
-(
-    `id`          INT(11) AUTO_INCREMENT,
-    `currency_id` INT(11) NOT NULL,
-    `product_id`  INT(11) NOT NULL,
-    CONSTRAINT product_currency_pk
-        PRIMARY KEY (id),
-    CONSTRAINT product_currency_product_id_fk
-        FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT product_currency_currency_id_fk
-        FOREIGN KEY (currency_id) REFERENCES currency (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 create table product_country
@@ -261,8 +247,8 @@ CREATE TABLE country
 (
     `id`         INT(11) AUTO_INCREMENT,
     `name`       VARCHAR(128) NOT NULL,
-    `iso_code_2` VARCHAR(2)   NOT NULL,
-    `iso_code_3` VARCHAR(3)   NOT NULL,
+    `alpha2` VARCHAR(2)   NOT NULL,
+    `alpha3` VARCHAR(3)   NOT NULL,
     `status`     BOOL         NOT NULL DEFAULT 1,
     `file_id`    INT          NOT NULL,
     PRIMARY KEY (id),
@@ -289,17 +275,16 @@ CREATE TABLE `order`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `oc_order_product`
+CREATE TABLE `order_product`
 (
     `id`         INT(11) AUTO_INCREMENT,
-    `order_id`   int(11)        NOT NULL,
-    `product_id` int(11)        NOT NULL,
-    `name`       varchar(255)   NOT NULL,
-    `quantity`   int(4)         NOT NULL,
-    `price`      decimal(15, 4) NOT NULL DEFAULT '0.0000',
-    `sale`       decimal(15, 4) NOT NULL DEFAULT '0.0000',
-    `total`      decimal(15, 4) NOT NULL DEFAULT '0.0000',
+    `order_id`   INT(11)        NOT NULL,
+    `product_id` INT(11)        NOT NULL,
+    `name`       VARCHAR(255)   NOT NULL,
+    `quantity`   INT(4)         NOT NULL,
+    `price`      DECIMAL(15, 2) NOT NULL DEFAULT '0.00',
+    `sale`       DECIMAL(15, 2) NOT NULL DEFAULT '0.00',
+    `total`      DECIMAL(15, 2) NOT NULL DEFAULT '0.00',
     PRIMARY KEY (`id`),
-    CONSTRAINT country_file_id_fk
-        FOREIGN KEY (order_id) REFERENCES `order` (id)
+    CONSTRAINT order_order_id_fk FOREIGN KEY (order_id) REFERENCES `order` (id)
 );

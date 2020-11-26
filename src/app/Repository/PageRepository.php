@@ -82,4 +82,9 @@ WHERE id = :id';
     {
         // TODO: Implement createFilesConnection() method.
     }
+
+    public function getFileByEntityId($id)
+    {
+        // TODO: Implement getFileByEntityId() method.
+    }
 }

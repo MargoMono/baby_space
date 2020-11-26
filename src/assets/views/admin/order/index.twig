@@ -4,12 +4,12 @@
     <section class="content-header">
         <div class="pull-right">
             <button type="button" data-toggle="tooltip" title="Фильтр"
-                    onclick="$('#filter-product').toggleClass('hidden-sm hidden-xs');"
+                    onclick="$('#filter-order').toggleClass('hidden-sm hidden-xs');"
                     class="btn btn-stile hidden-md hidden-lg"><i class="fa fa-filter"></i></button>
-            <a href="/admin/product/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary"><i
+            <a href="/admin/order/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary"><i
                         class="fa fa-plus"></i></a>
         </div>
-        <h1>Товары</h1>
+        <h1>Заказы</h1>
     </section>
     <section class="content">
         <div class="container-fluid">
@@ -25,15 +25,15 @@
                 </div>
             {% endif %}
             <div class="row">
-                <div id="filter-product" class="col-md-3 col-md-push-9 col-sm-12 hidden-sm hidden-xs">
+                <div id="filter-order" class="col-md-3 col-md-push-9 col-sm-12 hidden-sm hidden-xs">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title"><i class="fa fa-filter"></i>Фильтр</h3>
                         </div>
                         <div class="panel-body">
                             <div class="form-group">
-                                <label class="control-label" for="input-name">Название товара</label>
-                                <input type="text" name="filter_name" placeholder="Название товара" id="input-name"
+                                <label class="control-label" for="input-name">Название заказа</label>
+                                <input type="text" name="filter_name" placeholder="Название заказа" id="input-name"
                                        class="form-control"/>
                             </div>
                             <div class="form-group">
@@ -46,7 +46,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="input-price">Цена, руб.</label>
+                                <label class="control-label" for="input-price">Цена</label>
                                 <input type="text" name="filter_price" placeholder="Цена" id="input-price"
                                        class="form-control"/>
                             </div>
@@ -72,48 +72,39 @@
                             <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_list }}</h3>
                         </div>
                         <div class="panel-body">
-                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-product">
+                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-order">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <td class="text-center">Изображение</td>
                                             <td class="text-left">
-                                                <a {% if sort.order == 'pd.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/product/sort/?order=pd.name&desc={{ sort.desc }}">Название</a>
+                                                <a {% if sort.order == 'pd.name' %} class="{{ sort.desc|lower }}" {% endif %}
+                                                        href="/admin/order/sort/?order=pd.name&desc={{ sort.desc }}">Название</a>
                                             </td>
                                             <td class="text-left">
-                                                <a {% if sort.order == 'c.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/product/sort/?order=c.name&desc={{ sort.desc }}">Категория</a>
+                                                <a {% if sort.order == 'c.name' %} class="{{ sort.desc|lower }}" {% endif %}
+                                                        href="/admin/order/sort/?order=c.name&desc={{ sort.desc }}">Категория</a>
                                             </td>
                                             <td class="text-left">
-                                                <a {% if sort.order == 'p.price' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/product/sort/?order=p.price&desc={{ sort.desc }}">Цена</a>
-                                            </td>
-                                            <td class="text-left">
-                                                <a {% if sort.order == 'p.status' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/product/sort/?order=p.status&desc={{ sort.desc }}">Статус</a>
+                                                <a {% if sort.order == 'p.status' %} class="{{ sort.desc|lower }}" {% endif %}
+                                                        href="/admin/order/sort/?order=p.status&desc={{ sort.desc }}">Статус</a>
                                             </td>
                                             <td class="text-right">Действие</td>
                                         </tr>
                                         </thead>
                                         <tbody>
 
-                                        {% if productList %}
-                                            {% for product in productList %}
-                                                <tr class="product-{{ product.id }} product-item">
-                                                    <td class="text-center">{% if product.file_alias %} <img
-                                                                src="/upload/images/product/{{ product.file_alias }}"
-                                                                alt="{{ product.product_name }}"
-                                                                class="img-thumbnail"/> {% else %} <span
-                                                                class="img-thumbnail list"><i
-                                                                    class="fa fa-camera fa-2x"></i></span> {% endif %}
-                                                    </td>
-                                                    <td class="text-left">{{ product.product_name }}</td>
-                                                    <td class="text-left">{{ product.category_name }}</td>
-                                                    <td class="text-left">{{ product.price }}</td>
-                                                    <td class="text-left">{% if product.status == 1 %} Отбражается {% else %} Скрыт {% endif %}</td>
+                                        {% if orderList %}
+                                            {% for order in orderList %}
+                                                <tr class="order-{{ order.id }} order-item">
+                                                    <td class="text-left">{{ order.order_name }}</td>
+                                                    <td class="text-left">{{ order.category_name }}</td>
+                                                    <td class="text-left">{% if order.status == 1 %} Отбражается {% else %} Скрыт {% endif %}</td>
                                                     <td class="text-right  td-action">
-                                                        <a href="/admin/product/update/{{ product.id }}"
+                                                        <a href="/admin/order/update/{{ order.id }}"
                                                            data-toggle="tooltip" title="Редактировать"
                                                            class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
-                                                        <a href="/admin/product/delete/{{ product.id }}"
+                                                        <a href="/admin/order/delete/{{ order.id }}"
                                                            data-toggle="tooltip" title="Удалить"
                                                            class="btn btn-primary"><i class="fa fa-times"></i></a>
                                                     </td>
@@ -150,19 +141,19 @@
                 'status': $('#input-status').val()
             };
             $.ajax({
-                url: '/admin/product/filter',
+                url: '/admin/order/filter',
                 type: 'POST',
                 data: data,
                 success: function (res) {
-                    let productItem = document.querySelectorAll('.product-item');
-                    productItem.forEach(function (item) {
+                    let orderItem = document.querySelectorAll('.order-item');
+                    orderItem.forEach(function (item) {
                         item.classList.add("hide")
                     });
 
                     JSON.parse(res).forEach(function (item) {
-                        let product = document.querySelector('.product-' + item.id);
-                        product.classList.remove("hide");
-                        console.log(product)
+                        let order = document.querySelector('.order-' + item.id);
+                        order.classList.remove("hide");
+                        console.log(order)
                     });
                 },
                 error: function () {

@@ -2,151 +2,282 @@
 
 namespace App\Repository;
 
-use App\Repository\AbstractRepository;
+use App\Components\Language;
 use PDO;
+use PDOException;
 
 class OrderRepository extends AbstractRepository
 {
-    public function getOrderById($id)
+    public function getAll($sort = null)
     {
-        $sql = 'SELECT * FROM product_order WHERE id = :id';
+        if (empty($sort['order'])) {
+            $sort['order'] = 'id';
+        }
+
+        if (empty($sort['desc'])) {
+            $sort['desc'] = 'ASC';
+        }
+
+        $sql = '
+        SELECT 
+            o.*, 
+            f.alias AS file_alias, 
+            c.name AS category_name,
+            pd.description as description, pd.name as product_name
+        FROM order o
+            JOIN order_product op ON o.id = op.order_id
+            JOIN product p ON op.product_id = p.id
+            JOIN file f ON p.file_id = f.id 
+            JOIN category c ON p.category_id = c.id 
+            JOIN product_description pd on p.id = pd.product_id
+        WHERE language_id = :language_id
+        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
+
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id, PDO::PARAM_INT);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getRecomendations($id)
+    {
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
+        $sql = '
+        SELECT 
+            p.*, 
+            f.alias AS file_alias, 
+            c.name AS category_name,
+            pd.description as description, pd.name as product_name
+        FROM product p
+            JOIN file f ON p.file_id = f.id 
+            JOIN category c ON p.category_id = c.id 
+            JOIN product_description pd ON p.id = pd.product_id
+        WHERE language_id = :language_id
+        AND p.id != :id';
+
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getById($id)
+    {
+        $sql = '
+        SELECT 
+            p.*, cp.id as category_id, cp.name AS category_name, f.alias AS file_alias
+        FROM product p
+            JOIN category cp ON p.category_id = cp.id
+            JOIN file f ON p.file_id = f.id
+        WHERE p.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
         return $result->fetch();
     }
 
-    public function save($sort, $products)
+    public function create($data)
     {
         $sql = '
-        INSERT INTO product_order
-        (user_name, user_phone, user_email, user_city, user_adress, user_delivery, user_payment, user_comment, products)
-        VALUES 
-        (:user_name, :user_phone, :user_email, :user_city, :user_adress, :user_delivery, :user_payment, :user_comment, :products)';
-
-        $products = json_encode($products);
+INSERT INTO product 
+    (category_id, file_id, status, alias, sort) 
+VALUES 
+    (:category_id, :file_id, :status, :alias, :sort) ';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':user_name', $sort['name'], PDO::PARAM_STR);
-        $result->bindParam(':user_phone', $sort['phone'], PDO::PARAM_STR);
-        $result->bindParam(':user_email', $sort['email'], PDO::PARAM_STR);
-        $result->bindParam(':user_city', $sort['city'], PDO::PARAM_STR);
-        $result->bindParam(':user_adress', $sort['address'], PDO::PARAM_STR);
-        $result->bindParam(':user_delivery', $sort['delivery'], PDO::PARAM_STR);
-        $result->bindParam(':user_payment', $sort['payment'], PDO::PARAM_STR);
-        $result->bindParam(':user_comment', $sort['comment'], PDO::PARAM_STR);
-        $result->bindParam(':products', $products, PDO::PARAM_STR);
+        $result->bindParam(':category_id', $data['category_id']);
+        $result->bindParam(':file_id', $data['file_id']);
+        $result->bindParam(':status', $data['status']);
+        $result->bindParam(':alias', $data['alias']);
+        $result->bindParam(':sort', $data['sort']);
 
-        if ($result->execute()) {
+        try {
+            $result->execute();
             return $this->db->lastInsertId();
-        }
-
-        return false;
-    }
-
-    /**
-     * Возвращает список заказов
-     */
-
-    public static function getOrdersList()
-    {
-        // Соединение с БД
-        $db = Db::getConnection();
-
-        // Получение и возврат результатов
-        $result = $db->query('SELECT id, user_name, user_phone, date, status FROM product_order ORDER BY id DESC');
-        $ordersList = array();
-        $i = 0;
-        while ($row = $result->fetch()) {
-            $ordersList[$i]['id'] = $row['id'];
-            $ordersList[$i]['user_name'] = $row['user_name'];
-            $ordersList[$i]['user_phone'] = $row['user_phone'];
-            $ordersList[$i]['date'] = $row['date'];
-            $ordersList[$i]['status'] = $row['status'];
-            $i++;
-        }
-        return $ordersList;
-    }
-
-    /**
-     * Возвращает текстое пояснение статуса для заказа :<br/>
-     */
-
-    public static function getStatusText($status)
-    {
-        switch ($status) {
-            case '1':
-                return 'Новый заказ';
-                break;
-            case '2':
-                return 'В обработке';
-                break;
-            case '3':
-                return 'Доставляется';
-                break;
-            case '4':
-                return 'Закрыт';
-                break;
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to create product');
         }
     }
 
-    /*
-     * Удаляем заказ с заданным id
-     */
-
-    public static function deleteOrderById($id)
+    public function updateById($data)
     {
-        // Соединение с БД
-        $db = Db::getConnection();
+        $sql = '
+UPDATE product
+    SET
+    category_id = :category_id,
+    file_id = :file_id,
+    status = :status,
+    alias = :alias,
+    sort = :sort
+WHERE id = :id';
 
-        // Текст запроса к БД
-        $sql = 'DELETE FROM product_order WHERE id = :id';
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':category_id', $data['category_id']);
+        $result->bindParam(':file_id', $data['file_id']);
+        $result->bindParam(':status', $data['status']);
+        $result->bindParam(':alias', $data['alias']);
+        $result->bindParam(':sort', $data['sort']);
+        $result->bindParam(':id', $data['id']);
 
-        // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
-        $result->bindParam(':id', $id, PDO::PARAM_INT);
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update product');
+        }
     }
 
-    /**
-     * Редактируем заказ с заданным id
-     */
-    public static function updateOrderById($id, $userName, $userPhone, $userCity, $userAdress, $userDelivery, $userPayment, $userComment, $date, $status)
+    public function deleteById($id)
     {
-        // Соединение с БД
-        $db = Db::getConnection();
+        $sql = 'DELETE FROM product WHERE id = :id';
 
-        // Текст запроса к БД
-        $sql = "UPDATE product_order
-            SET 
-                user_name = :user_name, 
-                user_phone = :user_phone, 
-                user_city = :user_city, 
-                user_adress = :user_adress, 
-                user_delivery = :user_delivery,  
-                user_payment = :user_payment,                          
-                user_comment = :user_comment, 
-                date = :date, 
-                status = :status 
-            WHERE id = :id";
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
 
-        // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
-        $result->bindParam(':id', $id, PDO::PARAM_INT);
-        $result->bindParam(':user_name', $userName, PDO::PARAM_STR);
-        $result->bindParam(':user_phone', $userPhone, PDO::PARAM_STR);
-        $result->bindParam(':user_city', $userCity, PDO::PARAM_STR);
-        $result->bindParam(':user_adress', $userAdress, PDO::PARAM_STR);
-        $result->bindParam(':user_delivery', $userDelivery, PDO::PARAM_STR);
-        $result->bindParam(':user_payment', $userPayment, PDO::PARAM_STR);
-        $result->bindParam(':user_comment', $userComment, PDO::PARAM_STR);
-        $result->bindParam(':date', $date, PDO::PARAM_STR);
-        $result->bindParam(':status', $status, PDO::PARAM_INT);
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage());
+            throw new \RuntimeException('Unable to delete product');
+        }
+    }
+
+    public function createFilesConnection($productId, $fileId)
+    {
+        $sql = '
+INSERT INTO product_file
+    (product_id, file_id) 
+VALUES 
+    (:product_id, :file_id) ';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':product_id', $productId);
+        $result->bindParam(':file_id', $fileId);
+
+        try {
+            $result->execute();
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), [$productId, $fileId]);
+            throw new \RuntimeException('Unable to create product');
+        }
+    }
+
+    public function getProductFilesByProductId($id)
+    {
+        $sql = '
+        SELECT 
+            p.*, f.alias AS file_alias, f.id AS file_id
+        FROM product p
+            JOIN product_file pf ON p.id = pf.product_id
+            JOIN file f ON pf.file_id = f.id
+        WHERE p.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function deleteFileConnection($productId, $fileId)
+    {
+        $sql = 'DELETE FROM product_file WHERE product_id = :product_id AND file_id =:file_d';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':product_id', $productId);
+        $result->bindParam(':file_d', $fileId);
+
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), [$productId, $fileId]);
+            throw new \RuntimeException('Unable to delete product-file connection');
+        }
+    }
+
+    public function getFile($id)
+    {
+        $sql = '
+        SELECT 
+            f.*
+        FROM product p
+            JOIN file f ON p.file_id = f.id
+        WHERE p.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getFiles($id)
+    {
+        $sql = '
+        SELECT 
+            f.*
+        FROM product p
+            JOIN product_file pf ON p.id = pf.product_id
+            JOIN file f ON pf.file_id = f.id
+        WHERE p.id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getFilteredData($data)
+    {
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
+        $filter = '';
+
+        if (!empty($data['name'])) {
+            $filter .= ' AND pd.name like \'%' . $data['name'] . '%\'';
+        }
+
+        if (!empty($data['category'])) {
+            $filter .= ' AND c.id = ' . $data['category'];
+        }
+
+        if ($data['status'] !== '') {
+            $filter .= ' AND p.status = ' . $data['status'];
+        }
+
+        $sql = "
+        SELECT 
+            p.id
+        FROM product p
+            JOIN file f ON p.file_id = f.id 
+            JOIN category c ON p.category_id = c.id 
+            JOIN product_description pd ON p.id = pd.product_id
+        WHERE language_id = :language_id
+        $filter";
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
     }
 }
 
-?>

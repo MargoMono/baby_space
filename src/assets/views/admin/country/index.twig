@@ -33,8 +33,8 @@
                                         <tr>
                                             <td class="text-center">Изображение</td>
                                             <td class="text-left"> <a {% if sort.order == 'c.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.name&desc={{ sort.desc }}">Название</a></td>
-                                            <td class="text-left"> <a {% if sort.order == 'c.iso_code_2' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.iso_code_2&desc={{ sort.desc }}">Код ISO 2</a></td>
-                                            <td class="text-left"> <a {% if sort.order == 'c.iso_code_3' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.iso_code_3&desc={{ sort.desc }}">Код ISO 3</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'c.alpha2' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.alpha2&desc={{ sort.desc }}">Код alpha 2</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'c.alpha3' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.alpha3&desc={{ sort.desc }}">Код alpha 3</a></td>
                                             <td class="text-left"> <a {% if sort.order == 'c.status' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.status&desc={{ sort.desc }}">Статус</a></td>
                                             <td class="text-right">Действие</td>
                                         </tr>
@@ -50,8 +50,8 @@
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-left">{{ country.name }}</td>
-                                                    <td class="text-left">{{ country.iso_code_2 }}</td>
-                                                    <td class="text-left">{{ country.iso_code_3 }}</td>
+                                                    <td class="text-left">{{ country.alpha2 }}</td>
+                                                    <td class="text-left">{{ country.alpha3 }}</td>
                                                     <td class="text-left">
                                                         {% if country.status == 1 %}
                                                             Отображается
@@ -60,7 +60,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-right">
-                                                        {% if country.alias != 'russian' %}
+                                                        {% if country.alpha2 != 'RU' %}
                                                             <a href="/admin/country/update/{{ country.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
                                                             <a href="/admin/country/delete/{{ country.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
                                                         {% endif %}

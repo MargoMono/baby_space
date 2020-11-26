@@ -51,14 +51,14 @@ class CountryRepository extends AbstractRepository implements Entity
     {
         $sql = '
 INSERT INTO country
-    (name, iso_code_2, iso_code_3, status, file_id) 
+    (name, alpha2, alpha3, status, file_id) 
 VALUES 
-    (:name, :iso_code_2, :iso_code_3, :status, :file_id) ';
+    (:name, :alpha2, :alpha3, :status, :file_id) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
-        $result->bindParam(':iso_code_2', $data['iso_code_2']);
-        $result->bindParam(':iso_code_3', $data['iso_code_3']);
+        $result->bindParam(':alpha2', $data['alpha2']);
+        $result->bindParam(':alpha3', $data['alpha3']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':file_id', $data['file_id']);
 
@@ -77,16 +77,16 @@ VALUES
 UPDATE country
     SET
     name = :name,
-    iso_code_2 = :iso_code_2,
-    iso_code_3 = :iso_code_3,
+    alpha2 = :alpha2,
+    alpha3 = :alpha3,
     status = :status,
     file_id = :file_id
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
-        $result->bindParam(':iso_code_2', $data['iso_code_2']);
-        $result->bindParam(':iso_code_3', $data['iso_code_3']);
+        $result->bindParam(':alpha2', $data['alpha2']);
+        $result->bindParam(':alpha3', $data['alpha3']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':id', $data['id']);
@@ -124,4 +124,5 @@ WHERE id = :id';
     {
         // TODO: Implement createFilesConnection() method.
     }
+
 }

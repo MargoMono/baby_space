@@ -1,0 +1,32 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+
+    <section class="content-header">
+        <h1>
+            Панель администратора
+            <small>Удаление заказа</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/admin/order/">заказ</a></li>
+            <li class="active">Удаление заказа</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <div class="col-lg-12 correct">
+            <div class="login-form">
+                <h4>Удалить заказ "{{ order.name }}"</h4>
+
+                <p>Вы действительно хотите удалить этот заказ?</p>
+
+                <form action="/admin/order/delete" method="post">
+                    <input type="hidden" name="id" value="{{ order.id }}">
+                    <input type="submit" name="submit" class="btn btn-stile" value="Удалить"/>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
