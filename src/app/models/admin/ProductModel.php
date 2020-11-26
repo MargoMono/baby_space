@@ -2,9 +2,11 @@
 
 namespace App\Models\Admin;
 
+use App\Helpers\RateHelper;
 use App\Helpers\TextHelper;
 use App\Repository\CategoryRepository;
 use App\Repository\CountryRepository;
+use App\Repository\CurrencyRepository;
 use App\Repository\LanguageRepository;
 use App\Repository\ProductCountryRepository;
 use App\Repository\ProductDescriptionRepository;
@@ -20,6 +22,7 @@ class ProductModel implements ModelStrategy
     public $productRecommendationsRepository;
     public $languageRepository;
     public $countryRepository;
+    public $currencyRepository;
     public $productCountryRepository;
 
     public function __construct()
@@ -28,6 +31,7 @@ class ProductModel implements ModelStrategy
         $this->categoryRepository = new CategoryRepository();
         $this->languageRepository = new LanguageRepository();
         $this->countryRepository = new CountryRepository();
+        $this->currencyRepository = new CurrencyRepository();
         $this->productDescriptionRepository = new ProductDescriptionRepository();
         $this->productRecommendationsRepository = new ProductRecommendationsRepository();
         $this->productCountryRepository = new ProductCountryRepository();
@@ -41,9 +45,8 @@ class ProductModel implements ModelStrategy
     public function getIndexData($sort = null)
     {
         $productList = $this->productRepository->getAll($sort);
-        $data['productList'] = $productList;
 
-        if($sort['desc'] == 'DESC'){
+        if ($sort['desc'] == 'DESC') {
             $sort['desc'] = 'ASC';
         } else {
             $sort['desc'] = 'DESC';
@@ -52,6 +55,14 @@ class ProductModel implements ModelStrategy
         $data['sort'] = $sort;
 
         $data['categoryList'] = $this->categoryRepository->getAll();
+
+        foreach ($productList as $key => $product) {
+            foreach ($this->currencyRepository->getCurrencyForConvert() as $currency) {
+                $productList[$key]['convert'][$currency['code']] = RateHelper::convert($product['price'], $currency['rate']);
+            }
+        }
+
+        $data['productList'] = $productList;
 
         return $data;
     }
@@ -127,7 +138,7 @@ class ProductModel implements ModelStrategy
     {
         $this->productRepository->updateById($data);
 
-        foreach ($data['description'] as $productDescription){
+        foreach ($data['description'] as $productDescription) {
             $this->productDescriptionRepository->updateById($productDescription);
         }
 

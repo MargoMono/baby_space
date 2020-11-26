@@ -34,6 +34,7 @@
                                             <td class="text-left"> <a {% if sort.order == 'name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/currency/sort/?order=name&desc={{ sort.desc }}">Название</a></td>
                                             <td class="text-left"> <a {% if sort.order == 'alias' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/currency/sort/?order=alias&desc={{ sort.desc }}">Ссылка</a></td>
                                             <td class="text-left"> <a {% if sort.order == 'code' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/currency/sort/?order=code&desc={{ sort.desc }}">Код</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'rate' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/currency/sort/?order=rate&desc={{ sort.desc }}">Курс к рублю</a></td>
                                             <td class="text-right">Действие</td>
                                         </tr>
                                         </thead>
@@ -45,8 +46,13 @@
                                                     <td class="text-left">{{ currency.name }}</td>
                                                     <td class="text-left">{{ currency.alias }}</td>
                                                     <td class="text-left">{{ currency.code }}</td>
+                                                    <td class="text-left">
+                                                        {% if currency.code != 'RUB' %}
+                                                            {{ currency.rate }}
+                                                        {% endif %}
+                                                    </td>
                                                     <td class="text-right">
-                                                        {% if currency.alias != 'russian' %}
+                                                        {% if currency.code != 'RUB' %}
                                                             <a href="/admin/currency/update/{{ currency.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
                                                             <a href="/admin/currency/delete/{{ currency.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
                                                         {% endif %}

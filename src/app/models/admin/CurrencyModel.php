@@ -86,6 +86,7 @@ class CurrencyModel implements ModelStrategy
             'name' => $params['name'],
             'code' => $params['code'],
             'alias' => $params['alias'],
+            'rate' => $params['rate'],
         ];
     }
 

@@ -107,7 +107,12 @@
                                                     </td>
                                                     <td class="text-left">{{ product.product_name }}</td>
                                                     <td class="text-left">{{ product.category_name }}</td>
-                                                    <td class="text-left">{{ product.price }}</td>
+                                                    <td class="text-left">
+                                                        <b> {{ product.price }} руб. </b>
+                                                        {% for key, convert in product.convert %}
+                                                            <br> {{ convert }} {{key}}
+                                                        {% endfor %}
+                                                    </td>
                                                     <td class="text-left">{% if product.status == 1 %} Отбражается {% else %} Скрыт {% endif %}</td>
                                                     <td class="text-right  td-action">
                                                         <a href="/admin/product/update/{{ product.id }}"

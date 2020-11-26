@@ -49,14 +49,15 @@ class CurrencyRepository extends AbstractRepository
     {
         $sql = '
 INSERT INTO currency
-    (name, alias, code) 
+    (name, alias, code, rate) 
 VALUES 
-    (:name, :alias, :code) ';
+    (:name, :alias, :code, :rate) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
         $result->bindParam(':alias', $data['alias']);
         $result->bindParam(':code', $data['code']);
+        $result->bindParam(':rate', $data['rate']);
 
         try {
             $result->execute();
@@ -76,13 +77,15 @@ UPDATE currency
     SET
     name = :name,
     alias = :alias,
-    code = :code
+    code = :code,
+    rate = :rate
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
         $result->bindParam(':alias', $data['alias']);
         $result->bindParam(':code', $data['code']);
+        $result->bindParam(':rate', $data['rate']);
         $result->bindParam(':id', $data['id']);
 
         return $result->execute();
@@ -96,5 +99,19 @@ WHERE id = :id';
         $result->bindParam(':id', $id);
 
         return $result->execute();
+    }
+
+    public function getCurrencyForConvert($sort = null)
+    {
+        $sql = "
+        SELECT * 
+            FROM currency 
+        WHERE code != 'RUB'";
+
+        $result = $this->db->prepare($sql);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
     }
 }
