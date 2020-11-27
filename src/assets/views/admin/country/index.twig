@@ -35,6 +35,7 @@
                                             <td class="text-left"> <a {% if sort.order == 'c.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.name&desc={{ sort.desc }}">Название</a></td>
                                             <td class="text-left"> <a {% if sort.order == 'c.alpha2' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.alpha2&desc={{ sort.desc }}">Код alpha 2</a></td>
                                             <td class="text-left"> <a {% if sort.order == 'c.alpha3' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.alpha3&desc={{ sort.desc }}">Код alpha 3</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'c.currency_id' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.currency_id&desc={{ sort.desc }}">Валюта по умолчанию</a></td>
                                             <td class="text-left"> <a {% if sort.order == 'c.status' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/country/sort/?order=c.status&desc={{ sort.desc }}">Статус</a></td>
                                             <td class="text-right">Действие</td>
                                         </tr>
@@ -52,6 +53,7 @@
                                                     <td class="text-left">{{ country.name }}</td>
                                                     <td class="text-left">{{ country.alpha2 }}</td>
                                                     <td class="text-left">{{ country.alpha3 }}</td>
+                                                    <td class="text-left">{{ country.currency_name }}</td>
                                                     <td class="text-left">
                                                         {% if country.status == 1 %}
                                                             Отображается

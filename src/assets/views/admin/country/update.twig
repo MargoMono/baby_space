@@ -46,6 +46,16 @@
                             </div>
                         </div>
                         <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-currency_id">Валюта по умолчанию</label>
+                            <div class="col-sm-10">
+                                <select name="currency_id" id="input-currency_id" class="form-control" required>
+                                    {% for currency in currencyList %}
+                                        <option {% if currency.id == country.currency_id %} selected {% endif %} value="{{ currency.id }}">{{ currency.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group required">
                             <label class="col-sm-2 control-label" for="input-status">Статус</label>
                             <div class="col-sm-10">
                                 <select name="status" id="input-status" class="form-control">
