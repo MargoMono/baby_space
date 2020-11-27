@@ -126,7 +126,7 @@ class Route
         $router->get('admin/country/delete/{id}', [Admin\CountryController::class, 'actionShowDeletePage']);
         $router->post('admin/country/delete', [Admin\CountryController::class, 'delete']);
 
-        // Страницы товаров
+        // Заказы
         $router->any('admin/order', [Admin\ProductController::class, 'actionIndex']);
         $router->any('admin/order/sort/{id}?', [Admin\ProductController::class, 'actionIndex']);
         $router->any('admin/order/filter', [Admin\ProductController::class, 'actionFilter']);
@@ -149,6 +149,15 @@ class Route
         $router->post('admin/product/delete', [Admin\ProductController::class, 'delete']);
         $router->get('admin/product/image/delete/{id}/{photoId}', [Admin\ProductController::class, 'imageDelete']);
 
+        // Страницы скидки
+        $router->any('admin/sale', [Admin\SaleController::class, 'actionIndex']);
+        $router->any('admin/sale/sort/{id}?', [Admin\SaleController::class, 'actionIndex']);
+        $router->get('admin/sale/create', [Admin\SaleController::class, 'actionShowCreatePage']);
+        $router->post('admin/sale/create', [Admin\SaleController::class, 'create']);
+        $router->get('admin/sale/update/{id}', [Admin\SaleController::class, 'actionShowUpdatePage']);
+        $router->post('admin/sale/update/{id}', [Admin\SaleController::class, 'update']);
+        $router->get('admin/sale/delete/{id}', [Admin\SaleController::class, 'actionShowDeletePage']);
+        $router->post('admin/sale/delete', [Admin\SaleController::class, 'delete']);
 
         // Страницы категорий
         $router->any('admin/category', [Admin\CategoryController::class, 'actionIndex']);

@@ -1,0 +1,30 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="pull-right">
+            <button type="submit" form="form-option" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
+            <a href="/admin/sale" data-toggle="tooltip" title="Отменить" class="btn btn-stile"><i class="fa fa-reply"></i></a>
+        </div>
+        <h1>Скидки</h1>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="col-lg-12 correct">
+                <div class="login-form">
+                    <h4>Удалить скидку "{{ sale.name }}"</h4>
+
+                    <p>Вы действительно хотите удалить эту скидку?</p>
+
+                    <form action="/admin/sale/delete" method="post">
+                        <input type="hidden" name="id" value="{{ sale.id }}">
+                        <input type="submit" name="submit" class="btn btn-stile" value="Удалить"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+{% include 'admin/includes/footer.twig' %}

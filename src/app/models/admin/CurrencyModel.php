@@ -2,15 +2,18 @@
 
 namespace App\Models\Admin;
 
+use App\Components\Rates;
 use App\Repository\CurrencyRepository;
 
 class CurrencyModel implements ModelStrategy
 {
     private $currencyRepository;
+    private $rates;
 
     public function __construct()
     {
         $this->currencyRepository = new CurrencyRepository();
+        $this->rates = new Rates();
     }
 
     public function getFileDirectory(): string

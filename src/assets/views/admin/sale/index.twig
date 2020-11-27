@@ -1,0 +1,77 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="pull-right">
+            <a href="/admin/sale/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+        </div>
+        <h1>Скидки</h1>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> Список скидок</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-sale">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <td class="text-center">Изображение товара</td>
+                                            <td class="text-left"> <a {% if sort.order == 'pd.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/sale/sort/?order=pd.name&desc={{ sort.desc }}">Название товара</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'c.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/sale/sort/?order=c.name&desc={{ sort.desc }}">Название страны</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 's.size' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/sale/sort/?order=s.size&desc={{ sort.desc }}">Размер скидки</a></td>
+                                            <td class="text-right">Действие</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {% if saleList %}
+                                            {% for sale in saleList %}
+                                                <tr id="item-sale-{{ sale.id }}">
+                                                    <td class="text-center">
+                                                        {% if sale.file_alias %} <img src="/upload/images/product/{{ sale.file_alias }}" alt="{{ sale.name }}" class="img-thumbnail"/>
+                                                        {% else %} <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-left">{{ sale.product_name }}</td>
+                                                    <td class="text-left">{{ sale.country_name }}</td>
+                                                    <td class="text-left">{{ sale.size }}%</td>
+                                                    <td class="text-right td-action">
+                                                        <a href="/admin/sale/update/{{ sale.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="/admin/sale/delete/{{ sale.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td class="text-center" colspan="8">Ничего не найдено</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}

@@ -108,10 +108,17 @@
                                                     <td class="text-left">{{ product.product_name }}</td>
                                                     <td class="text-left">{{ product.category_name }}</td>
                                                     <td class="text-left">
-                                                        <b> {{ product.price }} руб. </b>
+                                                        <b> {{ product.price }} руб.</b>
                                                         {% for key, convert in product.convert %}
-                                                            <br> {{ convert }} {{key}}
+                                                            <br> ≈ {{ convert }} {{key}}
                                                         {% endfor %}
+                                                        {% if product.sale %}
+                                                            <br>
+                                                            <b>Действует скидка!!</b>
+                                                            {% for key, sale in product.sale %}
+                                                                <br> {{key}} - {{ sale }}
+                                                            {% endfor %}
+                                                        {% endif %}
                                                     </td>
                                                     <td class="text-left">{% if product.status == 1 %} Отбражается {% else %} Скрыт {% endif %}</td>
                                                     <td class="text-right  td-action">

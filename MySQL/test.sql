@@ -245,12 +245,12 @@ create table currency
 
 CREATE TABLE country
 (
-    `id`         INT(11) AUTO_INCREMENT,
-    `name`       VARCHAR(128) NOT NULL,
-    `alpha2` VARCHAR(2)   NOT NULL,
-    `alpha3` VARCHAR(3)   NOT NULL,
-    `status`     BOOL         NOT NULL DEFAULT 1,
-    `file_id`    INT          NOT NULL,
+    `id`      INT(11) AUTO_INCREMENT,
+    `name`    VARCHAR(128) NOT NULL,
+    `alpha2`  VARCHAR(2)   NOT NULL,
+    `alpha3`  VARCHAR(3)   NOT NULL,
+    `status`  BOOL         NOT NULL DEFAULT 1,
+    `file_id` INT          NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT country_file_id_fk
         FOREIGN KEY (file_id) REFERENCES file (id)
@@ -287,4 +287,30 @@ CREATE TABLE `order_product`
     `total`      DECIMAL(15, 2) NOT NULL DEFAULT '0.00',
     PRIMARY KEY (`id`),
     CONSTRAINT order_order_id_fk FOREIGN KEY (order_id) REFERENCES `order` (id)
+);
+
+create table sale
+(
+    `id`         INT(11) AUTO_INCREMENT,
+    `size`       INT(3)  NOT NULL,
+    `product_id` INT(11) NOT NULL,
+    `country_id` INT(11) NOT NULL,
+    CONSTRAINT sale
+        PRIMARY KEY (id),
+    CONSTRAINT sale_product_id_fk
+        FOREIGN KEY (product_id) REFERENCES product (id) ON UPDATE CASCADE,
+    CONSTRAINT sale_country_id_fk
+        FOREIGN KEY (country_id) REFERENCES country (id) ON UPDATE CASCADE
+);
+
+create table rate
+(
+    `id`          INT(11) AUTO_INCREMENT,
+    `currency_id` INT(3)                 NOT NULL,
+    `rate`        DECIMAL(15, 2)         NOT NULL,
+    `date`        DATETIME DEFAULT now() NOT NULL,
+    CONSTRAINT rate
+        PRIMARY KEY (id),
+    CONSTRAINT rate_currency_id_fk
+        FOREIGN KEY (currency_id) REFERENCES currency (id) ON UPDATE CASCADE
 );

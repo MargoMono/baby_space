@@ -2,7 +2,7 @@
 
 namespace App\Models\Admin;
 
-use App\Helpers\RateHelper;
+use App\Helpers\CalculationHelper;
 use App\Helpers\TextHelper;
 use App\Repository\CategoryRepository;
 use App\Repository\CountryRepository;
@@ -12,6 +12,7 @@ use App\Repository\ProductCountryRepository;
 use App\Repository\ProductDescriptionRepository;
 use App\Repository\ProductRecommendationsRepository;
 use App\Repository\ProductRepository;
+use App\Repository\SaleRepository;
 
 class ProductModel implements ModelStrategy
 {
@@ -24,6 +25,7 @@ class ProductModel implements ModelStrategy
     public $countryRepository;
     public $currencyRepository;
     public $productCountryRepository;
+    public $saleRepository;
 
     public function __construct()
     {
@@ -35,6 +37,7 @@ class ProductModel implements ModelStrategy
         $this->productDescriptionRepository = new ProductDescriptionRepository();
         $this->productRecommendationsRepository = new ProductRecommendationsRepository();
         $this->productCountryRepository = new ProductCountryRepository();
+        $this->saleRepository = new SaleRepository();
     }
 
     public function getFileDirectory(): string
@@ -57,10 +60,11 @@ class ProductModel implements ModelStrategy
         $data['categoryList'] = $this->categoryRepository->getAll();
 
         foreach ($productList as $key => $product) {
-            foreach ($this->currencyRepository->getCurrencyForConvert() as $currency) {
-                $productList[$key]['convert'][$currency['code']] = RateHelper::convert($product['price'], $currency['rate']);
+            foreach ($this->currencyRepository->getAllCurrencyForConvert() as $currency) {
+                $productList[$key]['convert'][$currency['code']] = CalculationHelper::convert($product['price'], $currency['rate']);
             }
         }
+
 
         $data['productList'] = $productList;
 

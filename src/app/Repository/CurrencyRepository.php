@@ -18,8 +18,9 @@ class CurrencyRepository extends AbstractRepository
         }
 
         $sql = '
-        SELECT * 
-        FROM currency 
+        SELECT c.* , r.rate
+        FROM currency c
+           LEFT JOIN rate r on c.id = r.currency_id
         ORDER BY '. $sort['order'].' '. $sort['desc'];
 
         $result = $this->db->prepare($sql);
@@ -101,12 +102,27 @@ WHERE id = :id';
         return $result->execute();
     }
 
-    public function getCurrencyForConvert($sort = null)
+    public function getAllCurrencyForConvert($sort = null)
+    {
+        $sql = "
+        SELECT c.*, r.rate
+            FROM currency c
+        LEFT JOIN rate r on c.id = r.currency_id
+        WHERE code != 'RUB'";
+
+        $result = $this->db->prepare($sql);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getCurrencyByProductAndCountryId($productId, $countryId)
     {
         $sql = "
         SELECT * 
             FROM currency 
-        WHERE code != 'RUB'";
+        WHERE c != 'RUB'";
 
         $result = $this->db->prepare($sql);
         $result->setFetchMode(PDO::FETCH_ASSOC);

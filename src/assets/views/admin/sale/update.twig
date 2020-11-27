@@ -1,0 +1,88 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="pull-right">
+            <button type="submit" form="form-option" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
+            <a href="/admin/sale" data-toggle="tooltip" title="Отменить" class="btn btn-stile"><i class="fa fa-reply"></i></a>
+        </div>
+        <h1>Скидки</h1>
+    </section>
+    <section class="content">
+        <div class="panel panel-default">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i>Обновить скидку</h3>
+            </div>
+            <div class="panel-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-option" class="form-horizontal">
+                    <fieldset>
+                        <input type="hidden" name="id" placeholder="" value="{{ sale.id }}">
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-name">Название</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="name" value="{{ sale.name }}" placeholder="Название" id="input-name" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-short_description">Краткое содержание</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="short_description" value="{{ sale.short_description }}" placeholder="Краткое содержание" id="input-short_description" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-description">Текст</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="description" value="{{ sale.description }}" placeholder="Текст" id="input-description" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-file">Изображение</label>
+                            <div class="col-sm-10">
+                                <img src="/upload/images/sale/{{ sale.file_alias }}" width="150" alt=""/>
+                                <input type="hidden" name="file_id" placeholder="" value="{{ sale.file_id }}">
+                                <input type="hidden" name="file_alias" placeholder="" value="{{ sale.file_alias }}">
+                                <input type="file" name="file" id="input-file" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-meta_title">Мета-тег title (для SEO)</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="meta_title" value="{{ sale.meta_title }}" placeholder="Мета-тег title (для SEO)" id="input-meta_title" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-meta_description">Мета-тег description (для SEO)</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="meta_description" value="{{ sale.meta_description }}" placeholder="Мета-тег description (для SEO))" id="input-meta_description" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-meta_keyword">Мета-теги keywords (для SEO)</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="meta_keyword" value="{{ sale.meta_keyword }}" placeholder="Мета-теги keywords (для SEO)" id="input-meta_keyword" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-tag">Теги (через запятую)</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="tag" value="{{ sale.tag }}" placeholder="Теги (через запятую)" id="input-tag" class="form-control" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
