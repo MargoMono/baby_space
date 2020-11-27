@@ -1,0 +1,67 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="pull-right">
+            <button type="submit" form="form-option" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
+            <a href="/admin/coupon" data-toggle="tooltip" title="Отменить" class="btn btn-stile"><i class="fa fa-reply"></i></a>
+        </div>
+        <h1>Купоны</h1>
+    </section>
+    <section class="content">
+        <div class="panel panel-default">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i>Обновить купон</h3>
+            </div>
+            <div class="panel-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-option" class="form-horizontal">
+                    <fieldset>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-code">Код</label>
+                            <div class="col-sm-10">
+                                <input type="text"  maxlength="20" required name="code" value="{{ coupon.code }}" placeholder="Код" id="input-code" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-discount">% скидки</label>
+                            <div class="col-sm-10">
+                                <input type="number" min="1" max="99" required name="discount" value="{{ coupon.discount }}" placeholder="% скидки" id="input-discount" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-quantity">Количество</label>
+                            <div class="col-sm-10">
+                                <input type="number" required name="quantity" value="{{ coupon.quantity }}" placeholder="Количество" id="input-quantity" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-start_date">Дата начала действия</label>
+                            <div class="col-sm-10">
+                                <input type="date" required name="start_date" value="{{ coupon.start_date }}" placeholder="Дата начала действия" id="input-start_date" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-end_date">Дата окончания действия</label>
+                            <div class="col-sm-10">
+                                <input type="date" required name="end_date" value="{{ coupon.end_date }}" placeholder="Дата окончания действия" id="input-end_date" class="form-control" />
+                            </div>
+                        </div>
+                        <input type="hidden" name="id" placeholder="" value="{{ coupon.id }}">
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}

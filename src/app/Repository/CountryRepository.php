@@ -18,9 +18,10 @@ class CountryRepository extends AbstractRepository implements Entity
         }
 
         $sql = '
-        SELECT c.* , f.alias AS file_alias
+        SELECT c.* , f.alias AS file_alias, cr.name as currency_name
             FROM country c
             LEFT JOIN file f ON c.file_id = f.id
+            LEFT JOIN currency cr ON c.currency_id = cr.id
         ORDER BY '. $sort['order'].' '. $sort['desc'];
 
         $result = $this->db->prepare($sql);
@@ -34,9 +35,10 @@ class CountryRepository extends AbstractRepository implements Entity
     public function getById($id)
     {
         $sql = '
-        SELECT c.*, f.alias AS file_alias
+        SELECT c.*, f.alias AS file_alias, cr.name as currency_name
             FROM country c
             LEFT JOIN file f ON c.file_id = f.id
+            LEFT JOIN currency cr ON c.currency_id = cr.id
         WHERE c.id = :id';
 
         $result = $this->db->prepare($sql);
@@ -51,9 +53,9 @@ class CountryRepository extends AbstractRepository implements Entity
     {
         $sql = '
 INSERT INTO country
-    (name, alpha2, alpha3, status, file_id) 
+    (name, alpha2, alpha3, status, file_id, currency_id) 
 VALUES 
-    (:name, :alpha2, :alpha3, :status, :file_id) ';
+    (:name, :alpha2, :alpha3, :status, :file_id, :currency_id) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
@@ -61,6 +63,7 @@ VALUES
         $result->bindParam(':alpha3', $data['alpha3']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':file_id', $data['file_id']);
+        $result->bindParam(':currency_id', $data['currency_id']);
 
         try {
             $result->execute();
@@ -80,7 +83,8 @@ UPDATE country
     alpha2 = :alpha2,
     alpha3 = :alpha3,
     status = :status,
-    file_id = :file_id
+    file_id = :file_id,
+    currency_id = :currency_id
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
@@ -89,6 +93,7 @@ WHERE id = :id';
         $result->bindParam(':alpha3', $data['alpha3']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':file_id', $data['file_id']);
+        $result->bindParam(':currency_id', $data['currency_id']);
         $result->bindParam(':id', $data['id']);
 
         return $result->execute();

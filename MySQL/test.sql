@@ -314,3 +314,14 @@ create table rate
     CONSTRAINT rate_currency_id_fk
         FOREIGN KEY (currency_id) REFERENCES currency (id) ON UPDATE CASCADE
 );
+
+create table coupon
+(
+    `id`         INT(11) AUTO_INCREMENT,
+    `discount`   INT(3)   NOT NULL,
+    `quantity`   INT(11)  NOT NULL,
+    `start_date` DATETIME NOT NULL,
+    `end_date`   DATETIME NOT NULL,
+    CONSTRAINT coupons
+        PRIMARY KEY (id)
+);

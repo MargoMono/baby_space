@@ -3,15 +3,18 @@
 namespace App\Models\Admin;
 
 use App\Repository\CountryRepository;
+use App\Repository\CurrencyRepository;
 
 class CountryModel implements ModelStrategy
 {
     public $fileDirectory = 'country';
     private $countryRepository;
+    private $currencyRepository;
 
     public function __construct()
     {
         $this->countryRepository = new CountryRepository();
+        $this->currencyRepository = new CurrencyRepository();
     }
 
     public function getFileDirectory(): string
@@ -37,7 +40,8 @@ class CountryModel implements ModelStrategy
 
     public function getShowCreatePageData($sort = null)
     {
-        $data['countryList'] = $this->countryRepository->getAll($sort);
+        $data['countryList'] = $this->countryRepository->getAll();
+        $data['currencyList'] = $this->currencyRepository->getAll();
 
         return $data;
     }
@@ -50,6 +54,7 @@ class CountryModel implements ModelStrategy
     public function getShowUpdatePageData($id)
     {
         $data['country'] = $this->countryRepository->getById($id);
+        $data['currencyList'] = $this->currencyRepository->getAll();
 
         return $data;
     }
@@ -90,6 +95,7 @@ class CountryModel implements ModelStrategy
             'alpha3' => $params['alpha3'],
             'status' => $params['status'],
             'file_id' => $params['file_id'],
+            'currency_id' => $params['currency_id'],
         ];
     }
 

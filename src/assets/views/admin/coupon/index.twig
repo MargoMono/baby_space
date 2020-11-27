@@ -1,0 +1,77 @@
+{% include 'admin/includes/header.twig' %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="pull-right">
+            <a href="/admin/coupon/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+        </div>
+        <h1>Купоны</h1>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> Список купонов</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-coupon">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <td class="text-left"> <a {% if sort.order == 'code' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/coupon/sort/?order=code&desc={{ sort.desc }}">Код</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'discount' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/coupon/sort/?order=discount&desc={{ sort.desc }}">% скидки</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'quantity' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/coupon/sort/?order=quantity&desc={{ sort.desc }}">Количество</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'used' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/coupon/sort/?order=used&desc={{ sort.desc }}">Использовано</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'start_date' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/coupon/sort/?order=start_date&desc={{ sort.desc }}">Дата начала<br> действия</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'end_date' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/coupon/sort/?order=end_date&desc={{ sort.desc }}">Дата окончания<br> действия</a></td>
+                                            <td class="text-right">Действие</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {% if couponList %}
+                                            {% for coupon in couponList %}
+                                                <tr id="item-coupon-{{ coupon.id }}">
+                                                    <td class="text-left">{{ coupon.code }}</td>
+                                                    <td class="text-left">{{ coupon.discount }}</td>
+                                                    <td class="text-left">{{ coupon.quantity }}</td>
+                                                    <td class="text-left">{{ coupon.used }}</td>
+                                                    <td class="text-left">{{ coupon.start_date }}</td>
+                                                    <td class="text-left">{{ coupon.end_date }}</td>
+                                                    <td class="text-right td-action">
+                                                        <a href="/admin/coupon/update/{{ coupon.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="/admin/coupon/delete/{{ coupon.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td class="text-center" colspan="8">Ничего не найдено</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'admin/includes/footer.twig' %}
