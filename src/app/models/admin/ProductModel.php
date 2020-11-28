@@ -60,11 +60,23 @@ class ProductModel implements ModelStrategy
         $data['categoryList'] = $this->categoryRepository->getAll();
 
         foreach ($productList as $key => $product) {
+            $salePrice = null;
+
+            if(!empty($product['sale'])){
+                $salePrice = CalculationHelper::sale($product['price'], $product['sale']);
+            }
+
             foreach ($this->currencyRepository->getAllCurrencyForConvert() as $currency) {
                 $productList[$key]['convert'][$currency['code']] = CalculationHelper::convert($product['price'], $currency['rate']);
+
+                if(empty($salePrice)){
+                    continue;
+                }
+
+                $productList[$key]['convert_sale'][$currency['code']] = CalculationHelper::convert($salePrice, $currency['rate']);
+                $productList[$key]['sale_price'] = $salePrice;
             }
         }
-
 
         $data['productList'] = $productList;
 
@@ -223,6 +235,7 @@ class ProductModel implements ModelStrategy
             'id' => $params['id'],
             'category_id' => $params['category_id'],
             'price' => $params['price'],
+            'sale' => $params['sale'],
             'status' => $params['status'],
             'sort' => $params['sort'],
             'file_id' => $params['file_id'],

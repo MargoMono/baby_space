@@ -91,13 +91,14 @@ class ProductRepository extends AbstractRepository
     {
         $sql = '
 INSERT INTO product 
-    (category_id, price, file_id, status, alias, sort) 
+    (category_id, price, sale, file_id, status, alias, sort) 
 VALUES 
-    (:category_id, :price, :file_id, :status, :alias, :sort) ';
+    (:category_id, :price, :sale, :file_id, :status, :alias, :sort) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
         $result->bindParam(':price', $data['price']);
+        $result->bindParam(':sale', $data['sale']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);
@@ -119,6 +120,7 @@ UPDATE product
     SET
     category_id = :category_id,
     price = :price,
+    sale = :sale,
     file_id = :file_id,
     status = :status,
     alias = :alias,
@@ -128,6 +130,7 @@ WHERE id = :id';
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
         $result->bindParam(':price', $data['price']);
+        $result->bindParam(':sale', $data['sale']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);

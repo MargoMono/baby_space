@@ -113,10 +113,10 @@
                                                             <br> ≈ {{ convert }} {{key}}
                                                         {% endfor %}
                                                         {% if product.sale %}
-                                                            <br>
-                                                            <b>Действует скидка!!</b>
-                                                            {% for key, sale in product.sale %}
-                                                                <br> {{key}} - {{ sale }}
+                                                            <br><b>Действует скидка - {{ product.sale }} %</b>
+                                                            <br> Цена итого: {{ product.sale_price }} руб.
+                                                            {% for key, sale in product.convert_sale %}
+                                                                <br> ≈ {{ sale }} {{key}}
                                                             {% endfor %}
                                                         {% endif %}
                                                     </td>
