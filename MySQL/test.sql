@@ -286,7 +286,7 @@ CREATE TABLE `order_product`
     `sale`       DECIMAL(15, 2) NOT NULL DEFAULT '0.00',
     `total`      DECIMAL(15, 2) NOT NULL DEFAULT '0.00',
     PRIMARY KEY (`id`),
-    CONSTRAINT order_order_id_fk FOREIGN KEY (order_id) REFERENCES `order` (id)
+    CONSTRAINT order_order_id_fk FOREIGN KEY (order_id) REFERENCES orders (id)
 );
 
 create table sale
@@ -325,3 +325,28 @@ create table coupon
     CONSTRAINT coupons
         PRIMARY KEY (id)
 );
+
+create table payment_method
+(
+    `id`   INT(11) AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    CONSTRAINT payment_method
+        PRIMARY KEY (id)
+);
+
+create table shipping_method
+(
+    `id`   INT(11) AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    CONSTRAINT shipping_method
+        PRIMARY KEY (id)
+);
+
+create table order_status
+(
+    `id`   INT(11) AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    CONSTRAINT order_status
+        PRIMARY KEY (id)
+);
+

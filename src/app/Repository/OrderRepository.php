@@ -21,48 +21,17 @@ class OrderRepository extends AbstractRepository
         $sql = '
         SELECT 
             o.*, 
-            f.alias AS file_alias, 
-            c.name AS category_name,
-            pd.description as description, pd.name as product_name
-        FROM order o
-            JOIN order_product op ON o.id = op.order_id
-            JOIN product p ON op.product_id = p.id
-            JOIN file f ON p.file_id = f.id 
-            JOIN category c ON p.category_id = c.id 
-            JOIN product_description pd on p.id = pd.product_id
-        WHERE language_id = :language_id
+            os.name as status_name, os.id as status_id,
+            sm.name as shipping_method_name, sm.id as shipping_method_id,
+            pm.name as payment_method_name, pm.id as payment_method_id
+        FROM orders o
+            JOIN order_status os ON o.status_id = os.id
+            JOIN order_shipping_method sm ON o.shipping_method_id = sm.id
+            JOIN order_payment_method pm ON o.payment_method_id = pm.id
         ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':language_id', $languageId);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getRecomendations($id)
-    {
-        $languageId = Language::DEFAUL_LANGUGE_ID;
-
-        $sql = '
-        SELECT 
-            p.*, 
-            f.alias AS file_alias, 
-            c.name AS category_name,
-            pd.description as description, pd.name as product_name
-        FROM product p
-            JOIN file f ON p.file_id = f.id 
-            JOIN category c ON p.category_id = c.id 
-            JOIN product_description pd ON p.id = pd.product_id
-        WHERE language_id = :language_id
-        AND p.id != :id';
-
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':language_id', $languageId);
-        $result->bindParam(':id', $id);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
@@ -71,13 +40,18 @@ class OrderRepository extends AbstractRepository
 
     public function getById($id)
     {
+
         $sql = '
         SELECT 
-            p.*, cp.id as category_id, cp.name AS category_name, f.alias AS file_alias
-        FROM product p
-            JOIN category cp ON p.category_id = cp.id
-            JOIN file f ON p.file_id = f.id
-        WHERE p.id = :id';
+            o.*, 
+            os.name as status_name, os.id as status_id,
+            sm.name as shipping_method_name, sm.id as shipping_method_id,
+            pm.name as payment_method_name, pm.id as payment_method_id
+        FROM orders o
+            JOIN order_status os ON o.status_id = os.id
+            JOIN order_shipping_method sm ON o.shipping_method_id = sm.id
+            JOIN order_payment_method pm ON o.payment_method_id = pm.id
+            AND o.id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -87,61 +61,49 @@ class OrderRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function create($data)
-    {
-        $sql = '
-INSERT INTO product 
-    (category_id, file_id, status, alias, sort) 
-VALUES 
-    (:category_id, :file_id, :status, :alias, :sort) ';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':category_id', $data['category_id']);
-        $result->bindParam(':file_id', $data['file_id']);
-        $result->bindParam(':status', $data['status']);
-        $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':sort', $data['sort']);
-
-        try {
-            $result->execute();
-            return $this->db->lastInsertId();
-        } catch (PDOException $e) {
-            $this->logger->error($e->getMessage(), $data);
-            throw new \RuntimeException('Unable to create product');
-        }
-    }
-
     public function updateById($data)
     {
         $sql = '
-UPDATE product
+UPDATE orders
     SET
-    category_id = :category_id,
-    file_id = :file_id,
-    status = :status,
-    alias = :alias,
-    sort = :sort
+    first_name = :first_name,
+    last_name = :last_name,
+    email = :email,
+    telephone = :telephone,
+    country = :country,
+    city = :city,
+    postcode = :postcode,
+    address = :address,
+    payment_method_id = :payment_method_id,
+    shipping_method_id = :shipping_method_id,
+    status_id = :status_id
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':category_id', $data['category_id']);
-        $result->bindParam(':file_id', $data['file_id']);
-        $result->bindParam(':status', $data['status']);
-        $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':sort', $data['sort']);
+        $result->bindParam(':first_name', $data['first_name']);
+        $result->bindParam(':last_name', $data['last_name']);
+        $result->bindParam(':email', $data['email']);
+        $result->bindParam(':telephone', $data['telephone']);
+        $result->bindParam(':country', $data['country']);
+        $result->bindParam(':city', $data['city']);
+        $result->bindParam(':postcode', $data['postcode']);
+        $result->bindParam(':address', $data['address']);
+        $result->bindParam(':payment_method_id', $data['payment_method_id']);
+        $result->bindParam(':shipping_method_id', $data['shipping_method_id']);
+        $result->bindParam(':status_id', $data['status_id']);
         $result->bindParam(':id', $data['id']);
 
         try {
             $result->execute();
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage(), $data);
-            throw new \RuntimeException('Unable to update product');
+            throw new \RuntimeException('Unable to update order');
         }
     }
 
     public function deleteById($id)
     {
-        $sql = 'DELETE FROM product WHERE id = :id';
+        $sql = 'DELETE FROM orders WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -150,99 +112,27 @@ WHERE id = :id';
             $result->execute();
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage());
-            throw new \RuntimeException('Unable to delete product');
+            throw new \RuntimeException('Unable to delete order');
         }
     }
 
-    public function createFilesConnection($productId, $fileId)
+    public function getOrderProductsByOrderId($orderId)
     {
-        $sql = '
-INSERT INTO product_file
-    (product_id, file_id) 
-VALUES 
-    (:product_id, :file_id) ';
 
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':product_id', $productId);
-        $result->bindParam(':file_id', $fileId);
-
-        try {
-            $result->execute();
-            return $this->db->lastInsertId();
-        } catch (PDOException $e) {
-            $this->logger->error($e->getMessage(), [$productId, $fileId]);
-            throw new \RuntimeException('Unable to create product');
-        }
-    }
-
-    public function getProductFilesByProductId($id)
-    {
         $sql = '
         SELECT 
-            p.*, f.alias AS file_alias, f.id AS file_id
-        FROM product p
-            JOIN product_file pf ON p.id = pf.product_id
-            JOIN file f ON pf.file_id = f.id
-        WHERE p.id = :id';
+            *
+        FROM order_product 
+        WHERE order_id = :order_id';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
+        $result->bindParam(':order_id', $orderId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
         return $result->fetchAll();
     }
 
-    public function deleteFileConnection($productId, $fileId)
-    {
-        $sql = 'DELETE FROM product_file WHERE product_id = :product_id AND file_id =:file_d';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':product_id', $productId);
-        $result->bindParam(':file_d', $fileId);
-
-        try {
-            $result->execute();
-        } catch (PDOException $e) {
-            $this->logger->error($e->getMessage(), [$productId, $fileId]);
-            throw new \RuntimeException('Unable to delete product-file connection');
-        }
-    }
-
-    public function getFile($id)
-    {
-        $sql = '
-        SELECT 
-            f.*
-        FROM product p
-            JOIN file f ON p.file_id = f.id
-        WHERE p.id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getFiles($id)
-    {
-        $sql = '
-        SELECT 
-            f.*
-        FROM product p
-            JOIN product_file pf ON p.id = pf.product_id
-            JOIN file f ON pf.file_id = f.id
-        WHERE p.id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
 
     public function getFilteredData($data)
     {
@@ -250,30 +140,93 @@ VALUES
 
         $filter = '';
 
-        if (!empty($data['name'])) {
-            $filter .= ' AND pd.name like \'%' . $data['name'] . '%\'';
+        if (!empty($data['id'])) {
+            $filter .= ' AND o.id = ' . $data['id'];
         }
 
-        if (!empty($data['category'])) {
-            $filter .= ' AND c.id = ' . $data['category'];
+        if (!empty($data['client'])) {
+            $filter .= ' AND (o.first_name like \'%' . $data['client'] . '%\' OR o.last_name like \'%' . $data['client'] . '%\')';
         }
 
-        if ($data['status'] !== '') {
-            $filter .= ' AND p.status = ' . $data['status'];
+        if (!empty($data['shipping_method_id'])) {
+            $filter .= ' AND o.shipping_method_id = ' . $data['shipping_method_id'];
         }
+
+        if (!empty($data['payment_method_id'])) {
+            $filter .= ' AND o.payment_method_id = ' . $data['payment_method_id'];
+        }
+
+        if (!empty($data['price'])) {
+            $filter .= ' AND o.price = ' . $data['price'];
+        }
+
+        if (!empty($data['status_id'])) {
+            $filter .= ' AND o.status_id = ' . $data['status_id'];
+        }
+
+        if (!empty($data['created_at'])) {
+            $filter .= ' AND o.created_at = \'' . $data['created_at'] . ' \'';
+        }
+        
 
         $sql = "
         SELECT 
-            p.id
-        FROM product p
+            o.*, 
+            f.alias AS file_alias, 
+            os.name as status_name, os.id as status_id,
+            sm.name as shipping_method_name, sm.id as shipping_method_id,
+            pm.name as payment_method_name, pm.id as payment_method_id
+        FROM orders o
+            JOIN order_product op ON o.id = op.order_id
+            JOIN product p ON op.product_id = p.id
             JOIN file f ON p.file_id = f.id 
             JOIN category c ON p.category_id = c.id 
-            JOIN product_description pd ON p.id = pd.product_id
-        WHERE language_id = :language_id
+            JOIN order_status os ON o.status_id = os.id
+            JOIN order_shipping_method sm ON o.shipping_method_id = sm.id
+            JOIN order_payment_method pm ON o.payment_method_id = pm.id
         $filter";
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getAllStatus($sort = null)
+    {
+        $sql = '
+        SELECT * FROM order_status ';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getAllPaymentMethods($sort = null)
+    {
+        $sql = '
+        SELECT * FROM order_payment_method ';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getAllShippingMethods($sort = null)
+    {
+        $sql = '
+        SELECT * FROM order_shipping_method ';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

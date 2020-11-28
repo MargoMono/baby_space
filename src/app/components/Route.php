@@ -127,15 +127,14 @@ class Route
         $router->post('admin/country/delete', [Admin\CountryController::class, 'delete']);
 
         // Заказы
-        $router->any('admin/order', [Admin\ProductController::class, 'actionIndex']);
-        $router->any('admin/order/sort/{id}?', [Admin\ProductController::class, 'actionIndex']);
-        $router->any('admin/order/filter', [Admin\ProductController::class, 'actionFilter']);
-        $router->get('admin/order/create', [Admin\ProductController::class, 'actionShowCreatePage']);
-        $router->post('admin/order/create', [Admin\ProductController::class, 'create']);
-        $router->get('admin/order/update/{id}', [Admin\ProductController::class, 'actionShowUpdatePage']);
-        $router->post('admin/order/update/{id}', [Admin\ProductController::class, 'update']);
-        $router->get('admin/order/delete/{id}', [Admin\ProductController::class, 'actionShowDeletePage']);
-        $router->post('admin/order/delete', [Admin\ProductController::class, 'delete']);
+        $router->any('admin/order', [Admin\OrderController::class, 'actionIndex']);
+        $router->any('admin/order/sort/{id}?', [Admin\OrderController::class, 'actionIndex']);
+        $router->any('admin/order/filter', [Admin\OrderController::class, 'actionFilter']);
+        $router->get('admin/order/view/{id}', [Admin\OrderController::class, 'actionShowViewPage']);
+        $router->get('admin/order/update/{id}', [Admin\OrderController::class, 'actionShowUpdatePage']);
+        $router->post('admin/order/update/{id}', [Admin\OrderController::class, 'update']);
+        $router->get('admin/order/delete/{id}', [Admin\OrderController::class, 'actionShowDeletePage']);
+        $router->post('admin/order/delete', [Admin\OrderController::class, 'delete']);
 
         // Страницы товаров
         $router->any('admin/product', [Admin\ProductController::class, 'actionIndex']);

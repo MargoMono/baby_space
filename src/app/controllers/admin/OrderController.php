@@ -30,13 +30,19 @@ class OrderController implements ControllerStrategy
 
     public function actionShowCreatePage()
     {
-        $this->controllerContext->actionShowCreatePage();
+        return null;
     }
 
     public function create()
     {
-        $this->controllerContext->create();
+        return null;
     }
+
+    public function actionShowViewPage($id)
+    {
+        $this->model->actionShowViewPage($id);
+    }
+
 
     public function actionShowUpdatePage($id)
     {

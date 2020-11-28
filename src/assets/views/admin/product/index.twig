@@ -174,7 +174,6 @@
                     JSON.parse(res).forEach(function (item) {
                         let product = document.querySelector('.product-' + item.id);
                         product.classList.remove("hide");
-                        console.log(product)
                     });
                 },
                 error: function () {

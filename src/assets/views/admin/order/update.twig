@@ -5,150 +5,127 @@
 <div class="content-wrapper">
     <section class="content-header">
         <div class="pull-right">
-            <button type="submit" form="form-order" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
-            <a href="/admin/order" data-toggle="tooltip" title="Отменить" class="btn btn-stile"><i class="fa fa-reply"></i></a></div>
-        <h1>Изменить заказ</h1>
+            <button type="submit" form="form-order" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i
+                        class="fa fa-save"></i></button>
+            <a href="/admin/order" data-toggle="tooltip" title="Вернуться" class="btn btn-stile"><i
+                        class="fa fa-reply"></i></a></div>
+        <h1>Заказ № {{ order.id }}</h1>
     </section>
     <section class="content">
-        {% if error_warning %}
-            <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-            </div>
-        {% endif %}
-        {% if success %}
-            <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-            </div>
-        {% endif %}
-        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-order" class="form-horizontal">
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#tab-general" data-toggle="tab">Основное</a></li>
-                <li><a href="#tab-data" data-toggle="tab">Данные</a></li>
-                <li><a href="#tab-links" data-toggle="tab">Связи</a></li>
-                <li><a href="#tab-image" data-toggle="tab">Изображения</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" id="tab-general">
-                    <ul class="nav nav-tabs" id="language">
-                        {% for language in languages %}
-                            <li><a href="#tab-language-{{ language.id }}" data-toggle="tab"> {{ language.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                    <div class="tab-content">
-                        {% for language in languages %}
-
-                            <div class="tab-pane" id="tab-language-{{ language.id }}">
-                                <div class="form-group required">
-                                    <label class="col-sm-2 control-label" for="input-name">Название</label>
-                                    <div class="col-sm-10">
-                                        <input required type="text" name="name-{{ language.id }}" value="{{ language.order.name }}" id="input-name" class="form-control"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="input-description">Описание</label>
-                                    <div class="col-sm-10">
-                                        <textarea data-toggle="summernote" id="input-description" name="description-{{ language.id }}">{{ language.order.description }}</textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="input-meta_title">Мета-тег Title</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="meta_title-{{ language.id }}" value="{{ language.order.meta_title }}" id="input-meta_title" class="form-control"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="input-meta_description">Мета-тег Description</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="meta_description-{{ language.id }}" value="{{ language.order.meta_description }}" id="input-meta_description" class="form-control"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="input-meta_keyword">Мета-тег Keyword</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="meta_keyword-{{ language.id }}" value="{{ language.order.meta_keyword }}" id="input-meta_keyword" class="form-control"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="input-tag">Теги заказа</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="tag-{{ language.id }}" value="{{ language.order.tag }}" id="input-tag" class="form-control"/>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <input type="hidden" name="id-{{ language.id }}" placeholder="" value="{{ language.order.id }}">
-
-                        {% endfor %}
-                    </div>
+        <div class="panel panel-default">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i
+                            class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
-                <div class="tab-pane" id="tab-data">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-category">Категория</label>
-                        <div class="col-sm-10">
-                            <select required name="category_id" id="input-category" class="form-control">
-                                {% for category in categoryList %}
-                                    <option {% if category.id == order.category_id %} selected {% endif %} value="{{ category.id }}">{{ category.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-status">Статус</label>
-                        <div class="col-sm-10">
-                            <select name="status" id="input-status" class="form-control">
-                                <option value="1" {% if order.status == 1 %} selected {% endif %}>Отображается</option>
-                                <option value="0" {% if order.status == 0 %} selected {% endif %}>Скрыт</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-sort">Порядок сортировки</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="sort" value="{{ order.sort }}" id="input-sort" class="form-control"/>
-                        </div>
-                    </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
-                <div class="tab-pane" id="tab-links">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-recommendation">Рекомендуемые заказы</label>
-                        <div class="col-sm-10">
-                            <select name="exapmle-select" id="input-recommendation" class="form-control">
-                                <option value="default">Не выбрано</option>
-                                {% for order in orderRecommendationList %}
-                                    <option value="{{ order.id }}">{{ order.order_name }}</option>
-                                {% endfor %}
-                            </select>
-                            <div id="order-recommendation-list" class="well well-sm" style="height: 150px; overflow: auto;">
-                                {% for order in orderRecommendationListActual %}
-                                    <div id="order-recommendation{{ order.id }}">
-                                        <i class="fa fa-minus-circle"></i> {{ order.order_name }}
-                                        <input type="hidden" name="order_recommendation[]" value="{{ order.id }}">
-                                    </div>
-                                {% endfor %}
+            {% endif %}
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i>Изменить общую информацию</h3>
+            </div>
+            <div class="panel-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-order" class="form-horizontal">
+                    <fieldset>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-first_name">Имя клиента</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="first_name" value="{{ order.first_name }}" placeholder="Имя клиента" id="input-first_name" class="form-control" />
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="tab-pane" id="tab-image">
-                    <p class="title-name">Главное изображение заказа</p>
-                    <img src="/upload/images/order/{{ order.file_alias }}" width="150" alt=""/>
-                    <input type="file" name="file" value="">
+                       <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-name">Фамилия клиента</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="last_name" value="{{ order.last_name }}" placeholder="Фамилия клиента" id="input-last_name" class="form-control" />
+                            </div>
+                        </div>
+                       <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-email">Почта</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="email" value="{{ order.email }}" placeholder="Почта" id="input-email" class="form-control" />
+                            </div>
+                        </div>
+                       <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-telephone">Телефон</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="telephone" value="{{ order.telephone }}" placeholder="Телефон" id="input-telephone" class="form-control" />
+                            </div>
+                       </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-country">Страна</label>
+                            <div class="col-sm-10">
+                                <select required name="country" id="input-country" class="form-control">
+                                {% for country in countryList %}
+                                    <option {% if country.name == order.country %} selected {% endif %} value="{{ country.name }}">{{ country.name }}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-city">Город</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="city" value="{{ order.city }}" placeholder="Город" id="input-city" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-postcode">Почтовый индекс</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="postcode" value="{{ order.postcode }}" placeholder="Почтовый индекс" id="input-postcode" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-address">Адрес</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="address" value="{{ order.address }}" placeholder="Адрес" id="input-address" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-shipping_method_id">Способ доставки</label>
+                            <div class="col-sm-10">
+                                <select name="shipping_method_id" id="input-shipping_method_id" class="form-control">
+                                    {% for shipping in orderShippingMethodList %}
+                                        <option {% if order.shipping_method_id == shipping.id %} selected {% endif %} value="{{ shipping.id }}">{{ shipping.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-payment_method_id">Способ оплаты</label>
+                            <div class="col-sm-10">
+                                <select name="payment_method_id" id="input-payment_method_id" class="form-control">
+                                    {% for payment in orderPaymentMethodList %}
+                                        <option {% if order.payment_method_id == payment.id %} selected {% endif %} value="{{ payment.id }}">{{ payment.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-comment">Комментарий</label>
+                            <div class="col-sm-10">
+                                <input type="text" required name="comment" value="{{ order.comment }}" placeholder="Комментарий" id="input-comment" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-status_id">Статус</label>
+                            <div class="col-sm-10">
+                                <select required name="status_id" id="input-status_id" class="form-control">
+                                    {% for status in orderStatusList %}
+                                        <option {% if status.id == order.status_id %} selected {% endif %} value="{{ status.id }}">{{ status.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
 
-                    <p class="title-name">Дополнительные изображения</p>
-                    {% for photo in orderFilesList %}
-                        <img src="/upload/images/order/{{ photo.file_alias }}" width="150" alt=""/>
-                        <a href="/admin/order/image/delete/{{ order.id }}/{{ photo.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
-                        <br><br>
-                    {% endfor %}
-                    <input type='file' name='files[]' multiple >
-                </div>
+                    </fieldset>
+
+                    <input type="hidden" name="id" placeholder="" value="{{ order.id }}">
+
+                </form>
             </div>
-
-            <input type="hidden" name="id" placeholder="" value="{{ order.id }}">
-            <input type="hidden" name="file_id" placeholder="" value="{{ order.file_id }}">
-            <input type="hidden" name="file_alias" placeholder="" value="{{ order.file_alias }}">
-
-        </form>
+        </div>
     </section>
 </div>
 {% include 'admin/includes/footer.twig' %}
@@ -168,7 +145,7 @@
         let text = recommendationSelect.options[index].text;
         let value = recommendationSelect.options[index].value;
 
-        if (value == 'default'){
+        if (value == 'default') {
             return;
         }
 
@@ -177,7 +154,7 @@
 
     });
 
-    $('#order-recommendation-list').delegate('.fa-minus-circle', 'click', function() {
+    $('#order-recommendation-list').delegate('.fa-minus-circle', 'click', function () {
         $(this).parent().remove();
     });
 

@@ -12,7 +12,6 @@ use App\Repository\ProductCountryRepository;
 use App\Repository\ProductDescriptionRepository;
 use App\Repository\ProductRecommendationsRepository;
 use App\Repository\ProductRepository;
-use App\Repository\SaleRepository;
 
 class ProductModel implements ModelStrategy
 {
@@ -25,7 +24,6 @@ class ProductModel implements ModelStrategy
     public $countryRepository;
     public $currencyRepository;
     public $productCountryRepository;
-    public $saleRepository;
 
     public function __construct()
     {
@@ -37,7 +35,6 @@ class ProductModel implements ModelStrategy
         $this->productDescriptionRepository = new ProductDescriptionRepository();
         $this->productRecommendationsRepository = new ProductRecommendationsRepository();
         $this->productCountryRepository = new ProductCountryRepository();
-        $this->saleRepository = new SaleRepository();
     }
 
     public function getFileDirectory(): string
