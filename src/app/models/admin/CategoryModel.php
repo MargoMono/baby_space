@@ -55,9 +55,9 @@ class CategoryModel implements ModelStrategy
         return $data;
     }
 
-    public function update($file, $data)
+    public function update($data)
     {
-        return $this->categoryRepository->updateById($data);
+        $this->categoryRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
@@ -69,7 +69,7 @@ class CategoryModel implements ModelStrategy
 
     public function delete($id)
     {
-        return $this->categoryRepository->deleteById($id);
+        $this->categoryRepository->deleteById($id);
     }
 
     public function createFilesConnection($id, $fileId)

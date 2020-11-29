@@ -21,11 +21,11 @@ class BlogModel implements ModelStrategy
         return $this->fileDirectory;
     }
 
-    public function getIndexData($sort = null)
+    public function getIndexData($sort = null): array
     {
         $data['blogList'] = $this->blogRepository->getAll($sort);
 
-        if($sort['desc'] == 'DESC'){
+        if ($sort['desc'] == 'DESC') {
             $sort['desc'] = 'ASC';
         } else {
             $sort['desc'] = 'DESC';
@@ -36,48 +36,50 @@ class BlogModel implements ModelStrategy
         return $data;
     }
 
-    public function getShowCreatePageData($sort = null)
+    public function getShowCreatePageData($sort = null): array
     {
         $data['blogList'] = $this->blogRepository->getAll($sort);
 
         return $data;
     }
 
-    public function create($data)
+    public function create($data): int
     {
         return $this->blogRepository->create($data);
     }
 
-    public function getShowUpdatePageData($id)
+    public function getShowUpdatePageData($id): array
     {
         $data['blog'] = $this->blogRepository->getById($id);
 
         return $data;
     }
 
-    public function update($data)
+    public function update($data): void
     {
-        return $this->blogRepository->updateById($data);
+        $this->blogRepository->updateById($data);
     }
 
-    public function getShowDeletePageData($id)
+    public function getShowDeletePageData($id): array
     {
         $data['blog'] = $this->blogRepository->getById($id);
 
         return $data;
     }
 
-    public function delete($id)
+    public function delete($id): void
     {
-        return $this->blogRepository->deleteById($id);
+        $this->blogRepository->deleteById($id);
     }
 
     public function createFilesConnection($id, $fileId)
     {
+        return null;
     }
 
     public function deleteFileConnection($id, $imageId)
     {
+        return null;
     }
 
     public function getFile($id)
@@ -90,7 +92,7 @@ class BlogModel implements ModelStrategy
         return null;
     }
 
-    public function prepareData($params)
+    public function prepareData($params): array
     {
         return [
             'id' => $params['id'],
@@ -99,7 +101,7 @@ class BlogModel implements ModelStrategy
             'description' => $params['description'],
             'file_id' => $params['file_id'],
             'alias' => TextHelper::getTranslit($params['name']),
-            'tag' =>  $params['tag'],
+            'tag' => $params['tag'],
             'meta_title' => $params['meta_title'],
             'meta_description' => $params['meta_description'],
             'meta_keyword' => $params['meta_keyword'],

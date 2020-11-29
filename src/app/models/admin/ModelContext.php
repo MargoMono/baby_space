@@ -23,25 +23,14 @@ class ModelContext
      */
     private $fileRepository;
 
-    private $logger;
-
     /**
      * @param ModelStrategy $strategy
      */
     public function __construct(ModelStrategy $strategy)
     {
         $this->strategy = $strategy;
-        $this->logger = Logger::getLogger(static::class);
         $this->fileUploader = new FileUploaderHelper();
         $this->fileRepository = new FileRepository();
-    }
-
-    /**
-     * @param ModelStrategy $strategy
-     */
-    public function setStrategy(ModelStrategy $strategy)
-    {
-        $this->strategy = $strategy;
     }
 
     /**
@@ -54,10 +43,10 @@ class ModelContext
             $params['file_id'] = $this->createFile($file['file']);
         }
 
-        $newEntityId = $this->strategy->create($this->strategy->prepareData($params));
+        $id = $this->strategy->create($this->strategy->prepareData($params));
 
-        if (!empty($file['file'][0]['name'])) {
-            $this->addFilesConnection($file['files'], $newEntityId);
+        if (!empty($file['files'][0]['name'])) {
+            $this->addFilesConnection($file['files'], $id);
         }
     }
 
@@ -79,7 +68,7 @@ class ModelContext
             $this->fileRepository->deleteById($oldFile['id']);
         }
 
-        if (!empty($file['file'][0]['name'])) {
+        if (!empty($file['files'][0]['name'])) {
             $this->updateFilesConnection($file['files'], $params['id']);
         }
     }
@@ -96,12 +85,12 @@ class ModelContext
 
         $this->strategy->delete($id);
 
-        if (!empty($file) && $file['file']['error'] != FileUploaderHelper::UPLOAD_ERR_NO_FILE) {
+        if (!empty($file['file']['name'])) {
             $this->fileRepository->deleteById($file['id']);
             $this->fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);
         }
 
-        if (!empty($files) && $file['files']['error'][0] != FileUploaderHelper::UPLOAD_ERR_NO_FILE) {
+        if (!empty($file['files'][0]['name'])) {
             foreach ($files as $file) {
                 $this->fileRepository->deleteById($file['id']);
                 $this->fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);
