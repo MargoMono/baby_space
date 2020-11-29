@@ -301,6 +301,7 @@ a:hover, a:active, a:focus {
 .logo-mini img {
     max-height: 32px;
 }
+
 .main-header .logo .logo-mini {
     display: none
 }
@@ -5273,11 +5274,6 @@ table.text-center, table.text-center td, table.text-center th {
     margin: 10px 0 5px 0;
 }
 
-.required {
-    color: #b6032b;
-    font-weight: bold;
-}
-
 .note {
     color: #337ab7;
     font-weight: bold;
@@ -5315,10 +5311,22 @@ table.text-center, table.text-center td, table.text-center th {
     max-height: 40px;
 }
 
-.td-action{
+.td-action {
     min-width: 100px;
 }
+
 .tab-content {
     margin-top: 20px;
 }
 
+.prompt {
+    font-size: 14px;
+    margin: 5px 0 0 0;
+    color: #555858;
+}
+
+.required:after
+{
+    color: red;
+    content: " *";
+}

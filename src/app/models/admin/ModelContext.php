@@ -50,13 +50,13 @@ class ModelContext
      */
     public function create($file, $params): void
     {
-        if (!empty($file['file']) && $file['file']['error'] != FileUploaderHelper::UPLOAD_ERR_NO_FILE) {
+        if (!empty($file['file']['name'])) {
             $params['file_id'] = $this->createFile($file['file']);
         }
 
         $newEntityId = $this->strategy->create($this->strategy->prepareData($params));
 
-        if (!empty($file['files'] && $file['files']['error'][0] != FileUploaderHelper::UPLOAD_ERR_NO_FILE)) {
+        if (!empty($file['file'][0]['name'])) {
             $this->addFilesConnection($file['files'], $newEntityId);
         }
     }
@@ -67,19 +67,19 @@ class ModelContext
      */
     public function update($file, $params)
     {
-        if (!empty($file['file']) && $file['file']['error'] != FileUploaderHelper::UPLOAD_ERR_NO_FILE) {
+        if (!empty($file['file']['name'])) {
             $oldFile =  $this->fileRepository->getFileById($params['file_id']);
             $params['file_id'] = $this->updateFile($file['file'], $params);
         }
 
-        $this->strategy->update($file, $this->strategy->prepareData($params));
+        $this->strategy->update($this->strategy->prepareData($params));
 
         if (!empty($oldFile)) {
             $this->fileUploader->deleteFile($oldFile['alias'], $this->strategy->fileDirectory);
             $this->fileRepository->deleteById($oldFile['id']);
         }
 
-        if (!empty($file['files'] && $file['files']['error'][0] != FileUploaderHelper::UPLOAD_ERR_NO_FILE)) {
+        if (!empty($file['file'][0]['name'])) {
             $this->updateFilesConnection($file['files'], $params['id']);
         }
     }

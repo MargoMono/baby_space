@@ -55,7 +55,7 @@ class BlogModel implements ModelStrategy
         return $data;
     }
 
-    public function update($file, $data)
+    public function update($data)
     {
         return $this->blogRepository->updateById($data);
     }

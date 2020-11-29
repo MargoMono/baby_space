@@ -67,7 +67,7 @@ class FileUploaderHelper
             return null;
         }
 
-        for ($i = 0; $i < count($fileList['name']); $i++) {
+        for ($i = 0, $iMax = count($fileList['name']); $i < $iMax; $i++) {
 
             if ($fileList['error'][$i] === UPLOAD_ERR_NO_FILE) {
                 return null;
