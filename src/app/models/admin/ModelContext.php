@@ -45,7 +45,7 @@ class ModelContext
 
         $id = $this->strategy->create($this->strategy->prepareData($params));
 
-        if (!empty($file['files'][0]['name'])) {
+        if (!empty($file['files']['name'][0])) {
             $this->addFilesConnection($file['files'], $id);
         }
     }
@@ -68,7 +68,7 @@ class ModelContext
             $this->fileRepository->deleteById($oldFile['id']);
         }
 
-        if (!empty($file['files'][0]['name'])) {
+        if (!empty($file['files']['name'][0])) {
             $this->updateFilesConnection($file['files'], $params['id']);
         }
     }
@@ -90,7 +90,7 @@ class ModelContext
             $this->fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);
         }
 
-        if (!empty($file['files'][0]['name'])) {
+        if (!empty($file['files']['name'][0])) {
             foreach ($files as $file) {
                 $this->fileRepository->deleteById($file['id']);
                 $this->fileUploader->deleteFile($file['alias'], $this->strategy->fileDirectory);

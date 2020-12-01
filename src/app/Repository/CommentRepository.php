@@ -17,7 +17,9 @@ class CommentRepository extends AbstractRepository
             $sort['desc'] = 'ASC';
         }
 
-        $sql = 'SELECT * FROM comment 
+        $sql = '
+        SELECT * 
+            FROM comment 
         ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
@@ -42,13 +44,13 @@ class CommentRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function create($data)
+    public function create($data): ?string
     {
         $sql = '
-INSERT INTO comment
-    (user_name, user_email, description, status) 
-VALUES 
-    ( :user_name, :user_email, :description, :status) ';
+        INSERT INTO comment
+            (user_name, user_email, description, status) 
+        VALUES 
+            ( :user_name, :user_email, :description, :status) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':user_name', $data['user_name']);
@@ -56,23 +58,25 @@ VALUES
         $result->bindParam(':description', $data['description']);
         $result->bindParam(':status', $data['status']);
 
-        if ($result->execute()) {
+        try {
+            $result->execute();
             return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to create comment');
         }
-
-        return null;
     }
 
-    public function updateById($data)
+    public function updateById($data): void
     {
         $sql = '
-UPDATE comment
-    SET
-    user_email = :user_email,
-    user_name = :user_name,
-    description = :description,
-    status = :status
-WHERE id = :id';
+        UPDATE comment
+            SET
+            user_email = :user_email,
+            user_name = :user_name,
+            description = :description,
+            status = :status
+        WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':user_email', $data['user_email']);
@@ -81,20 +85,30 @@ WHERE id = :id';
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':id', $data['id']);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update comment');
+        }
     }
 
-    public function deleteById($id)
+    public function deleteById($id): void
     {
         $sql = 'DELETE FROM comment WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), ['id' => $id]);
+            throw new \RuntimeException('Unable to delete comment');
+        }
     }
 
-    public function getFilesByCommentId($id)
+    public function getFilesByCommentId($id): array
     {
         $sql = '
         SELECT 
@@ -112,13 +126,13 @@ WHERE id = :id';
         return $result->fetchAll();
     }
 
-    public function createFilesConnection($commentId, $fileId)
+    public function createFilesConnection($commentId, $fileId): ?string
     {
         $sql = '
-INSERT INTO comment_file
-    (comment_id, file_id) 
-VALUES 
-    (:comment_id, :file_id) ';
+        INSERT INTO comment_file
+            (comment_id, file_id) 
+        VALUES 
+            (:comment_id, :file_id) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':comment_id', $commentId);
@@ -129,11 +143,11 @@ VALUES
             return $this->db->lastInsertId();
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage(), [$commentId, $fileId]);
-            throw new \RuntimeException('Unable to create product');
+            throw new \RuntimeException('Unable to create comment files connection');
         }
     }
 
-    public function deleteFileConnection($commentId, $fileId)
+    public function deleteFileConnection($commentId, $fileId): void
     {
         $sql = 'DELETE FROM comment_file WHERE comment_id = :comment_id AND file_id =:file_d';
 
@@ -145,7 +159,7 @@ VALUES
             $result->execute();
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage(), [$commentId, $fileId]);
-            throw new \RuntimeException('Unable to delete product-file connection');
+            throw new \RuntimeException('Unable to delete comment-file connection');
         }
     }
 
@@ -164,41 +178,48 @@ VALUES
         return $result->fetch();
     }
 
-    public function createAnswer($data)
+    public function createAnswer($data): ?string
     {
         $sql = '
-INSERT INTO comment_answer
-    (comment_id, description) 
-VALUES 
-    ( :comment_id, :description) ';
+        INSERT INTO comment_answer
+            (comment_id, description) 
+        VALUES 
+            ( :comment_id, :description)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':comment_id', $data['comment_id']);
         $result->bindParam(':description', $data['description']);
 
-        if ($result->execute()) {
+        try {
+            $result->execute();
             return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to create comment answer');
         }
-
-        return null;
     }
 
-    public function updateAnswerById($data)
+    public function updateAnswerById($data): void
     {
         $sql = '
-UPDATE comment_answer
-    SET
-    description = :description
-WHERE comment_id = :comment_id';
+        UPDATE comment_answer
+            SET
+            description = :description
+        WHERE comment_id = :comment_id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':description', $data['description']);
         $result->bindParam(':comment_id', $data['comment_id']);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update comment answer');
+        }
     }
 
-    public function getAnswerFilesByAnswerCommentId($id)
+    public function getAnswerFilesByAnswerCommentId($id): array
     {
         $sql = '
         SELECT 
@@ -216,13 +237,13 @@ WHERE comment_id = :comment_id';
         return $result->fetchAll();
     }
 
-    public function createCommentAnswerFile($id, $fileId)
+    public function createCommentAnswerFile($id, $fileId): ?string
     {
         $sql = '
-INSERT INTO comment_answer_file
-    (comment_answer_id, file_id) 
-VALUES 
-    (:comment_answer_id, :file_id) ';
+        INSERT INTO comment_answer_file
+            (comment_answer_id, file_id) 
+        VALUES 
+            (:comment_answer_id, :file_id)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':comment_answer_id', $id);
@@ -237,7 +258,7 @@ VALUES
         }
     }
 
-    public function deleteAnswerFileConnection($commentAnswerId, $fileId)
+    public function deleteAnswerFileConnection($commentAnswerId, $fileId): void
     {
         $sql = 'DELETE FROM comment_answer_file WHERE comment_answer_id = :comment_answer_id AND file_id =:file_d';
 

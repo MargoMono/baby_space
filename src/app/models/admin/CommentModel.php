@@ -75,13 +75,12 @@ class CommentModel implements ModelStrategy
             $this->commentRepository->updateAnswerById($data['comment_answer']);
         }
 
-        if (!empty($file['files_answer'] && $file['files_answer']['error'][0] != FileUploaderHelper::UPLOAD_ERR_NO_FILE)) {
+        if (!empty($file['files_answer']['name'][0])) {
             $imageList = $this->fileUploader->uploadSeveral($file['files_answer'], $this->getFileDirectory());
 
             if (empty($imageList)) {
                 throw new \RuntimeException('Can\'t create files connection - information about uploaded files is empty');
             }
-
 
             foreach ($imageList as $image) {
                 $fileId = $this->fileRepository->createFile($image);
@@ -113,7 +112,7 @@ class CommentModel implements ModelStrategy
 
     public function delete($id)
     {
-        return $this->commentRepository->deleteById($id);
+        $this->commentRepository->deleteById($id);
     }
 
     public function createFilesConnection($id, $fileId)
@@ -136,7 +135,7 @@ class CommentModel implements ModelStrategy
         return $this->commentRepository->getFilesByCommentId($id);
     }
 
-    public function prepareData($params)
+    public function prepareData($params): array
     {
         return [
             'comment' => [

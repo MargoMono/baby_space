@@ -9,12 +9,14 @@
     <section class="content">
         <div class="container-fluid">
             {% if error_warning %}
-                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <div class="alert alert-danger alert-dismissible">
+                    <i class="fa fa-exclamation-circle"></i> {{ error_warning }}
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
             {% endif %}
             {% if success %}
-                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                <div class="alert alert-success alert-dismissible">
+                    <i class="fa fa-check-circle"></i> {{ success }}
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
             {% endif %}
@@ -30,10 +32,22 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <td class="text-left"> <a {% if sort.order == 'user_name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/comment/sort/?order=user_name&desc={{ sort.desc }}">Имя</a></td>
-                                            <td class="text-left"> <a {% if sort.order == 'user_email' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/comment/sort/?order=user_email&desc={{ sort.desc }}">Эл. почта</a></td>
-                                            <td class="text-left"> <a {% if sort.order == 'description' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/comment/sort/?order=description&desc={{ sort.desc }}">Описание</a></td>
-                                            <td class="text-left"> <a {% if sort.order == 'status' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/comment/sort/?order=status&desc={{ sort.desc }}">Статус</a></td>
+                                            <td class="text-left">
+                                                <a {% if sort.order == 'user_name' %} class="{{ sort.desc|lower }}" {% endif %}
+                                                        href="/admin/comment/sort/?order=user_name&desc={{ sort.desc }}">Имя</a>
+                                            </td>
+                                            <td class="text-left">
+                                                <a {% if sort.order == 'user_email' %} class="{{ sort.desc|lower }}" {% endif %}
+                                                        href="/admin/comment/sort/?order=user_email&desc={{ sort.desc }}">Эл.
+                                                    почта</a></td>
+                                            <td class="text-left">
+                                                <a {% if sort.order == 'description' %} class="{{ sort.desc|lower }}" {% endif %}
+                                                        href="/admin/comment/sort/?order=description&desc={{ sort.desc }}">Описание</a>
+                                            </td>
+                                            <td class="text-left">
+                                                <a {% if sort.order == 'status' %} class="{{ sort.desc|lower }}" {% endif %}
+                                                        href="/admin/comment/sort/?order=status&desc={{ sort.desc }}">Статус</a>
+                                            </td>
                                             <td class="text-right">Действие</td>
                                         </tr>
                                         </thead>
@@ -47,8 +61,12 @@
                                                     <td class="text-left">{{ comment.description }}</td>
                                                     <td class="text-left">{% if comment.status == 1 %} Отбражается {% else %} На модерации {% endif %}</td>
                                                     <td class="text-right td-action">
-                                                        <a href="/admin/comment/update/{{ comment.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
-                                                        <a href="/admin/comment/delete/{{ comment.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
+                                                        <a href="/admin/comment/update/{{ comment.id }}"
+                                                           data-toggle="tooltip" title="Редактировать"
+                                                           class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="/admin/comment/delete/{{ comment.id }}"
+                                                           data-toggle="tooltip" title="Удалить"
+                                                           class="btn btn-primary"><i class="fa fa-times"></i></a>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
