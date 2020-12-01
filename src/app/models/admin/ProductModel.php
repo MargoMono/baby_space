@@ -42,7 +42,7 @@ class ProductModel implements ModelStrategy
         return $this->fileDirectory;
     }
 
-    public function getIndexData($sort = null)
+    public function getIndexData($sort = null): array
     {
         $productList = $this->productRepository->getAll($sort);
 
@@ -80,7 +80,7 @@ class ProductModel implements ModelStrategy
         return $data;
     }
 
-    public function getShowCreatePageData($sort = null)
+    public function getShowCreatePageData($sort = null): array
     {
         $categoryList = $this->categoryRepository->getAll();
 
@@ -100,7 +100,7 @@ class ProductModel implements ModelStrategy
         return $data;
     }
 
-    public function create($data)
+    public function create($data): int
     {
         $newProductId = $this->productRepository->create($data);
 
@@ -123,7 +123,7 @@ class ProductModel implements ModelStrategy
         return $newProductId;
     }
 
-    public function getShowUpdatePageData($id)
+    public function getShowUpdatePageData($id): array
     {
         $product = $this->productRepository->getById($id);
         $languages = $this->languageRepository->getAll();
@@ -147,7 +147,7 @@ class ProductModel implements ModelStrategy
         return $data;
     }
 
-    public function update($file, $data)
+    public function update($file, $data): void
     {
         $this->productRepository->updateById($data);
 
@@ -172,14 +172,14 @@ class ProductModel implements ModelStrategy
         }
     }
 
-    public function getShowDeletePageData($id)
+    public function getShowDeletePageData($id): array
     {
         $data['product'] = $this->productRepository->getById($id);
 
         return $data;
     }
 
-    public function delete($id)
+    public function delete($id): void
     {
         $this->productRepository->deleteById($id);
     }
@@ -209,7 +209,7 @@ class ProductModel implements ModelStrategy
         return $this->productRepository->getFilteredData($data);
     }
 
-    public function prepareData($params)
+    public function prepareData($params): array
     {
         $languages = $this->languageRepository->getAll();
 

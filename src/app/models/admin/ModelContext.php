@@ -61,7 +61,7 @@ class ModelContext
             $params['file_id'] = $this->updateFile($file['file'], $params);
         }
 
-        $this->strategy->update($this->strategy->prepareData($params));
+        $this->strategy->update($file, $this->strategy->prepareData($params));
 
         if (!empty($oldFile)) {
             $this->fileUploader->deleteFile($oldFile['alias'], $this->strategy->fileDirectory);

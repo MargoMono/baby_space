@@ -95,6 +95,7 @@ class Route
 
         // Главная страница админки
         $router->get('admin', [Admin\IndexController::class, 'actionIndex']);
+        $router->get('admin/turbo', [Admin\TurboController::class, 'actionIndex']);
 
         // Язык
         $router->any('admin/language', [Admin\LanguagesController::class, 'actionIndex']);

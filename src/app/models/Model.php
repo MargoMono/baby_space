@@ -16,13 +16,6 @@ class Model
 
     public function getDefaultData()
     {
-        $categoryRepository = new CategoryRepository();
-        $mainCategoryList = $categoryRepository->getMainCategoryList();
-
-        foreach ($mainCategoryList as $key => $mainCategory) {
-            $mainCategoryList[$key]['childCategoryList'] = $categoryRepository->getEnableChildCategoryListById($mainCategory['id']);
-        }
-
         if (!empty($_SESSION['comparison_product'])) {
             $data['comparison_product_count'] = count($_SESSION['comparison_product']);
         } else {
@@ -33,7 +26,6 @@ class Model
         $lastNew = $newRepository->getLastNew();
 
         $data['lastNew'] = $lastNew;
-        $data['footerCategoryList'] = $mainCategoryList;
 
         $languagesRepository = new LanguageRepository();
         $data['languages'] = $languagesRepository->getAll();

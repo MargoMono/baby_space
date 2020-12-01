@@ -4,25 +4,25 @@ namespace App\Models\Admin;
 
 interface ModelStrategy
 {
-    public function getFileDirectory(): string;
+    public function getFileDirectory();
 
-    public function getIndexData($sort = null): array;
+    public function getIndexData($sort = null);
 
-    public function getShowCreatePageData($sort = null): array;
+    public function getShowCreatePageData($sort = null);
 
-    public function create($data): int;
+    public function create($data);
 
-    public function getShowUpdatePageData($id): array;
+    public function getShowUpdatePageData($id);
 
-    public function update($data): void;
+    public function update($file, $data);
 
-    public function getShowDeletePageData($id): array;
+    public function getShowDeletePageData($id);
 
-    public function delete($id): void;
+    public function delete($id);
 
     // Work with data
 
-    public function prepareData($params): array;
+    public function prepareData($params);
 
     public function getFile($id);
 

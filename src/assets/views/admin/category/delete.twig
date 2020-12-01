@@ -11,6 +11,13 @@
     <section class="content">
         <div class="container-fluid">
             <div class="col-lg-12 correct">
+                {% if productExist %}
+                <div class="login-form">
+                    <h4>Невозможно удалить категорию - "{{ category.name }}"</h4>
+                    <p>Невозможно удалить категорию в которой существую товары - необходимо удалить все товары, относящиеся к категории {{ category.name }} </p>
+                    <p>В случае, если Вы не хотите, чтобы категория и ее товары отображались на сайте достаточно изменить статус категории на "Скрыта"</p>
+                </div>
+                {% else %}
                 <div class="login-form">
                     <h4>Удалить категорию "{{ category.name }}"</h4>
 
@@ -21,6 +28,7 @@
                         <input type="submit" name="submit" class="btn btn-stile" value="Удалить"/>
                     </form>
                 </div>
+                {% endif %}
             </div>
         </div>
     </section>

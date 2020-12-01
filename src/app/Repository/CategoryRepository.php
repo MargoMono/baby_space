@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\Repository\AbstractRepository;
 use PDO;
+use PDOException;
 
 class CategoryRepository extends AbstractRepository implements Entity
 {
@@ -51,106 +51,6 @@ class CategoryRepository extends AbstractRepository implements Entity
         return $result->fetch();
     }
 
-    public function getEnabledCategoryById($id)
-    {
-        $sql = '
-        SELECT 
-            c.*, cp.name AS parent_name, f.alias AS file_alias
-        FROM category c
-            LEFT JOIN category cp ON c.parent_id = cp.id
-            LEFT JOIN file f ON c.file_id = f.id
-        WHERE c.id = :id
-        AND c.status = 1';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetch();
-    }
-
-
-    public function getMainCategoryList()
-    {
-        $result = $this->db->query('
-        SELECT c.*, f.alias AS file_alias
-            FROM category c
-            JOIN file f ON c.file_id = f.id 
-        WHERE c.status = 1 
-            AND c.parent_id = 0
-        ORDER BY c.name'
-        );
-
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-
-        return $result->fetchAll();
-    }
-
-    public function getChildCategoryListById($id)
-    {
-        $sql = '
-        SELECT 
-            cp.*, f.alias as file_alias
-        FROM category c
-            JOIN category cp ON cp.parent_id = c.id
-            JOIN file f ON cp.file_id = f.id
-        WHERE c.id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getEnableChildCategoryListById($id)
-    {
-        $sql = '
-        SELECT 
-            cp.*, f.alias as file_alias
-        FROM category c
-            JOIN category cp ON cp.parent_id = c.id
-            JOIN file f ON cp.file_id = f.id
-        WHERE c.id = :id
-            AND cp.status = 1';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getParentCategoryListById($id)
-    {
-        $sql = '
-        SELECT cp.*, f.alias as file_alias
-            FROM category c
-            JOIN category cp ON c.parent_id = cp.id
-            JOIN file f ON cp.file_id = f.id
-        WHERE c.id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetch();
-    }
-
-    public function deleteById($id)
-    {
-        $sql = 'DELETE FROM category WHERE id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-
-        return $result->execute();
-    }
-
     public function create($data)
     {
         $sql = '
@@ -171,11 +71,13 @@ VALUES
         $result->bindParam(':meta_description', $data['meta_description']);
         $result->bindParam(':meta_keyword', $data['meta_keyword']);
 
-        if ($result->execute()) {
+        try {
+            $result->execute();
             return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to create category');
         }
-
-        return null;
     }
 
     public function updateById($data)
@@ -208,7 +110,27 @@ WHERE id = :id';
         $result->bindParam(':meta_keyword', $data['meta_keyword']);
         $result->bindParam(':id', $data['id']);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update category');
+        }
+    }
+
+    public function deleteById($id)
+    {
+        $sql = 'DELETE FROM category WHERE id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), ['id' => $id]);
+            throw new \RuntimeException('Unable to delete category');
+        }
     }
 
     public function getFileByEntityId($id)

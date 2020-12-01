@@ -289,5 +289,22 @@ VALUES
 
         return $result->fetchAll();
     }
+
+    public function getAllByCategoryId($categoryId): array
+    {
+
+        $sql = '
+        SELECT 
+            *
+        FROM product 
+        WHERE category_id = :category_id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':category_id', $categoryId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
 }
 

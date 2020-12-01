@@ -26,7 +26,7 @@ class CommentModel implements ModelStrategy
         return $this->fileDirectory;
     }
 
-    public function getIndexData($sort = null)
+    public function getIndexData($sort = null): array
     {
         $data['commentList'] = $this->commentRepository->getAll($sort);
 
@@ -43,10 +43,12 @@ class CommentModel implements ModelStrategy
 
     public function getShowCreatePageData($sort = null)
     {
+        return null;
     }
 
     public function create($data)
     {
+        return null;
     }
 
     public function getShowUpdatePageData($id)
