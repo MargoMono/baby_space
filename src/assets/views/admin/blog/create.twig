@@ -3,10 +3,12 @@
 <div class="content-wrapper">
     <section class="content-header">
         <div class="pull-right">
-            <button type="submit" form="form-blog" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i
-                        class="fa fa-save"></i></button>
-            <a href="/admin/blog" data-toggle="tooltip" title="Вернуться" class="btn btn-stile"><i
-                        class="fa fa-reply"></i></a>
+            <button type="submit" form="form-blog" data-toggle="tooltip" title="Сохранить" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+            </button>
+            <a href="/admin/blog" data-toggle="tooltip" title="Вернуться" class="btn btn-stile">
+                <i class="fa fa-reply"></i>
+            </a>
         </div>
         <h1>Блог</h1>
     </section>
@@ -40,8 +42,8 @@
                         <div class="form-group ">
                             <label class="col-sm-2 control-label required" for="input-description">Текст</label>
                             <div class="col-sm-10">
-                                <input type="text" name="description" placeholder="Текст"
-                                       data-toggle="summernote" id="input-description" class="form-control"/>
+                                <textarea data-toggle="summernote" name="description" id="input-description">
+                                </textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -54,7 +56,8 @@
                             <label class="col-sm-2 control-label" for="input-meta_title">Мета-тег title (для
                                 SEO)</label>
                             <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" name="meta_title" placeholder="Мета-тег title (для SEO)"
+                                <input type="text" minlength="1" maxlength="255" name="meta_title"
+                                       placeholder="Мета-тег title (для SEO)"
                                        id="input-meta_title" class="form-control"/>
                                 <p class="prompt">от 1 до 255 символов</p>
                             </div>
@@ -63,7 +66,8 @@
                             <label class="col-sm-2 control-label" for="input-meta_description">Мета-тег description (для
                                 SEO)</label>
                             <div class="col-sm-10">
-                                <input type="text"  minlength="1" maxlength="255" name="meta_description" placeholder="Мета-тег description (для SEO))"
+                                <input type="text" minlength="1" maxlength="255" name="meta_description"
+                                       placeholder="Мета-тег description (для SEO))"
                                        id="input-meta_description" class="form-control"/>
                                 <p class="prompt">от 1 до 255 символов</p>
                             </div>
@@ -72,7 +76,8 @@
                             <label class="col-sm-2 control-label" for="input-meta_keyword">Мета-теги keywords (для
                                 SEO)</label>
                             <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" name="meta_keyword" placeholder="Мета-теги keywords (для SEO)"
+                                <input type="text" minlength="1" maxlength="255" name="meta_keyword"
+                                       placeholder="Мета-теги keywords (для SEO)"
                                        id="input-meta_keyword" class="form-control"/>
                                 <p class="prompt">от 1 до 255 символов</p>
                             </div>
@@ -80,7 +85,8 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="input-tag">Теги (через запятую)</label>
                             <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" name="tag" placeholder="Теги (через запятую)" id="input-tag"
+                                <input type="text" minlength="1" maxlength="255" name="tag"
+                                       placeholder="Теги (через запятую)" id="input-tag"
                                        class="form-control"/>
                                 <p class="prompt">от 1 до 255 символов</p>
                             </div>
@@ -113,7 +119,6 @@
             }
             if (!$('#input-file').val()) {
                 validAlert(e);
-                return;
             }
         });
 
