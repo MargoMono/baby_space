@@ -61,7 +61,7 @@ class CountryModel implements ModelStrategy
 
     public function update($file, $data)
     {
-        return $this->countryRepository->updateById($data);
+        $this->countryRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
@@ -73,7 +73,17 @@ class CountryModel implements ModelStrategy
 
     public function delete($id)
     {
-        return $this->countryRepository->deleteById($id);
+        $this->countryRepository->deleteById($id);
+    }
+
+    public function createFilesConnection($id, $fileId)
+    {
+        return null;
+    }
+
+    public function deleteFileConnection($id, $imageId)
+    {
+        return null;
     }
 
     public function getFile($id)
@@ -86,7 +96,7 @@ class CountryModel implements ModelStrategy
         return null;
     }
 
-    public function prepareData($params)
+    public function prepareData($params): array
     {
         return [
             'id' => $params['id'],
@@ -97,20 +107,5 @@ class CountryModel implements ModelStrategy
             'file_id' => $params['file_id'],
             'currency_id' => $params['currency_id'],
         ];
-    }
-
-    public function validation($file, $params)
-    {
-        // TODO: Implement validation() method.
-    }
-
-    public function createFilesConnection($id, $fileId)
-    {
-        // TODO: Implement createFilesConnection() method.
-    }
-
-    public function deleteFileConnection($id, $imageId)
-    {
-        // TODO: Implement deleteFileConnection() method.
     }
 }

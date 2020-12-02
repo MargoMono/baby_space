@@ -62,7 +62,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-right">
-                                                        {% if country.alpha2 != 'RU' %}
+                                                        {% if country.id != 1 %}
                                                             <a href="/admin/country/update/{{ country.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
                                                             <a href="/admin/country/delete/{{ country.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
                                                         {% endif %}

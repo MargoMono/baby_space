@@ -22,7 +22,7 @@ class CountryRepository extends AbstractRepository implements Entity
             FROM country c
             LEFT JOIN file f ON c.file_id = f.id
             LEFT JOIN currency cr ON c.currency_id = cr.id
-        ORDER BY '. $sort['order'].' '. $sort['desc'];
+        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':order', $sort);
@@ -52,10 +52,10 @@ class CountryRepository extends AbstractRepository implements Entity
     public function create($data)
     {
         $sql = '
-INSERT INTO country
-    (name, alpha2, alpha3, status, file_id, currency_id) 
-VALUES 
-    (:name, :alpha2, :alpha3, :status, :file_id, :currency_id) ';
+        INSERT INTO country
+            (name, alpha2, alpha3, status, file_id, currency_id) 
+        VALUES 
+            (:name, :alpha2, :alpha3, :status, :file_id, :currency_id) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
@@ -77,15 +77,15 @@ VALUES
     public function updateById($data)
     {
         $sql = '
-UPDATE country
-    SET
-    name = :name,
-    alpha2 = :alpha2,
-    alpha3 = :alpha3,
-    status = :status,
-    file_id = :file_id,
-    currency_id = :currency_id
-WHERE id = :id';
+        UPDATE country
+            SET
+            name = :name,
+            alpha2 = :alpha2,
+            alpha3 = :alpha3,
+            status = :status,
+            file_id = :file_id,
+            currency_id = :currency_id
+        WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
@@ -96,7 +96,12 @@ WHERE id = :id';
         $result->bindParam(':currency_id', $data['currency_id']);
         $result->bindParam(':id', $data['id']);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update country');
+        }
     }
 
     public function deleteById($id)
@@ -106,7 +111,12 @@ WHERE id = :id';
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), ['id' => $id]);
+            throw new \RuntimeException('Unable to delete country');
+        }
     }
 
     public function getFileByEntityId($id)
@@ -124,10 +134,4 @@ WHERE id = :id';
 
         return $result->fetch();
     }
-
-    public function createFilesConnection($id, $fileId)
-    {
-        // TODO: Implement createFilesConnection() method.
-    }
-
 }
