@@ -52,7 +52,7 @@
                                                     <td class="text-left">{{ language.alias }}</td>
                                                     <td class="text-left">{{ language.code }}</td>
                                                     <td class="text-right">
-                                                        {% if language.alias != 'russian' %}
+                                                        {% if language.id != 1 %}
                                                             <a href="/admin/language/update/{{ language.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
                                                             <a href="/admin/language/delete/{{ language.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
                                                         {% endif %}

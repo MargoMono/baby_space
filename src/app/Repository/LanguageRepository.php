@@ -49,10 +49,10 @@ class LanguageRepository extends AbstractRepository implements Entity
     public function create($data)
     {
         $sql = '
-INSERT INTO language
-    (name, alias, code, file_id) 
-VALUES 
-    (:name, :alias, :code, :file_id) ';
+        INSERT INTO language
+            (name, alias, code, file_id) 
+        VALUES 
+            (:name, :alias, :code, :file_id)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
@@ -65,20 +65,20 @@ VALUES
             return $this->db->lastInsertId();
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage(), $data);
-            throw new \RuntimeException('Unable to create product');
+            throw new \RuntimeException('Unable to create language');
         }
     }
 
     public function updateById($data)
     {
         $sql = '
-UPDATE language
-    SET
-    name = :name,
-    alias = :alias,
-    code = :code,
-    file_id = :file_id
-WHERE id = :id';
+        UPDATE language
+            SET
+            name = :name,
+            alias = :alias,
+            code = :code,
+            file_id = :file_id
+        WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
@@ -87,7 +87,12 @@ WHERE id = :id';
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':id', $data['id']);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update language');
+        }
     }
 
     public function deleteById($id)
@@ -97,7 +102,12 @@ WHERE id = :id';
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), ['id' => $id]);
+            throw new \RuntimeException('Unable to delete language');
+        }
     }
 
     public function getFileByEntityId($id)
@@ -114,10 +124,5 @@ WHERE id = :id';
         $result->execute();
 
         return $result->fetch();
-    }
-
-    public function createFilesConnection($id, $fileId)
-    {
-        // TODO: Implement createFilesConnection() method.
     }
 }

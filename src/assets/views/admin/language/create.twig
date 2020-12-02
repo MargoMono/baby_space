@@ -3,48 +3,57 @@
 <div class="content-wrapper">
     <section class="content-header">
         <div class="pull-right">
-            <button type="submit" form="form-option" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
-            <a href="/admin/language" data-toggle="tooltip" title="Вернуться" class="btn btn-stile"><i class="fa fa-reply"></i></a>
+            <button type="submit" form="form-language" data-toggle="tooltip" title="Сохранить" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+            </button>
+            <a href="/admin/language" data-toggle="tooltip" title="Вернуться" class="btn btn-stile">
+                <i class="fa fa-reply"></i>
+            </a>
         </div>
-    <h1>Языки</h1>
+        <h1>Языки</h1>
     </section>
     <section class="content">
-        {% if error_warning %}
-            <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-            </div>
-        {% endif %}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-pencil"></i>Добавить язык</h3>
             </div>
             <div class="panel-body">
-                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-option" class="form-horizontal">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-language"
+                      class="form-horizontal">
                     <fieldset>
-                        <div class="form-group required">
-                            <label class="col-sm-2 control-label" for="input-name">Название</label>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-name">Название</label>
                             <div class="col-sm-10">
-                                <input type="text" required name="name" placeholder="Название" id="input-name" class="form-control" />
+                                <input type="text" minlength="1" maxlength="255" name="name" placeholder="Название"
+                                       id="input-name" class="form-control"/>
+                                <p class="prompt">от 1 до 255 символов</p>
                             </div>
                         </div>
-                        <div class="form-group required">
-                            <label class="col-sm-2 control-label" for="input-code">Код языка</label>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-code">Код языка</label>
                             <div class="col-sm-10">
-                                <input type="text" required name="code"  placeholder="Код языка" id="input-code" class="form-control" />
+                                <input type="text" minlength="1" maxlength="255" name="code" placeholder="Код языка"
+                                       id="input-code" class="form-control"/>
+                                <p class="prompt">от 1 до 255 символов</p>
                             </div>
                         </div>
-                        <div class="form-group required">
-                            <label class="col-sm-2 control-label" for="input-alias">Название файла языка</label>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-alias">Название файла
+                                языка</label>
                             <div class="col-sm-10">
-                                <input type="text" required name="alias"  placeholder="Название файла языка" id="input-alias" class="form-control" />
+                                <input type="text" minlength="1" maxlength="255" name="alias"
+                                       placeholder="Название файла языка" id="input-alias" class="form-control"/>
+                                <p class="prompt">от 1 до 255 символов</p>
                             </div>
                         </div>
-                        <div class="form-group required">
-                            <label class="col-sm-2 control-label" for="input-file">Изображение (рекомендуется загрузить с сайта по
-                            <a href="https://icon-icons.com/ru/pack/Flat-Europe-Flag-Icons/266">ссылке</a>)
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-file">Изображение (рекомендуется
+                                загрузить с сайта по
+                                <a href="https://icon-icons.com/ru/pack/Flat-Europe-Flag-Icons/266">ссылке</a>)
                             </label>
                             <div class="col-sm-10">
-                                <input type="file" required name="file"  placeholder="Название файла языка" id="input-file" class="form-control" />
+                                <input type="file" name="file" placeholder="Название файла языка" id="input-file"
+                                       class="form-control"/>
                             </div>
                         </div>
                     </fieldset>
@@ -55,3 +64,38 @@
 </div>
 
 {% include 'admin/includes/footer.twig' %}
+
+<script>
+    $(document).ready(function () {
+
+        $('#form-language').on('submit', function (e) {
+            if (!$('#input-name').val()) {
+                validAlert(e);
+                return;
+            }
+            if (!$('#input-code').val()) {
+                validAlert(e);
+                return;
+            }
+            if (!$('#input-alias').val()) {
+                validAlert(e);
+                return;
+            }
+
+            if (!$('#input-file').val()) {
+                validAlert(e);
+            }
+        });
+
+        const content = '<div class="alert alert-danger alert-dismissible">\n' +
+            '            <i class="fa fa-exclamation-circle "></i> Заполните все необходимые поля, отмеченные звездочкой\n' +
+            '            <button type="button" class="close" data-dismiss="alert">&times;</button>\n' +
+            '        </div>';
+
+        function validAlert(e) {
+            e.preventDefault();
+            $('.alert').remove();
+            $('.content').prepend(content);
+        }
+    });
+</script>

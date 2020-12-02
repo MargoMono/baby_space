@@ -56,7 +56,7 @@ class LanguageModel implements ModelStrategy
 
     public function update($file, $data)
     {
-        return $this->languageRepository->updateById($data);
+        $this->languageRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
@@ -68,7 +68,17 @@ class LanguageModel implements ModelStrategy
 
     public function delete($id)
     {
-        return $this->languageRepository->deleteById($id);
+        $this->languageRepository->deleteById($id);
+    }
+
+    public function createFilesConnection($id, $fileId)
+    {
+        return null;
+    }
+
+    public function deleteFileConnection($id, $imageId)
+    {
+        return null;
     }
 
     public function getFile($id)
@@ -90,20 +100,5 @@ class LanguageModel implements ModelStrategy
             'alias' => $params['alias'],
             'file_id' => $params['file_id'],
         ];
-    }
-
-    public function validation($file, $params)
-    {
-        // TODO: Implement validation() method.
-    }
-
-    public function createFilesConnection($id, $fileId)
-    {
-        // TODO: Implement createFilesConnection() method.
-    }
-
-    public function deleteFileConnection($id, $imageId)
-    {
-        // TODO: Implement deleteFileConnection() method.
     }
 }
