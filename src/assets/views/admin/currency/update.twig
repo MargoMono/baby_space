@@ -3,20 +3,26 @@
 <div class="content-wrapper">
     <section class="content-header">
         <div class="pull-right">
-            <button type="submit" form="form-option" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
-            <a href="/admin/currency" data-toggle="tooltip" title="Вернуться" class="btn btn-stile"><i class="fa fa-reply"></i></a>
+            <button type="submit" form="form-currency" data-toggle="tooltip" title="Сохранить" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+            </button>
+            <a href="/admin/currency" data-toggle="tooltip" title="Вернуться" class="btn btn-stile">
+                <i class="fa fa-reply"></i>
+            </a>
         </div>
         <h1>Валюта</h1>
     </section>
     <section class="content">
         <div class="panel panel-default">
             {% if error_warning %}
-                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <div class="alert alert-danger alert-dismissible">
+                    <i class="fa fa-exclamation-circle"></i> {{ error_warning }}
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
             {% endif %}
             {% if success %}
-                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                <div class="alert alert-success alert-dismissible">
+                    <i class="fa fa-check-circle"></i> {{ success }}
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
             {% endif %}
@@ -24,33 +30,39 @@
                 <h3 class="panel-title"><i class="fa fa-pencil"></i>Обновить валюту</h3>
             </div>
             <div class="panel-body">
-                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-option" class="form-horizontal">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-currency" class="form-horizontal">
                     <fieldset>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-name">Название</label>
+                            <div class="col-sm-10">
+                                <input type="text" minlength="1" maxlength="255" name="name" value="{{ currency.name }}" placeholder="Название" id="input-name" class="form-control" />
+                                <p class="prompt">от 1 до 255 символов</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-code">Код валюты</label>
+                            <div class="col-sm-10">
+                                <input type="text" minlength="1" maxlength="255" name="code" value="{{ currency.code }}" placeholder="Код валюты" id="input-code" class="form-control" />
+                                <p class="prompt">от 1 до 255 символов</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-alias">Сокращение для сайта</label>
+                            <div class="col-sm-10">
+                                <input type="text" minlength="1" maxlength="255" name="alias" value="{{ currency.alias }}"  placeholder="Сокращение для сайта" id="input-alias" class="form-control" />
+                                <p class="prompt">от 1 до 255 символов</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-rate">Курс к рублю</label>
+                            <div class="col-sm-10">
+                                <input type="text" minlength="1" maxlength="255" name="rate" value="{{ currency.rate }}" placeholder="Курс к рублю" id="input-rate" class="form-control" />
+                                <p class="prompt">от 1 до 255 символов</p>
+                            </div>
+                        </div>
+
                         <input type="hidden" name="id" placeholder="" value="{{ currency.id }}">
-                        <div class="form-group required">
-                            <label class="col-sm-2 control-label" for="input-name">Название</label>
-                            <div class="col-sm-10">
-                                <input type="text" required name="name" value="{{ currency.name }}" placeholder="Название" id="input-name" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group required">
-                            <label class="col-sm-2 control-label" for="input-code">Код валюты</label>
-                            <div class="col-sm-10">
-                                <input type="text" required name="code" value="{{ currency.code }}" placeholder="Код валюты" id="input-code" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group required">
-                            <label class="col-sm-2 control-label" for="input-alias">Сокращение для сайта</label>
-                            <div class="col-sm-10">
-                                <input type="text" required name="alias" value="{{ currency.alias }}"  placeholder="Сокращение для сайта" id="input-alias" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group required">
-                            <label class="col-sm-2 control-label" for="input-rate">Курс к рублю</label>
-                            <div class="col-sm-10">
-                                <input type="text" required name="rate" value="{{ currency.rate }}" placeholder="Курс к рублю" id="input-rate" class="form-control" />
-                            </div>
-                        </div>
+
                     </fieldset>
                 </form>
             </div>
@@ -59,3 +71,38 @@
 </div>
 
 {% include 'admin/includes/footer.twig' %}
+
+<script>
+    $(document).ready(function () {
+
+        $('#form-currency').on('submit', function (e) {
+            if (!$('#input-name').val()) {
+                validAlert(e);
+                return;
+            }
+            if (!$('#input-code').val()) {
+                validAlert(e);
+                return;
+            }
+            if (!$('#input-alias').val()) {
+                validAlert(e);
+                return;
+            }
+
+            if (!$('#input-rate').val()) {
+                validAlert(e);
+            }
+        });
+
+        const content = '<div class="alert alert-danger alert-dismissible">\n' +
+            '            <i class="fa fa-exclamation-circle "></i> Заполните все необходимые поля, отмеченные звездочкой\n' +
+            '            <button type="button" class="close" data-dismiss="alert">&times;</button>\n' +
+            '        </div>';
+
+        function validAlert(e) {
+            e.preventDefault();
+            $('.alert').remove();
+            $('.content').prepend(content);
+        }
+    });
+</script>

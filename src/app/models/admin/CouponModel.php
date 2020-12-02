@@ -54,7 +54,7 @@ class CouponModel implements ModelStrategy
 
     public function update($file, $data)
     {
-        return $this->couponRepository->updateById($data);
+        $this->couponRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
@@ -66,15 +66,17 @@ class CouponModel implements ModelStrategy
 
     public function delete($id)
     {
-        return $this->couponRepository->deleteById($id);
+        $this->couponRepository->deleteById($id);
     }
 
     public function createFilesConnection($id, $fileId)
     {
+        return null;
     }
 
     public function deleteFileConnection($id, $imageId)
     {
+        return null;
     }
 
     public function getFile($id)

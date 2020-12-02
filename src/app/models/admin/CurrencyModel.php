@@ -2,18 +2,15 @@
 
 namespace App\Models\Admin;
 
-use App\Components\Rates;
 use App\Repository\CurrencyRepository;
 
 class CurrencyModel implements ModelStrategy
 {
     private $currencyRepository;
-    private $rates;
 
     public function __construct()
     {
         $this->currencyRepository = new CurrencyRepository();
-        $this->rates = new Rates();
     }
 
     public function getFileDirectory(): string
@@ -57,7 +54,7 @@ class CurrencyModel implements ModelStrategy
 
     public function update($file, $data)
     {
-        return $this->currencyRepository->updateById($data);
+        $this->currencyRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
@@ -69,7 +66,17 @@ class CurrencyModel implements ModelStrategy
 
     public function delete($id)
     {
-        return $this->currencyRepository->deleteById($id);
+        $this->currencyRepository->deleteById($id);
+    }
+
+    public function createFilesConnection($id, $fileId)
+    {
+        return null;
+    }
+
+    public function deleteFileConnection($id, $imageId)
+    {
+        return null;
     }
 
     public function getFile($id)
@@ -89,22 +96,6 @@ class CurrencyModel implements ModelStrategy
             'name' => $params['name'],
             'code' => $params['code'],
             'alias' => $params['alias'],
-            'rate' => $params['rate'],
         ];
-    }
-
-    public function validation($file, $params)
-    {
-        // TODO: Implement validation() method.
-    }
-
-    public function createFilesConnection($id, $fileId)
-    {
-        // TODO: Implement createFilesConnection() method.
-    }
-
-    public function deleteFileConnection($id, $imageId)
-    {
-        // TODO: Implement deleteFileConnection() method.
     }
 }

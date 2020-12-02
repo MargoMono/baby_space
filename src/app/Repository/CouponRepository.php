@@ -47,10 +47,10 @@ class CouponRepository extends AbstractRepository implements Entity
     public function create($data)
     {
         $sql = '
-INSERT INTO coupon
-    (code, discount, quantity, start_date, end_date) 
-VALUES 
-    (:code, :discount, :quantity, :start_date, :end_date)';
+        INSERT INTO coupon
+            (code, discount, quantity, start_date, end_date) 
+        VALUES 
+            (:code, :discount, :quantity, :start_date, :end_date)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':code', $data['code']);
@@ -61,6 +61,7 @@ VALUES
 
         try {
             $result->execute();
+            return $this->db->lastInsertId();
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage(), $data);
             throw new \RuntimeException('Unable to create coupon');
@@ -70,14 +71,14 @@ VALUES
     public function updateById($data)
     {
         $sql = '
-UPDATE coupon
-    SET
-    code = :code,
-    discount = :discount,
-    quantity = :quantity,
-    start_date = :start_date,
-    end_date = :end_date
-WHERE id = :id';
+        UPDATE coupon
+            SET
+            code = :code,
+            discount = :discount,
+            quantity = :quantity,
+            start_date = :start_date,
+            end_date = :end_date
+        WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':code', $data['code']);

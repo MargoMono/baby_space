@@ -21,7 +21,7 @@ class CurrencyRepository extends AbstractRepository
         SELECT c.* , r.rate
         FROM currency c
            LEFT JOIN rate r on c.id = r.currency_id
-        ORDER BY '. $sort['order'].' '. $sort['desc'];
+        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':order', $sort);
@@ -49,16 +49,15 @@ class CurrencyRepository extends AbstractRepository
     public function create($data)
     {
         $sql = '
-INSERT INTO currency
-    (name, alias, code, rate) 
-VALUES 
-    (:name, :alias, :code, :rate) ';
+        INSERT INTO currency
+            (name, alias, code) 
+        VALUES 
+            (:name, :alias, :code) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
         $result->bindParam(':alias', $data['alias']);
         $result->bindParam(':code', $data['code']);
-        $result->bindParam(':rate', $data['rate']);
 
         try {
             $result->execute();
@@ -67,29 +66,30 @@ VALUES
             $this->logger->error($e->getMessage(), $data);
             throw new \RuntimeException('Unable to create product');
         }
-
-        return null;
     }
 
     public function updateById($data)
     {
         $sql = '
-UPDATE currency
-    SET
-    name = :name,
-    alias = :alias,
-    code = :code,
-    rate = :rate
-WHERE id = :id';
+        UPDATE currency
+            SET
+            name = :name,
+            alias = :alias,
+            code = :code
+        WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
         $result->bindParam(':alias', $data['alias']);
         $result->bindParam(':code', $data['code']);
-        $result->bindParam(':rate', $data['rate']);
         $result->bindParam(':id', $data['id']);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update currency');
+        }
     }
 
     public function deleteById($id)
@@ -99,30 +99,21 @@ WHERE id = :id';
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), ['id' => $id]);
+            throw new \RuntimeException('Unable to delete currency');
+        }
     }
 
-    public function getAllCurrencyForConvert($sort = null)
+    public function getAllCurrencyForConvert()
     {
         $sql = "
         SELECT c.*, r.rate
             FROM currency c
         LEFT JOIN rate r on c.id = r.currency_id
         WHERE code != 'RUB'";
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getCurrencyByProductAndCountryId($productId, $countryId)
-    {
-        $sql = "
-        SELECT * 
-            FROM currency 
-        WHERE c != 'RUB'";
 
         $result = $this->db->prepare($sql);
         $result->setFetchMode(PDO::FETCH_ASSOC);
