@@ -3,7 +3,7 @@
 <div class="content-wrapper">
     <section class="content-header">
         <div class="pull-right">
-            <button type="submit" form="form-option" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
+            <button type="submit" form="form-blog" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
             <a href="/admin/blog" data-toggle="tooltip" title="Вернуться" class="btn btn-stile"><i class="fa fa-reply"></i></a>
         </div>
         <h1>Блог</h1>
@@ -24,7 +24,7 @@
                 <h3 class="panel-title"><i class="fa fa-pencil"></i>Обновить статью</h3>
             </div>
             <div class="panel-body">
-                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-option" class="form-horizontal">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-blog" class="form-horizontal">
                     <fieldset>
                         <input type="hidden" name="id" placeholder="" value="{{ blog.id }}">
                         <div class="form-group">
@@ -105,7 +105,7 @@
                 validAlert(e);
                 return;
             }
-            if ($('#input-description').summernote('isEmpty')) {
+            if (!$('#input-description').val()) {
                 validAlert(e);
             }
         });

@@ -2,8 +2,6 @@
 
 namespace App\Models\Admin;
 
-use App\Helpers\TextHelper;
-use App\Repository\LanguageRepository;
 use App\Repository\NewRepository;
 
 class NewModel implements ModelStrategy
@@ -27,7 +25,7 @@ class NewModel implements ModelStrategy
     {
         $data['newList'] = $this->newRepository->getAll($sort);
 
-        if($sort['desc'] == 'DESC'){
+        if ($sort['desc'] == 'DESC') {
             $sort['desc'] = 'ASC';
         } else {
             $sort['desc'] = 'DESC';
@@ -60,7 +58,7 @@ class NewModel implements ModelStrategy
 
     public function update($file, $data)
     {
-        return $this->newRepository->updateById($data);
+        $this->newRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id)
@@ -72,7 +70,17 @@ class NewModel implements ModelStrategy
 
     public function delete($id)
     {
-        return $this->newRepository->deleteById($id);
+        $this->newRepository->deleteById($id);
+    }
+
+    public function createFilesConnection($id, $fileId)
+    {
+        return null;
+    }
+
+    public function deleteFileConnection($id, $imageId)
+    {
+        return null;
     }
 
     public function getFile($id)
@@ -82,7 +90,7 @@ class NewModel implements ModelStrategy
 
     public function getFiles($id)
     {
-        // TODO: Implement getFiles() method.
+        return null;
     }
 
     public function prepareData($params)
@@ -93,20 +101,5 @@ class NewModel implements ModelStrategy
             'description' => $params['description'],
             'file_id' => $params['file_id'],
         ];
-    }
-
-    public function validation($file, $params)
-    {
-        // TODO: Implement validation() method.
-    }
-
-    public function createFilesConnection($id, $fileId)
-    {
-        // TODO: Implement createFilesConnection() method.
-    }
-
-    public function deleteFileConnection($id, $imageId)
-    {
-        // TODO: Implement deleteFileConnection() method.
     }
 }

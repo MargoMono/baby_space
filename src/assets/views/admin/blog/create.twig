@@ -113,7 +113,7 @@
                 validAlert(e);
                 return;
             }
-            if ($('#input-description').summernote('isEmpty')) {
+            if (!$('#input-description').val()) {
                 validAlert(e);
                 return;
             }

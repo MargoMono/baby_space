@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Repository\AbstractRepository;
 use PDO;
 use PDOException;
 
@@ -22,7 +21,7 @@ class NewRepository extends AbstractRepository implements Entity
         SELECT n.* , f.alias AS file_alias
             FROM new n
             LEFT JOIN file f ON n.file_id = f.id
-        ORDER BY '. $sort['order'].' '. $sort['desc'];
+        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
         $result->setFetchMode(PDO::FETCH_ASSOC);
@@ -72,12 +71,12 @@ VALUES
     public function updateById($data)
     {
         $sql = '
-UPDATE new
-    SET
-    name = :name,
-    description = :description,
-    file_id = :file_id
-WHERE id = :id';
+        UPDATE new
+            SET
+            name = :name,
+            description = :description,
+            file_id = :file_id
+        WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
@@ -85,7 +84,12 @@ WHERE id = :id';
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':id', $data['id']);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update new');
+        }
     }
 
     public function deleteById($id)
@@ -95,7 +99,12 @@ WHERE id = :id';
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
 
-        return $result->execute();
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), ['id' => $id]);
+            throw new \RuntimeException('Unable to delete new');
+        }
     }
 
     public function getLastNewList($count)
@@ -155,11 +164,6 @@ WHERE id = :id';
         $result->execute();
 
         return $result->fetch();
-    }
-
-    public function createFilesConnection($id, $fileId)
-    {
-        // TODO: Implement createFilesConnection() method.
     }
 
     public function getFileByEntityId($id)
