@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Components\Logger;
+use App\Exceptions\AdminException;
 use App\Models\Admin\ModelContext;
 use App\Models\Admin\ModelStrategy;
 use App\View\View;
@@ -63,10 +64,12 @@ class ControllerContext
     {
         try {
             $this->modelContext->create($_FILES, $_POST);
+        } catch (AdminException $exception) {
+            $this->logger->error($exception->getMessage(), array_merge($_FILES, $_POST));
+            $this->errorAction('добавить', $exception->getMessage());
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), array_merge($_FILES, $_POST));
             $this->errorAction('добавить');
-            return;
         }
 
         $this->successAction('добавлено');
@@ -148,10 +151,16 @@ class ControllerContext
     /**
      * @param $action
      */
-    public function errorAction($action): void
+    public function errorAction($action, $explain = null): void
     {
         $data = $this->modelStrategy->getIndexData();
-        $data['error_warning'] = "Невозможно $action, обратитесь к разработчику";
+
+        if(!empty($explain)){
+            $data['error_warning'] = "Невозможно $action - $explain";
+        } else {
+            $data['error_warning'] = "Невозможно $action, обратитесь к разработчику.";
+        }
+
         $this->view->generate("admin/$this->viewDirectory/index.twig", $data);
     }
 

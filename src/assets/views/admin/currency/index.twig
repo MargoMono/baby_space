@@ -52,7 +52,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-right">
-                                                        {% if currency.code != 'RUB' %}
+                                                        {% if currency.id != 1 %}
                                                             <a href="/admin/currency/update/{{ currency.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
                                                             <a href="/admin/currency/delete/{{ currency.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
                                                         {% endif %}

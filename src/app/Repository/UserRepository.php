@@ -4,15 +4,20 @@ namespace App\Repository;
 
 use App\Repository\AbstractRepository;
 use PDO;
+use PDOException;
 
 class UserRepository extends AbstractRepository
 {
     const ADMIN = 100;
 
-    public function getUserList($sort = null)
+    public function getAll($sort = null)
     {
-        if (empty($sort)) {
-            $sort = 'id';
+        if (empty($sort['order'])) {
+            $sort['order'] = 'u.id';
+        }
+
+        if (empty($sort['desc'])) {
+            $sort['desc'] = 'ASC';
         }
 
         $sql = '
@@ -20,7 +25,8 @@ class UserRepository extends AbstractRepository
             u.*, r.name AS role_name 
         FROM user u 
             JOIN role r on u.role_id = r.id
-            ORDER BY u.' . $sort;
+        ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
+
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':order', $sort);
@@ -28,6 +34,92 @@ class UserRepository extends AbstractRepository
         $result->execute();
 
         return $result->fetchAll();
+    }
+
+    public function getById($id)
+    {
+        $sql = '
+        SELECT 
+            * 
+        FROM user 
+        WHERE id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id, PDO::PARAM_INT);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
+
+    public function create($data)
+    {
+        $sql = '
+        INSERT INTO user 
+            (name, email, password, salt, active_hex, role_id) 
+        VALUES 
+            (:name, :email, :password, :salt, :active_hex, :role_id)';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':name', $data['name']);
+        $result->bindParam(':email', $data['email']);
+        $result->bindParam(':password', $data['password']);
+        $result->bindParam(':salt', $data['salt']);
+        $result->bindParam(':active_hex', $data['active_hex']);
+        $result->bindParam(':role_id', $data['role_id']);
+
+        try {
+            $result->execute();
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to create user');
+        }
+    }
+
+    public function update($data)
+    {
+        $sql = '
+        UPDATE user
+        SET
+            name = :name,
+            email = :email,
+            password = :password,
+            salt = :salt,
+            active_hex = :active_hex,
+            role_id = :role_id
+        WHERE id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':name', $data['name']);
+        $result->bindParam(':email', $data['email']);
+        $result->bindParam(':password', $data['password']);
+        $result->bindParam(':salt', $data['salt']);
+        $result->bindParam(':active_hex', $data['active_hex']);
+        $result->bindParam(':role_id', $data['role_id']);
+        $result->bindParam(':id', $data['id']);
+
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), $data);
+            throw new \RuntimeException('Unable to update user');
+        }
+    }
+
+    public function deleteById($id)
+    {
+        $sql = 'DELETE FROM user WHERE id = :id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+
+        try {
+            $result->execute();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), ['id' => $id]);
+            throw new \RuntimeException('Unable to delete user');
+        }
     }
 
     public function getUserByEmailAndPassword($email, $password)
@@ -50,21 +142,6 @@ class UserRepository extends AbstractRepository
         return $result->fetch();
     }
 
-    public function getUserById($id)
-    {
-        $sql = '
-        SELECT 
-            * 
-        FROM user 
-        WHERE id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id, PDO::PARAM_INT);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetch();
-    }
 
     public function getUserByEmail($email)
     {
@@ -114,28 +191,6 @@ class UserRepository extends AbstractRepository
         return $result->execute();
     }
 
-    public function createUser($data)
-    {
-        $sql = '
-        INSERT INTO user 
-            (name, email, password, salt, active_hex, role_id) 
-        VALUES 
-            (:name, :email, :password, :salt, :active_hex, :role_id)';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':name', $data['name']);
-        $result->bindParam(':email', $data['email']);
-        $result->bindParam(':password', $data['password']);
-        $result->bindParam(':salt', $data['salt']);
-        $result->bindParam(':active_hex', $data['active_hex']);
-        $result->bindParam(':role_id', $data['role_id']);
-
-        if ($result->execute()) {
-            return $this->db->lastInsertId();
-        }
-
-        return null;
-    }
 
     public function updateUserPassword($data)
     {
@@ -156,33 +211,6 @@ class UserRepository extends AbstractRepository
         return $result->execute();
     }
 
-    public function updateUser($data)
-    {
-        $sql = '
-        UPDATE user
-        SET
-            name = :name,
-            email = :email,
-            role_id = :role_id
-        WHERE id = :id';
 
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':name', $data['name']);
-        $result->bindParam(':email', $data['email']);
-        $result->bindParam(':role_id', $data['role_id']);
-        $result->bindParam(':id', $data['id']);
-
-        return $result->execute();
-    }
-
-    public function deleteUserById($id)
-    {
-        $sql = 'DELETE FROM user WHERE id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':id', $id);
-
-        return $result->execute();
-    }
 }
 

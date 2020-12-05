@@ -11,6 +11,7 @@ use App\Controllers\Admin;
 use App\Controllers\Admin\NewController;
 use App\Controllers\Admin\CommentController;
 use App\Controllers\Admin\CategoryController;
+use App\Controllers\Admin\UserController;
 
 class Route
 {
@@ -204,13 +205,14 @@ class Route
         $router->get('admin/comment-answer/image/delete/{commentId}/{commentAnswerId}/{photoId}', [Admin\CommentController::class, 'commentAnswerImageDelete']);
 
 
-        $router->any('admin/user', ['App\\Controllers\\Admin\\UserController', 'actionIndex']);
-        $router->get('admin/user/create', ['App\\Controllers\\Admin\\UserController', 'actionShowCreatePage']);
-        $router->post('admin/user/create', ['App\\Controllers\\Admin\\UserController', 'create']);
-        $router->get('admin/user/update/{id}', ['App\\Controllers\\Admin\\UserController', 'actionShowUpdatePage']);
-        $router->post('admin/user/update/{id}', ['App\\Controllers\\Admin\\UserController', 'update']);
-        $router->get('admin/user/delete/{id}', ['App\\Controllers\\Admin\\UserController', 'actionShowDeletePage']);
-        $router->post('admin/user/delete', ['App\\Controllers\\Admin\\UserController', 'delete']);
+        $router->any('admin/user', [Admin\UserController::class, 'actionIndex']);
+        $router->any('admin/user/sort/{id}?', [Admin\UserController::class, 'actionIndex']);
+        $router->get('admin/user/create', [Admin\UserController::class, 'actionShowCreatePage']);
+        $router->post('admin/user/create', [Admin\UserController::class, 'create']);
+        $router->get('admin/user/update/{id}', [Admin\UserController::class, 'actionShowUpdatePage']);
+        $router->post('admin/user/update/{id}', [Admin\UserController::class, 'update']);
+        $router->get('admin/user/delete/{id}', [Admin\UserController::class, 'actionShowDeletePage']);
+        $router->post('admin/user/delete', [Admin\UserController::class, 'delete']);
     }
 }
 

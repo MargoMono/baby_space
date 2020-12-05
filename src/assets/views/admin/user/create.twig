@@ -2,76 +2,110 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>
-            Панель администратора
-            <small>Пользователи</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="/admin/user/">Пользователи</a></li>
-            <li class="active">Добавить пользователя</li>
-        </ol>
+        <div class="pull-right">
+            <button type="submit" form="form-user" data-toggle="tooltip" title="Сохранить" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+            </button>
+            <a href="/admin/user" data-toggle="tooltip" title="Вернуться" class="btn btn-stile">
+                <i class="fa fa-reply"></i>
+            </a>
+        </div>
+        <h1>Пользователи</h1>
     </section>
-
     <section class="content">
-        {% if errors is not empty %}
-            <div class="col-lg-12 mistake">
-                <p>Ошибка:</p>
-                <ul>
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-pencil"></i>Добавить пользователя
+                </h3>
             </div>
-        {% endif %}
-        <div class="col-lg-12 correct">
-            <div class="login-form">
-                <form action="#" enctype="multipart/form-data" method="post">
-
-                    <p class="title-name">Имя</p>
-                    <input type="text" name="name" placeholder="" value="" required minlength="3" maxlength="20">
-                    <p class="required">*обязательное поле</p>
-
-                    <p class="title-name">Почта</p>
-                    <input type="email" name="email" placeholder="" value="" required>
-                    <p class="required">*обязательное поле</p>
-
-                    <p class="title-name">Роль</p>
-                    <select name="role_id">
-                        {% for role in roleList %}
-                            <option value="{{ role.id }}">{{ role.name }}</option>
-                        {% endfor %}
-                    </select>
-
-                    <p class="title-name">Пароль</p>
-                    <input id="password1" type="password" name="password" placeholder="" value="" required>
-                    <p class="required">*обязательное поле</p>
-
-                    <p class="title-name">Подтверждение пароля</p>
-                    <input  id="password2" type="password" name="password" placeholder="" value="" required>
-                    <p class="required">*обязательное поле</p>
-
-                    <br><br>
-                    <input type="submit" name="button" class="btn btn-stile" value="Сохранить"/>
+            <div class="panel-body">
+                <form action="" method="post" enctype="multipart/form-data" id="form-user" class="form-horizontal">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-name">Имя</label>
+                            <div class="col-sm-10">
+                                <input type="text" minlength="1" maxlength="255" name="name" placeholder="Имя"
+                                       id="input-name" class="form-control"/>
+                                <p class="prompt">от 1 до 255 символов</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-email">Почта</label>
+                            <div class="col-sm-10">
+                                <input type="email" minlength="1" maxlength="255" name="email" placeholder="Почта"
+                                       id="input-email" class="form-control"/>
+                                <p class="prompt">от 1 до 255 символов</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-role">Роль</label>
+                            <div class="col-sm-10">
+                                <select name="role_id" id="input-role" class="form-control">
+                                    {% for role in roleList %}
+                                        <option value="{{ role.id }}">{{ role.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-password">Пароль</label>
+                            <div class="col-sm-10">
+                                <input type="password" minlength="6" maxlength="32" name="password" placeholder="Пароль"
+                                       id="input-password" class="form-control"/>
+                                <p class="prompt">от 1 до 32 символов</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="input-password_confirm">Подтверждение
+                                парол</label>
+                            <div class="col-sm-10">
+                                <input type="password" minlength="6" maxlength="32" name="password_confirm"
+                                       placeholder="Подтверждение пароля" id="input-password_confirm" class="form-control"/>
+                                <p class="prompt">от 1 до 32 символов</p>
+                            </div>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
         </div>
     </section>
 </div>
 
-<script type="text/javascript">
-    window.onload = function () {
-        document.getElementById("password1").onchange = validatePassword;
-        document.getElementById("password2").onchange = validatePassword;
-    }
-
-    function validatePassword() {
-        let pass2 = document.getElementById("password2").value;
-        let pass1 = document.getElementById("password1").value;
-        if (pass1 != pass2)
-            document.getElementById("password2").setCustomValidity("Пароли не совпадают");
-        else
-            document.getElementById("password2").setCustomValidity('');
-    }
-</script>
-
 {% include 'admin/includes/footer.twig' %}
+
+<script>
+    $(document).ready(function () {
+
+        $('#form-user').on('submit', function (e) {
+            if (!$('#input-name').val()) {
+                validAlert(e);
+                return;
+            }
+            if (!$('#input-email').val()) {
+                validAlert(e);
+                return;
+            }
+
+            if (!$('#input-password').val()) {
+                validAlert(e);
+                return;
+            }
+
+            if (!$('#input-password_confirm').val()) {
+                validAlert(e);
+            }
+        });
+
+        const content = '<div class="alert alert-danger alert-dismissible">\n' +
+            '            <i class="fa fa-exclamation-circle "></i> Заполните все необходимые поля, отмеченные звездочкой\n' +
+            '            <button type="button" class="close" data-dismiss="alert">&times;</button>\n' +
+            '        </div>';
+
+        function validAlert(e) {
+            e.preventDefault();
+            $('.alert').remove();
+            $('.content').prepend(content);
+        }
+    });
+</script>

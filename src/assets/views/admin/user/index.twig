@@ -2,65 +2,78 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>
-            Панель администратора
-            <small>Пользователи</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li class="active">Пользователи</li>
-        </ol>
+        <div class="pull-right">
+            {% if is_admin == true %}
+            <a href="/admin/user/create" data-toggle="tooltip" title="Добавить" class="btn btn-primary">
+                <i class="fa fa-plus"></i>
+            </a>
+             {% endif %}
+        </div>
+        <h1>Пользователи</h1>
     </section>
-
     <section class="content">
-        <a href="/admin/user/create" class="btn btn-stile back"><i class="fa fa-plus"></i> Добавить пользователя</a>
+        <div class="container-fluid">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible">
+                    <i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success alert-dismissible">
+                    <i class="fa fa-check-circle"></i> {{ success }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> Список пользователей</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-user">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <td class="text-left"> <a {% if sort.order == 'u.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/user/sort/?order=u.name&desc={{ sort.desc }}">Имя</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'u.email' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/user/sort/?order=u.email&desc={{ sort.desc }}">Почта</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'r.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/user/sort/?order=r.name&desc={{ sort.desc }}">Роль</a></td>
+                                            <td class="text-right">Действие</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
 
-        <h4>Список пользователей</h4>
-
-        <table class="table-bordered table-striped table">
-            <tr>
-                <th>Имя пользователя
-                    <form action="/admin/user" method="post">
-                        <input type="hidden" name="order" value="name">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Почта пользователя
-                    <form action="/admin/user" method="post">
-                        <input type="hidden" name="order" value="email">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                <th>Роль пользователя
-                    <form action="/admin/user" method="post">
-                        <input type="hidden" name="order" value="role_name">
-                        <input type="submit" class="btn btn-filter" value="&darr;">
-                    </form>
-                </th>
-                {% if is_admin == true %}
-                    <th></th>
-                    <th></th>
-                {% endif %}
-            </tr>
-            {% for user in userList %}
-                <tr>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.role_name }}</td>
-                    {% if is_admin == true %}
-                        <td><a href="/admin/user/update/{{ user.id }}" title="Редактировать"><i
-                                        class="fa fa-pencil-square-o"></i></a></td>
-                        {% if user_id != user.id %}
-                            <td><a href="/admin/user/delete/{{ user.id }}" title="Удалить"><i
-                                            class="fa fa-times"></i></a></td>
-                        {% else %}
-                            <th></th>
-                        {% endif %}
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        </table>
+                                        {% if userList %}
+                                            {% for user in userList %}
+                                                <tr id="item-user-{{ user.id }}">
+                                                    <td class="text-left">{{ user.name }}</td>
+                                                    <td class="text-left">{{ user.email }}</td>
+                                                    <td class="text-left">{{ user.role_name }}</td>
+                                                    <td class="text-right">
+                                                        {% if user.id != 1 and is_admin == true %}
+                                                            <a href="/admin/user/update/{{ user.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                                            <a href="/admin/user/delete/{{ user.id }}" data-toggle="tooltip" title="Удалить" class="btn btn-primary"><i class="fa fa-times"></i></a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td class="text-center" colspan="8">Ничего не найдено</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
 
 {% include 'admin/includes/footer.twig' %}
-

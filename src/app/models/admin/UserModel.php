@@ -2,136 +2,128 @@
 
 namespace App\Models\Admin;
 
-use App\Models\Model;
+use App\Exceptions\AdminException;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 
-class UserModel extends Model
+class UserModel implements ModelStrategy
 {
-    public function getIndexData($sort)
-    {
-        $userRepository = new UserRepository();
-        $userList = $userRepository->getUserList($sort);
+    private $userRepository;
+    private $roleRepository;
 
-        $data['userList'] = $userList;
+    public function __construct()
+    {
+        $this->userRepository = new UserRepository();
+        $this->roleRepository = new RoleRepository();
+    }
+
+    public function getFileDirectory(): string
+    {
+        return null;
+    }
+
+    public function getIndexData($sort = null)
+    {
+        $data['userList'] = $this->userRepository->getAll($sort);
         $data['is_admin'] = $this->checkIfRoleIsAdmin($_SESSION['user']);
         $data['user_id'] = $_SESSION['user']['id'];
 
+        if ($sort['desc'] == 'DESC') {
+            $sort['desc'] = 'ASC';
+        } else {
+            $sort['desc'] = 'DESC';
+        }
+
+        $data['sort'] = $sort;
+
         return $data;
     }
 
-    public function getShowCreatePageData()
+    public function getShowCreatePageData($sort = null)
     {
-        $roleRepository = new RoleRepository();
-        $data['roleList'] = $roleRepository->getRoleList();
-
+        $data['roleList'] = $this->roleRepository->getRoleList();
         return $data;
     }
 
-    public function create($params)
+    public function create($data)
     {
-        $res['result'] = false;
-
-        $userRepository = new UserRepository();
-
-        if (!empty($userRepository->getUserByEmail($params['email']))) {
-            $res['errors'][] = 'Пользователь с такой почтой уже существует';
-            return $res;
+        if ($data['password'] !== $data['password_confirm']) {
+            throw new AdminException(AdminException::USER_PASSWORD_CONFIRM_ERROR);
         }
 
-        $salt = $this->salt();
-
-        $data = [
-            'name' => $params['name'],
-            'email' => $params['email'],
-            'password' => md5(md5($_POST['password']) . $salt),
-            'salt' => $salt,
-            'active_hex' => md5($salt),
-            'role_id' => $params['role_id'],
-        ];
-
-        $newUser = $userRepository->createUser($data);
-
-        if (empty($newUser)) {
-            $res['errors'][] = 'Ошибка создания нового пользователя';
-            return $res;
+        if (!empty($this->userRepository->getUserByEmail($data['email']))) {
+            throw new AdminException(AdminException::USER_ALREADY_EXIST);
         }
 
-        $res['result'] = true;
-        return $res;
+        return $this->userRepository->create($data);
     }
 
     public function getShowUpdatePageData($id)
     {
-        $categoryRepository = new UserRepository();
-        $user = $categoryRepository->getUserById($id);
-
-        $roleRepository = new RoleRepository();
-        $roleList = $roleRepository->getRoleList();
-
-        foreach ($roleList as $key => $role) {
-            if ($role['id'] == $user['role_id']) {
-                $roleList[$key]['selected'] = true;
-                continue;
-            }
-            $roleList[$key]['selected'] = false;
-        }
-
-        $data['roleList'] = $roleList;
-        $data['user'] = $user;
+        $data['roleList'] = $this->roleRepository->getRoleList();
+        $data['user'] = $this->userRepository->getById($id);
 
         return $data;
     }
 
-    public function update($params)
+    public function update($file, $data)
     {
-        $res['result'] = false;
+        $this->userRepository->update($data);
 
-        $userRepository = new UserRepository();
+        $activeUser = $this->userRepository->getById($_SESSION["user"]['id']);
 
-        if (!$userRepository->updateUser($params)) {
-            $res['errors'][] = 'Ошибка обновления пользователя';
-            return $res;
-        }
-
-        $activeUser = $userRepository->getUserById($_SESSION["user"]['id']);
-
-        if ($activeUser['id'] == $params['id']) {
-            unset($_SESSION["user"]);
+        if ($activeUser['id'] == $data['id']) {
+            unset($_SESSION['user']);
             $_SESSION['user'] = $activeUser;
         }
-
-        $res['result'] = true;
-        return $res;
     }
 
     public function getShowDeletePageData($id)
     {
-        $categoryRepository = new UserRepository();
-        $data['user'] = $categoryRepository->getUserById($id);
+        $data['user'] = $this->userRepository->getById($id);
 
         return $data;
     }
 
-    public function delete($data)
+    public function delete($id)
     {
-        $res['result'] = false;
-
-        $categoryRepository = new UserRepository();
-
-        if ($categoryRepository->deleteUserById($data['id'])) {
-            $res['result'] = true;
-            return $res;
-        }
-
-        $res['errors'][] = "ошибка при удалении пользователя";
-
-        return $res;
+        $this->userRepository->deleteById($id);
     }
 
-    private function salt()
+    public function createFilesConnection($id, $fileId)
     {
-        return substr(md5(uniqid()), -8);
+        return null;
+    }
+
+    public function deleteFileConnection($id, $imageId)
+    {
+        return null;
+    }
+
+    public function getFile($id)
+    {
+        return null;
+    }
+
+    public function getFiles($id)
+    {
+        return null;
+    }
+
+    public function prepareData($params)
+    {
+        $salt = substr(md5(uniqid('', true)), -8);
+
+        return [
+            'id' => $params['id'],
+            'name' => $params['name'],
+            'email' => $params['email'],
+            'password' => md5(md5($_POST['password']) . $salt),
+            'password_confirm' => md5(md5($_POST['password_confirm']) . $salt),
+            'salt' => $salt,
+            'active_hex' => md5($salt),
+            'role_id' => $params['role_id'],
+        ];
     }
 
     private function checkIfRoleIsAdmin($user)
@@ -142,4 +134,3 @@ class UserModel extends Model
         return $role['permission'] == RoleRepository::ADMIN;
     }
 }
-
