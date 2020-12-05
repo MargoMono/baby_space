@@ -90,10 +90,10 @@ class ProductRepository extends AbstractRepository
     public function create($data)
     {
         $sql = '
-INSERT INTO product 
-    (category_id, price, sale, file_id, status, alias, sort) 
-VALUES 
-    (:category_id, :price, :sale, :file_id, :status, :alias, :sort) ';
+        INSERT INTO product 
+            (category_id, price, sale, file_id, status, alias, sort) 
+        VALUES 
+            (:category_id, :price, :sale, :file_id, :status, :alias, :sort)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
@@ -116,16 +116,16 @@ VALUES
     public function updateById($data)
     {
         $sql = '
-UPDATE product
-    SET
-    category_id = :category_id,
-    price = :price,
-    sale = :sale,
-    file_id = :file_id,
-    status = :status,
-    alias = :alias,
-    sort = :sort
-WHERE id = :id';
+        UPDATE product
+            SET
+            category_id = :category_id,
+            price = :price,
+            sale = :sale,
+            file_id = :file_id,
+            status = :status,
+            alias = :alias,
+            sort = :sort
+        WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
@@ -163,10 +163,10 @@ WHERE id = :id';
     public function createFilesConnection($productId, $fileId)
     {
         $sql = '
-INSERT INTO product_file
-    (product_id, file_id) 
-VALUES 
-    (:product_id, :file_id) ';
+        INSERT INTO product_file
+            (product_id, file_id) 
+        VALUES 
+            (:product_id, :file_id) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':product_id', $productId);
@@ -177,7 +177,7 @@ VALUES
             return $this->db->lastInsertId();
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage(), [$productId, $fileId]);
-            throw new \RuntimeException('Unable to create product');
+            throw new \RuntimeException('Unable to create product-file connection');
         }
     }
 

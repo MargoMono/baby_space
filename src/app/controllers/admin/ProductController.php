@@ -5,18 +5,15 @@ namespace App\Controllers\Admin;
 use App\Middleware\AdminAuthenticationChecking;
 use App\Models\Admin\ModelContext;
 use App\Models\Admin\ProductModel;
-use App\Repository\ProductRepository;
 
 class ProductController implements ControllerStrategy
 {
     private $controllerContext;
-    private $model;
 
     private $directory = 'product';
 
     public function __construct()
     {
-        $this->model = new ProductModel();
         $this->controllerContext = new ControllerContext(new ProductModel(),
             new ModelContext(new ProductModel()), $this->directory);
 

@@ -59,18 +59,20 @@ class ProductModel implements ModelStrategy
         foreach ($productList as $key => $product) {
             $salePrice = null;
 
-            if(!empty($product['sale'])){
+            if (!empty($product['sale'])) {
                 $salePrice = CalculationHelper::sale($product['price'], $product['sale']);
             }
 
             foreach ($this->currencyRepository->getAllCurrencyForConvert() as $currency) {
-                $productList[$key]['convert'][$currency['code']] = CalculationHelper::convert($product['price'], $currency['rate']);
+                $productList[$key]['convert'][$currency['code']] = CalculationHelper::convert($product['price'],
+                    $currency['rate']);
 
-                if(empty($salePrice)){
+                if (empty($salePrice)) {
                     continue;
                 }
 
-                $productList[$key]['convert_sale'][$currency['code']] = CalculationHelper::convert($salePrice, $currency['rate']);
+                $productList[$key]['convert_sale'][$currency['code']] = CalculationHelper::convert($salePrice,
+                    $currency['rate']);
                 $productList[$key]['sale_price'] = $salePrice;
             }
         }
@@ -83,14 +85,6 @@ class ProductModel implements ModelStrategy
     public function getShowCreatePageData($sort = null): array
     {
         $categoryList = $this->categoryRepository->getAll();
-
-        // удаляем возможность добавления товара в категорию у которой есть дочерняя
-        foreach ($categoryList as $key => $category) {
-            $childCategory = $this->categoryRepository->getChildCategoryListById($category['id']);
-            if (!empty($childCategory)) {
-                unset($categoryList[$key]);
-            }
-        }
 
         $data['categoryList'] = $categoryList;
         $data['countryList'] = $this->countryRepository->getAll();
@@ -242,12 +236,5 @@ class ProductModel implements ModelStrategy
             'product_country' => $params['product_country'],
         ];
     }
-
-    public function validation($file, $params)
-    {
-        // TODO: Implement validation() method.
-    }
-
-
 }
 
