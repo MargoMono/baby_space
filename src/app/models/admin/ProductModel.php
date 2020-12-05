@@ -146,7 +146,14 @@ class ProductModel implements ModelStrategy
         $this->productRepository->updateById($data);
 
         foreach ($data['description'] as $productDescription) {
-            $this->productDescriptionRepository->updateById($productDescription);
+            $productDescriptionExist = $this->productDescriptionRepository->getByIdAndLanguageId($data['id'],
+                $productDescription['language_id']);
+
+            if (empty($productDescriptionExist)) {
+                $this->productDescriptionRepository->create($data['id'], $productDescription);
+            } else {
+                $this->productDescriptionRepository->updateById($productDescription);
+            }
         }
 
         $this->productRecommendationsRepository->deleteByProductId($data['id']);
