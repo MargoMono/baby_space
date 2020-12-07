@@ -91,9 +91,9 @@ class ProductRepository extends AbstractRepository
     {
         $sql = '
         INSERT INTO product 
-            (category_id, price, sale, file_id, status, alias, sort) 
+            (category_id, price, sale, file_id, status, popular, alias, sort) 
         VALUES 
-            (:category_id, :price, :sale, :file_id, :status, :alias, :sort)';
+            (:category_id, :price, :sale, :file_id, :status, :popular, :alias, :sort)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
@@ -101,6 +101,7 @@ class ProductRepository extends AbstractRepository
         $result->bindParam(':sale', $data['sale']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
+        $result->bindParam(':popular', $data['popular']);
         $result->bindParam(':alias', $data['alias']);
         $result->bindParam(':sort', $data['sort']);
 
@@ -123,6 +124,7 @@ class ProductRepository extends AbstractRepository
             sale = :sale,
             file_id = :file_id,
             status = :status,
+            popular = :popular,
             alias = :alias,
             sort = :sort
         WHERE id = :id';
@@ -133,6 +135,7 @@ class ProductRepository extends AbstractRepository
         $result->bindParam(':sale', $data['sale']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
+        $result->bindParam(':popular', $data['popular']);
         $result->bindParam(':alias', $data['alias']);
         $result->bindParam(':sort', $data['sort']);
         $result->bindParam(':id', $data['id']);
@@ -301,6 +304,31 @@ class ProductRepository extends AbstractRepository
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $categoryId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getAllAvailable()
+    {
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
+        $sql = '
+        SELECT 
+            p.*, 
+            f.alias AS file_alias, 
+            c.name AS category_name,
+            pd.description as description, pd.name as product_name
+        FROM product p
+            JOIN file f ON p.file_id = f.id 
+            JOIN category c ON p.category_id = c.id 
+            JOIN product_description pd ON p.id = pd.product_id
+        WHERE language_id = :language_id
+        AND c.status = 1';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

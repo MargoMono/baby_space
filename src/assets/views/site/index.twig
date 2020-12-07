@@ -2,285 +2,239 @@
 
 {% block content %}
 
-<main class="site-main">
+    <main class="site-main">
 
-    <section class="hero-banner">
-        <div class="container">
-            <div class="row no-gutters align-items-center pbt-30px">
-                <div class="col-5 d-none d-sm-block">
-                    <div class="hero-banner__img">
-                        <img class="img-fluid" src="assets/images/site/home/main.jpg" alt="">
-                    </div>
-                </div>
-                <div class="col-sm-7 col-lg-6 offset-lg-1 pl-4 pl-md-5 pl-lg-0">
-                    <div class="hero-banner__content">
-                        <h4>Развиваемся весело</h4>
-                        <h1>Развивающие бизибодры для детей от 6 месяцев</h1>
-                        <p>Развивает логику и мышление, учит решать сложные задачи, ориентироваться в бытовой среде и
-                            быть самостоятельным.</p>
-                        <a class="button button-hero" href="#">В каталог</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="section-margin calc-50px">
-        <div class="container">
-            <div class="row">
-                {% for category in categoryList %}
-                    <div class="col-md-6 col-lg-4 col-xl-4">
-                        <div class="card text-center card-product">
-                            <div class="card-product__img">
-                                <img class="card-img" src="/upload/images/category/{{ category.file_alias }}" alt="">
-                                <ul class="catalog-item">
-                                    <li><h2>Для детей<br><span class="section-intro__style">{{ category.name }}</span></h2></li>
-                                    <li>{{ category.short_description }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-
-    <section class="section-margin calc-50px">
-        <div class="container">
-            <div class="section-intro pb-60px">
-                <p>Популярные товары в магазине</p>
-                <h2><img src="assets/images/site/logo4.jpg" alt="">Трендовые <span class="section-intro__style">товары</span></h2>
-            </div>
-            <div class="row">
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card text-center card-product">
-                        <div class="card-product__img">
-                            <img class="card-img" src="assets/images/site/home/hero-slide11.jpg" alt="">
-                            <ul class="card-product__imgOverlay">
-                                <li>
-                                    <button><i class="ti-search"></i></button>
-                                </li>
-                                <li>
-                                    <button><i class="ti-shopping-cart"></i></button>
-                                </li>
-                                <li>
-                                    <button><i class="ti-heart"></i></button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <p>От 5 лет и старше</p>
-                            <h4 class="card-product__title"><a href="single-product.html">Игрушка</a></h4>
-                            <p class="card-product__price">5500.00 руб.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card text-center card-product">
-                        <div class="card-product__img">
-                            <img class="card-img" src="assets/images/site/home/hero-slide11.jpg" alt="">
-                            <ul class="card-product__imgOverlay">
-                                <li>
-                                    <button><i class="ti-search"></i></button>
-                                </li>
-                                <li>
-                                    <button><i class="ti-shopping-cart"></i></button>
-                                </li>
-                                <li>
-                                    <button><i class="ti-heart"></i></button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <p>От 0 до 2 лет</p>
-                            <h4 class="card-product__title"><a href="single-product.html">Стульчик</a></h4>
-                            <p class="card-product__price">5000.00 руб.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card text-center card-product">
-                        <div class="card-product__img">
-                            <img class="card-img" src="assets/images/site/home/hero-slide11.jpg" alt="">
-                            <ul class="card-product__imgOverlay">
-                                <li>
-                                    <button><i class="ti-search"></i></button>
-                                </li>
-                                <li>
-                                    <button><i class="ti-shopping-cart"></i></button>
-                                </li>
-                                <li>
-                                    <button><i class="ti-heart"></i></button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <p>От 0 до 2 лет</p>
-                            <h4 class="card-product__title"><a href="single-product.html">Бизиборд</a></h4>
-                            <p class="card-product__price">7000.00 руб.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card text-center card-product">
-                        <div class="card-product__img">
-                            <img class="card-img" src="assets/images/site/home/hero-slide11.jpg" alt="">
-                            <ul class="card-product__imgOverlay">
-                                <li>
-                                    <button><i class="ti-search"></i></button>
-                                </li>
-                                <li>
-                                    <button><i class="ti-shopping-cart"></i></button>
-                                </li>
-                                <li>
-                                    <button><i class="ti-heart"></i></button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <p>От 3 до 4 лет</p>
-                            <h4 class="card-product__title"><a href="single-product.html">Бизиборд</a></h4>
-                            <p class="card-product__price">3000.00 руб.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="offer" id="parallax-1" data-anchor-target="#parallax-1"
-             data-300-top="background-position: 20px 30px" data-top-bottom="background-position: 0 20px">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-5">
-                    <div class="offer__content text-center">
-                        <h3>Скидка 50%</h3>
-                        <h4>Зимняя распродажа!</h4>
-                        <p>Успей оценить нашу специальную расподажу в честь нового года</p>
-                        <a class="button button--active mt-3 mt-xl-4" href="#">Каталог</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="blog section-margin calc-50px">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-lg-6 mb-4 mb-lg-0">
-                    <div class="section-intro pb-60px">
+        <section class="hero-banner">
+            <div class="container">
+                <div class="row no-gutters align-items-center pbt-30px">
+                    <div class="col-5 d-none d-sm-block">
                         <div class="hero-banner__img">
-                            <img class="img-fluid" src="assets/images/site/home/comment.jpg" alt="">
+                            <img class="img-fluid" src="assets/images/site/home/main.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-sm-7 col-lg-6 offset-lg-1 pl-4 pl-md-5 pl-lg-0">
+                        <div class="hero-banner__content">
+                            <h4>Развиваемся весело</h4>
+                            <h1>Развивающие бизибодры для детей от 6 месяцев</h1>
+                            <p>Развивает логику и мышление, учит решать сложные задачи, ориентироваться в бытовой среде
+                                и
+                                быть самостоятельным.</p>
+                            <a class="button button-hero" href="#">В каталог</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-6 mb-4 mb-lg-0">
-                    <div class="section-intro pb-60px text-right">
-                        <p>Отзывы о наших товарах</p>
-                        <h2> <span class="section-intro__style">Отзывы</span><img src="assets/images/site/logo3.jpg" alt=""></h2>
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
-                                <div class="card card-blog">
-                                    <div class="card-body">
-                                        <h4 class="card-blog__title"><a href="single-blog.html">Настя Павленко</a></h4>
-                                        <p>Какой хороший отыв, какой хороший я и песенка моя. Какой хороший отыв, какой хороший я и песенка моя.
-                                        </p>
-                                    </div>
+            </div>
+        </section>
+        <section class="section-margin calc-50px">
+            <div class="container">
+                <div class="row">
+                    {% for category in categoryList %}
+                        <div class="col-md-6 col-lg-4 col-xl-4">
+                            <div class="card text-center card-product">
+                                <div class="card-product__img">
+                                    <img class="card-img" src="/upload/images/category/{{ category.file_alias }}"
+                                         alt="">
+                                    <ul class="catalog-item">
+                                        <li><h2>Для детей<br><span
+                                                        class="section-intro__style">{{ category.name }}</span></h2>
+                                        </li>
+                                        <li>{{ category.short_description }}</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
-                                <div class="card card-blog">
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="section-margin calc-50px">
+            <div class="container">
+                <div class="section-intro pb-60px">
+                    <p>Популярные товары в магазине</p>
+                    <h2><img src="assets/images/site/logo4.jpg" alt="">Трендовые <span class="section-intro__style">товары</span>
+                    </h2>
+                </div>
+                <div class="row">
+                    {% for product in productList %}
+                        {% if product.popular == 1 %}
+                            <div class="col-md-6 col-lg-4 col-xl-3">
+                                <div class="card text-center card-product">
+                                    <div class="card-product__img">
+                                        <img class="card-img" src="/upload/images/product/{{ product.file_alias }}"
+                                             alt="">
+                                        <ul class="card-product__imgOverlay">
+                                            <li>
+                                                <button><i class="ti-search"></i></button>
+                                            </li>
+                                            <li>
+                                                <button><i class="ti-shopping-cart"></i></button>
+                                            </li>
+                                            <li>
+                                                <button><i class="ti-heart"></i></button>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <div class="card-body">
-                                        <h4 class="card-blog__title"><a href="single-blog.html">Даша</a></h4>
-                                        <p>Какой хороший отыв, какой хороший я и песенка моя. Какой хороший отыв, какой
-                                            хороший я и песенка моя. Какой хороший отыв, какой хороший я и песенка моя.</p>
+                                        <p class="popular-product__category">{{ product.category_name }}</p>
+                                        <h4 class="card-product__title"><a
+                                                    href="single-product.html">{{ product.product_name }}</a></h4>
+                                        <p class="card-product__price">{{ product.price }} руб.</p>
                                     </div>
                                 </div>
                             </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        {% if sale.status == 1 %}
+            <section class="offer" id="parallax-1" data-anchor-target="#parallax-1"
+                     data-300-top="background-position: 20px 30px" data-top-bottom="background-position: 0 20px">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-5">
+                            <div class="offer__content text-center">
+                                <h3>{{ sale.sale }}</h3>
+                                <h4>{{ sale.name }}</h4>
+                                <p>{{ sale.description }}</p>
+                                <a class="button button--active mt-3 mt-xl-4" href="#">Каталог</a>
+                            </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
-                                <div class="card card-blog">
-                                    <div class="card-body">
-                                        <h4 class="card-blog__title"><a href="single-blog.html">Кристина</a></h4>
-                                        <p>Какой хороший отыв, какой хороший я и песенка моя. Какой хороший отыв, какой хороший я и песенка моя.
-                                            Какой хороший отыв, какой хороший я и песенка моя.
-                                        </p>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+
+        <section class="blog section-margin calc-50px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 mb-4 mb-lg-0">
+                        <div class="section-intro pb-60px">
+                            <div class="hero-banner__img">
+                                <img class="img-fluid" src="assets/images/site/home/comment.jpg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 mb-4 mb-lg-0">
+                        <div class="section-intro pb-60px text-right">
+                            <p>Отзывы о наших товарах</p>
+                            <h2><span class="section-intro__style">Отзывы</span><img src="assets/images/site/logo3.jpg"
+                                                                                     alt=""></h2>
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
+                                    <div class="card card-blog">
+                                        <div class="card-body">
+                                            <h4 class="card-blog__title"><a href="single-blog.html">Настя Павленко</a>
+                                            </h4>
+                                            <p>Какой хороший отыв, какой хороший я и песенка моя. Какой хороший отыв,
+                                                какой хороший я и песенка моя.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <a class="button button--active mt-3 mt-xl-4" href="#">Читать все отзывы</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-intro pb-60px">
-                <p>Последние статьи из нашего блога</p>
-                <h2><img src="assets/images/site/logo2.jpg" alt=""><span class="section-intro__style">Статьи</span></h2>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                    <div class="card card-blog">
-                        <div class="card-blog__img">
-                            <img class="card-img rounded-0" src="assets/images/site/blog/blog1.png" alt="">
-                        </div>
-                        <div class="card-body">
-                            <h4 class="card-blog__title"><a href="single-blog.html">Тут типа умный заголовок</a></h4>
-                            <p>А тут ой какой интересный и завлекающий текст, прям не текст, а конфетка</p>
-                            <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                    <div class="card card-blog">
-                        <div class="card-blog__img">
-                            <img class="card-img rounded-0" src="assets/images/site/blog/blog2.png" alt="">
-                        </div>
-                        <div class="card-body">
-                            <h4 class="card-blog__title"><a href="single-blog.html">А этого заголовок очень веселый</a></h4>
-                            <p>Веселый текст, веселый заголовок, веселые дети и прочая красота</p>
-                            <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
+                                    <div class="card card-blog">
+                                        <div class="card-body">
+                                            <h4 class="card-blog__title"><a href="single-blog.html">Даша</a></h4>
+                                            <p>Какой хороший отыв, какой хороший я и песенка моя. Какой хороший отыв,
+                                                какой
+                                                хороший я и песенка моя. Какой хороший отыв, какой хороший я и песенка
+                                                моя.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
+                                    <div class="card card-blog">
+                                        <div class="card-body">
+                                            <h4 class="card-blog__title"><a href="single-blog.html">Кристина</a></h4>
+                                            <p>Какой хороший отыв, какой хороший я и песенка моя. Какой хороший отыв,
+                                                какой хороший я и песенка моя.
+                                                Какой хороший отыв, какой хороший я и песенка моя.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="button button--active mt-3 mt-xl-4" href="#">Читать все отзывы</a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                    <div class="card card-blog">
-                        <div class="card-blog__img">
-                            <img class="card-img rounded-0" src="assets/images/site/blog/blog3.png" alt="">
+                <div class="section-intro pb-60px">
+                    <p>Последние статьи из нашего блога</p>
+                    <h2><img src="assets/images/site/logo2.jpg" alt=""><span class="section-intro__style">Статьи</span>
+                    </h2>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                        <div class="card card-blog">
+                            <div class="card-blog__img">
+                                <img class="card-img rounded-0" src="assets/images/site/blog/blog1.png" alt="">
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-blog__title"><a href="single-blog.html">Тут типа умный заголовок</a>
+                                </h4>
+                                <p>А тут ой какой интересный и завлекающий текст, прям не текст, а конфетка</p>
+                                <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h4 class="card-blog__title"><a href="single-blog.html">Продажный заголовок</a></h4>
-                            <p>Вот ты думаешь это будет полезная статья? Как бы не так, после не ты побежишь покупать мои товары</p>
-                            <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                        <div class="card card-blog">
+                            <div class="card-blog__img">
+                                <img class="card-img rounded-0" src="assets/images/site/blog/blog2.png" alt="">
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-blog__title"><a href="single-blog.html">А этого заголовок очень
+                                        веселый</a></h4>
+                                <p>Веселый текст, веселый заголовок, веселые дети и прочая красота</p>
+                                <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                        <div class="card card-blog">
+                            <div class="card-blog__img">
+                                <img class="card-img rounded-0" src="assets/images/site/blog/blog3.png" alt="">
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-blog__title"><a href="single-blog.html">Продажный заголовок</a></h4>
+                                <p>Вот ты думаешь это будет полезная статья? Как бы не так, после не ты побежишь
+                                    покупать мои товары</p>
+                                <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="instagram_area">
-        <div class="container box_1620">
-            <div class="insta_btn">
-                <a class="btn theme_btn" href="#">Подпишись на нас в инстаграмм</a>
+        <section class="instagram_area">
+            <div class="container box_1620">
+                <div class="insta_btn">
+                    <a class="btn theme_btn" href="#">Подпишись на нас в инстаграмм</a>
+                </div>
+                <div class="instagram_image row m0">
+                    <a href="#"><img src="assets/images/site/instagram/ins-1.jpg" alt=""></a>
+                    <a href="#"><img src="assets/images/site/instagram/ins-2.jpg" alt=""></a>
+                    <a href="#"><img src="assets/images/site/instagram/ins-3.jpg" alt=""></a>
+                    <a href="#"><img src="assets/images/site/instagram/ins-4.jpg" alt=""></a>
+                    <a href="#"><img src="assets/images/site/instagram/ins-5.jpg" alt=""></a>
+                    <a href="#"><img src="assets/images/site/instagram/ins-6.jpg" alt=""></a>
+                </div>
             </div>
-            <div class="instagram_image row m0">
-                <a href="#"><img src="assets/images/site/instagram/ins-1.jpg" alt=""></a>
-                <a href="#"><img src="assets/images/site/instagram/ins-2.jpg" alt=""></a>
-                <a href="#"><img src="assets/images/site/instagram/ins-3.jpg" alt=""></a>
-                <a href="#"><img src="assets/images/site/instagram/ins-4.jpg" alt=""></a>
-                <a href="#"><img src="assets/images/site/instagram/ins-5.jpg" alt=""></a>
-                <a href="#"><img src="assets/images/site/instagram/ins-6.jpg" alt=""></a>
-            </div>
-        </div>
-    </section>    <!-- ================ Subscribe section end ================= -->
+        </section>    <!-- ================ Subscribe section end ================= -->
 
 
-</main>
+    </main>
 
 {% endblock %}

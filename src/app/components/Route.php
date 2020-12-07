@@ -161,6 +161,11 @@ class Route
         $router->get('admin/coupon/delete/{id}', [Admin\CouponController::class, 'actionShowDeletePage']);
         $router->post('admin/coupon/delete', [Admin\CouponController::class, 'delete']);
 
+
+        // Купоны
+        $router->get('admin/sale/update/{id}', [Admin\SaleController::class, 'actionShowUpdatePage']);
+        $router->post('admin/sale/update/{id}', [Admin\SaleController::class, 'update']);
+
         // Страницы категорий
         $router->any('admin/category', [Admin\CategoryController::class, 'actionIndex']);
         $router->any('admin/category/sort/{id}?', [Admin\CategoryController::class, 'actionIndex']);

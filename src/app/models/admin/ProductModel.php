@@ -235,6 +235,7 @@ class ProductModel implements ModelStrategy
             'price' => $params['price'],
             'sale' => $params['sale'],
             'status' => $params['status'],
+            'popular' => $params['popular'],
             'sort' => $params['sort'],
             'file_id' => $params['file_id'],
             'alias' => TextHelper::getTranslit($params['name-1']),

@@ -982,6 +982,10 @@ a {
     color: #384aeb
 }
 
+.popular-product__category {
+    text-transform: capitalize;
+}
+
 .offer {
     background: url("../../images/site/home/sale.png") right center no-repeat;
     background-size: cover
