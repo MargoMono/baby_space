@@ -55,13 +55,14 @@ class CategoryRepository extends AbstractRepository implements Entity
     {
         $sql = '
 INSERT INTO category 
-    (parent_id, name, description, file_id, status, alias, tag, meta_title, meta_description, meta_keyword) 
+    (parent_id, name, short_description, description, file_id, status, alias, tag, meta_title, meta_description, meta_keyword) 
 VALUES 
-    (:parent_id, :name, :description, :file_id, :status, :alias, :tag, :meta_title, :meta_description, :meta_keyword) ';
+    (:parent_id, :name, :short_description, :description, :file_id, :status, :alias, :tag, :meta_title, :meta_description, :meta_keyword) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':parent_id', $data['parent']);
         $result->bindParam(':name', $data['name']);
+        $result->bindParam(':short_description', $data['short_description']);
         $result->bindParam(':description', $data['description']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
@@ -87,6 +88,7 @@ UPDATE category
     SET
     parent_id = :parent_id,
     name = :name,
+    short_description = :short_description,
     description = :description,
     file_id = :file_id,
     status = :status,
@@ -100,6 +102,7 @@ WHERE id = :id';
         $result = $this->db->prepare($sql);
         $result->bindParam(':parent_id', $data['parent']);
         $result->bindParam(':name', $data['name']);
+        $result->bindParam(':short_description', $data['short_description']);
         $result->bindParam(':description', $data['description']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
@@ -147,5 +150,22 @@ WHERE id = :id';
         $result->execute();
 
         return $result->fetch();
+    }
+
+    public function getAllAvailable()
+    {
+        $sql = '
+        SELECT 
+            c.*, cp.name AS parent_name, cp.id AS parent_id, f.alias AS file_alias
+        FROM category c
+            LEFT JOIN category cp ON c.parent_id = cp.id
+            LEFT JOIN file f ON c.file_id = f.id
+        WHERE c.status = 1';
+
+        $result = $this->db->prepare($sql);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
     }
 }

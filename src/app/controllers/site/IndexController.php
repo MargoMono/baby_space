@@ -14,9 +14,9 @@ class IndexController extends Controller
         $this->model = new IndexModel();
     }
 
-    public function showMainPage()
+    public function showHomePage()
     {
-        $data = $this->model->getMainPageData();
+        $data = $this->model->getHomePageData();
         $data['page'] = 'main';
         $this->view->generate('/site/index.twig', $data);
     }

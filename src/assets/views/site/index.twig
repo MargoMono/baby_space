@@ -1,154 +1,286 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
-<head>
-    <title>KDF trading</title>
-    <meta name="description" content=""/>
-    <meta name="keywords" content=""/>
-    {% include 'site/includes/head.twig' %}
-    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
-</head>
-<body>
+{% extends "site/layout.twig" %}
 
-{% include 'site/includes/header.twig' %}
+{% block content %}
 
-<div class="index-main-block">
-    <div class="content-container">
-        <div class="content">
-            <h2>{{ heading_title }} <br>в Казани</h2>
-            <p>Мебельные фасады по ценам января 2020 и более 200 видов <br>декора от ведущих российских и европейских
-                фабрик</p>
-            <br><br>
-        </div>
-    </div>
-</div>
+<main class="site-main">
 
-<div class="index-points">
-    <div class="block">
-        <h3>2000 +</h3>
-        <p>Успешно реализованных <br>заказов</p>
-    </div>
-    <div class="block">
-        <h3>2-3&nbsp;часа</h3>
-        <p>Отгрузка и доставка заказа <br>по Казани</p>
-    </div>
-    <div class="block">
-        <h3>1000 +</h3>
-        <p>Оттенков пленки ПВХ для <br>фасадов</p>
-    </div>
-</div>
-
-
-
-<div class="index-catalog">
-    {% for mainCategory in mainCategoryList %}
-        <div class="block">
-            <div class="content-container"
-                 style="background-image:url('/upload/images/category/{{ mainCategory.file_alias }}')">
-                <div class="content">
-                    {% if mainCategory.id ==  1 %}<h4>Мебельные <br> фасады</h4>{% endif %}
-                    {% if mainCategory.id ==  2 %}<h4>Декоративные <br> элементы </h4>{% endif %}
-                    {% if mainCategory.id ==  3 %}<h4>Мебель <br> на заказ</h4>{% endif %}
-                    <a href="/catalog/{{ mainCategory.alias }}/{{ mainCategory.id }}" class="button">Посмотреть</a>
+    <section class="hero-banner">
+        <div class="container">
+            <div class="row no-gutters align-items-center pbt-30px">
+                <div class="col-5 d-none d-sm-block">
+                    <div class="hero-banner__img">
+                        <img class="img-fluid" src="assets/images/site/home/main.jpg" alt="">
+                    </div>
+                </div>
+                <div class="col-sm-7 col-lg-6 offset-lg-1 pl-4 pl-md-5 pl-lg-0">
+                    <div class="hero-banner__content">
+                        <h4>Развиваемся весело</h4>
+                        <h1>Развивающие бизибодры для детей от 6 месяцев</h1>
+                        <p>Развивает логику и мышление, учит решать сложные задачи, ориентироваться в бытовой среде и
+                            быть самостоятельным.</p>
+                        <a class="button button-hero" href="#">В каталог</a>
+                    </div>
                 </div>
             </div>
         </div>
-    {% endfor %}
-</div>
-
-
-<div class="index-form">
-    <h2>Заказать прайс-лист</h2>
-    <h3>Пришлем Вам на почту полный прайс-лист с актуальными ценами</h3>
-    <form id="send-catalog-form">
-        <input type="text" id="send-catalog-name" name="name" placeholder="Имя" required>
-        <input type="text" id="send-catalog-company" name="company" placeholder="* Название комании">
-        <input type="email" id="send-catalog-email" name="email" placeholder="Email" required>
-        <button class="button">Получить</button>
-    </form>
-    <p class="additional">Поля помеченные * не обязательны для заполнения</p>
-</div>
-
-
-<div class="index-usefull">
-    <div class="block">
-        <div class="header">
-            <h2>Полезные статьи</h2>
-        </div>
-        <div class="content-container column-2">
-            {% for key, new in news %}
-
-                {% if key == 0 %}
-                    <div class="column">
-                        <div class="block big-image">
-                            <img src="/upload/images/blog/{{ new.file_alias }}">
-                            <h3><a href="/blog/{{ article.alias|e }}/{{ article.id|e }}">{{ new.name }}</a></h3>
-                            <p>{{ new.description }}</p>
+    </section>
+    <section class="section-margin calc-50px">
+        <div class="container">
+            <div class="row">
+                {% for category in categoryList %}
+                    <div class="col-md-6 col-lg-4 col-xl-4">
+                        <div class="card text-center card-product">
+                            <div class="card-product__img">
+                                <img class="card-img" src="/upload/images/category/{{ category.file_alias }}" alt="">
+                                <ul class="catalog-item">
+                                    <li><h2>Для детей<br><span class="section-intro__style">{{ category.name }}</span></h2></li>
+                                    <li>{{ category.short_description }}</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                {% endif %}
-            {% endfor %}
-
-            <div class="column">
-                {% for key, new in news %}
-                    {% if key != 0 %}
-                        <div class="block">
-                            <h3><a href="/blog/{{ article.alias|e }}/{{ article.id|e }}">{{ new.name }}</a></h3>
-                            <p>{{ new.description }}</p>
-                        </div>
-                    {% endif %}
                 {% endfor %}
             </div>
         </div>
-        <div class="button-block">
-            <a href="/blog" class="button">Читать все статьи</a>
-        </div>
-    </div>
+    </section>
 
-    <div class="block">
-        <div class="header">
-            <h2>Отзывы клиентов</h2>
-        </div>
-        <div class="content-container column-1">
-            {% for comment in comments %}
-                <div class="block">
-                    <div class="image"
-                            {% if comment.photos.file_alias is not empty %}
-                                style="background-image:url('/upload/images/comment/{{ comment.photos.file_alias }}')"
-                            {% endif %}
-                    ></div>
-                    <div class="content">
-                        <h3>{{ comment.description }}</h3>
-                        <p>{{ comment.content }}</p>
-                        <p class="author">
-                            <span class="name">{{ comment.user_name }}</span>
-                            <span class="date">{{ comment.created_at }}</span>
-                        </p>
+    <section class="section-margin calc-50px">
+        <div class="container">
+            <div class="section-intro pb-60px">
+                <p>Популярные товары в магазине</p>
+                <h2><img src="assets/images/site/logo4.jpg" alt="">Трендовые <span class="section-intro__style">товары</span></h2>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="card text-center card-product">
+                        <div class="card-product__img">
+                            <img class="card-img" src="assets/images/site/home/hero-slide11.jpg" alt="">
+                            <ul class="card-product__imgOverlay">
+                                <li>
+                                    <button><i class="ti-search"></i></button>
+                                </li>
+                                <li>
+                                    <button><i class="ti-shopping-cart"></i></button>
+                                </li>
+                                <li>
+                                    <button><i class="ti-heart"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>От 5 лет и старше</p>
+                            <h4 class="card-product__title"><a href="single-product.html">Игрушка</a></h4>
+                            <p class="card-product__price">5500.00 руб.</p>
+                        </div>
                     </div>
                 </div>
-            {% endfor %}
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="card text-center card-product">
+                        <div class="card-product__img">
+                            <img class="card-img" src="assets/images/site/home/hero-slide11.jpg" alt="">
+                            <ul class="card-product__imgOverlay">
+                                <li>
+                                    <button><i class="ti-search"></i></button>
+                                </li>
+                                <li>
+                                    <button><i class="ti-shopping-cart"></i></button>
+                                </li>
+                                <li>
+                                    <button><i class="ti-heart"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>От 0 до 2 лет</p>
+                            <h4 class="card-product__title"><a href="single-product.html">Стульчик</a></h4>
+                            <p class="card-product__price">5000.00 руб.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="card text-center card-product">
+                        <div class="card-product__img">
+                            <img class="card-img" src="assets/images/site/home/hero-slide11.jpg" alt="">
+                            <ul class="card-product__imgOverlay">
+                                <li>
+                                    <button><i class="ti-search"></i></button>
+                                </li>
+                                <li>
+                                    <button><i class="ti-shopping-cart"></i></button>
+                                </li>
+                                <li>
+                                    <button><i class="ti-heart"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>От 0 до 2 лет</p>
+                            <h4 class="card-product__title"><a href="single-product.html">Бизиборд</a></h4>
+                            <p class="card-product__price">7000.00 руб.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="card text-center card-product">
+                        <div class="card-product__img">
+                            <img class="card-img" src="assets/images/site/home/hero-slide11.jpg" alt="">
+                            <ul class="card-product__imgOverlay">
+                                <li>
+                                    <button><i class="ti-search"></i></button>
+                                </li>
+                                <li>
+                                    <button><i class="ti-shopping-cart"></i></button>
+                                </li>
+                                <li>
+                                    <button><i class="ti-heart"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>От 3 до 4 лет</p>
+                            <h4 class="card-product__title"><a href="single-product.html">Бизиборд</a></h4>
+                            <p class="card-product__price">3000.00 руб.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="button-block">
-            <a href="/comments" class="button">Читать все отзывы</a>
+    </section>
+
+    <section class="offer" id="parallax-1" data-anchor-target="#parallax-1"
+             data-300-top="background-position: 20px 30px" data-top-bottom="background-position: 0 20px">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-5">
+                    <div class="offer__content text-center">
+                        <h3>Скидка 50%</h3>
+                        <h4>Зимняя распродажа!</h4>
+                        <p>Успей оценить нашу специальную расподажу в честь нового года</p>
+                        <a class="button button--active mt-3 mt-xl-4" href="#">Каталог</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </section>
+
+    <section class="blog section-margin calc-50px">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-6 mb-4 mb-lg-0">
+                    <div class="section-intro pb-60px">
+                        <div class="hero-banner__img">
+                            <img class="img-fluid" src="assets/images/site/home/comment.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 mb-4 mb-lg-0">
+                    <div class="section-intro pb-60px text-right">
+                        <p>Отзывы о наших товарах</p>
+                        <h2> <span class="section-intro__style">Отзывы</span><img src="assets/images/site/logo3.jpg" alt=""></h2>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
+                                <div class="card card-blog">
+                                    <div class="card-body">
+                                        <h4 class="card-blog__title"><a href="single-blog.html">Настя Павленко</a></h4>
+                                        <p>Какой хороший отыв, какой хороший я и песенка моя. Какой хороший отыв, какой хороший я и песенка моя.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
+                                <div class="card card-blog">
+                                    <div class="card-body">
+                                        <h4 class="card-blog__title"><a href="single-blog.html">Даша</a></h4>
+                                        <p>Какой хороший отыв, какой хороший я и песенка моя. Какой хороший отыв, какой
+                                            хороший я и песенка моя. Какой хороший отыв, какой хороший я и песенка моя.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
+                                <div class="card card-blog">
+                                    <div class="card-body">
+                                        <h4 class="card-blog__title"><a href="single-blog.html">Кристина</a></h4>
+                                        <p>Какой хороший отыв, какой хороший я и песенка моя. Какой хороший отыв, какой хороший я и песенка моя.
+                                            Какой хороший отыв, какой хороший я и песенка моя.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="button button--active mt-3 mt-xl-4" href="#">Читать все отзывы</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-intro pb-60px">
+                <p>Последние статьи из нашего блога</p>
+                <h2><img src="assets/images/site/logo2.jpg" alt=""><span class="section-intro__style">Статьи</span></h2>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="card card-blog">
+                        <div class="card-blog__img">
+                            <img class="card-img rounded-0" src="assets/images/site/blog/blog1.png" alt="">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-blog__title"><a href="single-blog.html">Тут типа умный заголовок</a></h4>
+                            <p>А тут ой какой интересный и завлекающий текст, прям не текст, а конфетка</p>
+                            <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="card card-blog">
+                        <div class="card-blog__img">
+                            <img class="card-img rounded-0" src="assets/images/site/blog/blog2.png" alt="">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-blog__title"><a href="single-blog.html">А этого заголовок очень веселый</a></h4>
+                            <p>Веселый текст, веселый заголовок, веселые дети и прочая красота</p>
+                            <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="card card-blog">
+                        <div class="card-blog__img">
+                            <img class="card-img rounded-0" src="assets/images/site/blog/blog3.png" alt="">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-blog__title"><a href="single-blog.html">Продажный заголовок</a></h4>
+                            <p>Вот ты думаешь это будет полезная статья? Как бы не так, после не ты побежишь покупать мои товары</p>
+                            <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="instagram_area">
+        <div class="container box_1620">
+            <div class="insta_btn">
+                <a class="btn theme_btn" href="#">Подпишись на нас в инстаграмм</a>
+            </div>
+            <div class="instagram_image row m0">
+                <a href="#"><img src="assets/images/site/instagram/ins-1.jpg" alt=""></a>
+                <a href="#"><img src="assets/images/site/instagram/ins-2.jpg" alt=""></a>
+                <a href="#"><img src="assets/images/site/instagram/ins-3.jpg" alt=""></a>
+                <a href="#"><img src="assets/images/site/instagram/ins-4.jpg" alt=""></a>
+                <a href="#"><img src="assets/images/site/instagram/ins-5.jpg" alt=""></a>
+                <a href="#"><img src="assets/images/site/instagram/ins-6.jpg" alt=""></a>
+            </div>
+        </div>
+    </section>    <!-- ================ Subscribe section end ================= -->
 
 
-<div class="index-portfolio">
-    <h2>Портфолио</h2>
-    <h3>Примеры готовых кухонь и шкафов-купе <br> изготовленных из наших фасадов</h3>
+</main>
 
-    <div class="table">
-        {% for photo in photos %}
-            <div class="block" style="background-image:url('/upload/images/portfolio/{{ photo.file_alias }}')"></div>
-        {% endfor %}
-    </div>
-
-    <a href="/portfolio" class="button">Перейти в портфолио</a>
-</div>
-
-<div class="interval"></div>
-
-{% include 'site/includes/footer.twig' %}
-</body>
-</html>
+{% endblock %}

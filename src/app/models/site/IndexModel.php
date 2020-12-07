@@ -16,38 +16,11 @@ class IndexModel extends Model
      * @return array|void
      * @throws Exception
      */
-    public function getMainPageData()
+    public function getHomePageData()
     {
-        $newsRepository = new BlogRepository();
-        $news = $newsRepository->getLastArticles(4);
-
-        $commentRepository = new CommentRepository();
-        $comments = $commentRepository->getLastComments(3);
-
-        foreach ($comments as $key => $comment) {
-            $date = new DateTime($comment['date']);
-            $comments[$key]['created_at'] = $date->format('d/m/Y');
-            $comments[$key]['photos'] = $commentRepository->getLimitCommentPhotos($comment['id'], 1);
-        }
-
-        $portfolioRepository = new PortfolioRepository();
-        $photos = $portfolioRepository->getLastPhotos(8);
-
         $categoryRepository = new CategoryRepository();
-        $mainCategoryList = $categoryRepository->getMainCategoryList();
+        $data['categoryList'] = $categoryRepository->getAllAvailable();
 
-        foreach ($news as $key => $new) {
-            $date = new DateTime($new['date']);
-            $news[$key]['date'] = $date->format('d/m/Y');
-        }
-
-        $params = [
-            'news' => $news,
-            'mainCategoryList' => $mainCategoryList,
-            'comments' => $comments,
-            'photos' => $photos,
-        ];
-
-        return $params;
+        return $data;
     }
 }

@@ -100,6 +100,7 @@ class CategoryModel implements ModelStrategy
             'id' => $params['id'],
             'parent_id' => $params['parent_id'],
             'name' => $params['name'],
+            'short_description' => $params['short_description'],
             'description' => $params['description'],
             'file_id' => $params['file_id'],
             'status' => $params['status'],

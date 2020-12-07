@@ -54,7 +54,7 @@ class Route
      */
     private function setRoutes($router)
     {
-        $router->get('/', [IndexController::class, 'showMainPage']);
+        $router->get('/', [IndexController::class, 'showHomePage']);
         $router->post('change-language', [IndexController::class, 'actionChangeLanguage']);
         $router->get('portfolio', ['App\\Controllers\\Site\\PortfolioController', 'showPortfolioPage']);
         $router->get('portfolio/show-more/{count}', ['App\\Controllers\\Site\\PortfolioController', 'showMore']);
