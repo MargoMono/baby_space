@@ -32,8 +32,8 @@
                                         <thead>
                                         <tr>
                                             <td class="text-center">Изображение</td>
-                                            <td class="text-left"> <a {% if sort.order == 'n.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/new/sort/?order=n.name&desc={{ sort.desc }}">Название</a></td>
-                                            <td class="text-left"> <a {% if sort.order == 'n.description' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/new/sort/?order=n.description&desc={{ sort.desc }}">Описание</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'nd.name' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/new/sort/?order=nd.name&desc={{ sort.desc }}">Название</a></td>
+                                            <td class="text-left"> <a {% if sort.order == 'nd.description' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/new/sort/?order=nd.description&desc={{ sort.desc }}">Описание</a></td>
                                             <td class="text-left"> <a {% if sort.order == 'n.created_at' %} class="{{ sort.desc|lower }}" {% endif %} href="/admin/new/sort/?order=n.created_at&desc={{ sort.desc }}">Дата новости</a></td>
                                             <td class="text-right">Действие</td>
                                         </tr>
