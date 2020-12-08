@@ -22,7 +22,8 @@ class NewRepository extends AbstractRepository implements Entity
 
         $sql = '
         SELECT 
-               n.* , nd.*, f.alias AS file_alias
+               n.* ,  f.alias AS file_alias,
+               nd.description AS description, nd.name AS name
         FROM new n
             JOIN file f ON n.file_id = f.id
             JOIN new_description nd ON n.id = nd.new_id
@@ -39,18 +40,31 @@ class NewRepository extends AbstractRepository implements Entity
 
     public function getById($id)
     {
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
         $sql = '
-        SELECT n.*, f.alias AS file_alias
+        SELECT 
+               n.* , f.alias AS file_alias,
+               nd.description AS description, nd.name AS name
         FROM new n
-        LEFT JOIN file f ON n.file_id = f.id
-        WHERE n.id = :id';
+            JOIN file f ON n.file_id = f.id
+            JOIN new_description nd ON n.id = nd.new_id
+        WHERE nd.language_id = :language_id
+        AND n.id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
-        return $result->fetch();
+        try {
+            $result->execute();
+            return $result->fetch();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), [$id, $languageId]);
+            throw new \RuntimeException('Unable to get new by id');
+        }
     }
 
     public function create($data)
