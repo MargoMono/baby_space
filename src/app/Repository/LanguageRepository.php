@@ -125,4 +125,20 @@ class LanguageRepository extends AbstractRepository implements Entity
 
         return $result->fetch();
     }
+
+    public function getByAlias($alias)
+    {
+        $sql = '
+        SELECT l.*, f.alias AS file_alias
+            FROM language l
+            LEFT JOIN file f ON l.file_id = f.id
+        WHERE l.alias = :alias';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':alias', $alias);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
 }

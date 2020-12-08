@@ -40,12 +40,16 @@ class Language
 
     public function getContent()
     {
-        include_once 'assets/language/' . $_SESSION['language'] . '.php';
+        include_once 'language/' . $_SESSION['language'] . '.php';
         return $_;
     }
 
     public function getLanguage()
     {
+        if (!empty($_SESSION['language'])) {
+            return $_SESSION['language'];
+        }
+
         $languageRepository = new LanguageRepository();
         $languages = $languageRepository->getAll();
 

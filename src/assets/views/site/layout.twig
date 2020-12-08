@@ -76,6 +76,27 @@
                         </li>
                     </ul>
                 </div>
+                <div class="dropdown" >
+                    <div class="dropbtn">
+                        <img class="card-img" src="/upload/images/language/{{ language.file_alias }}" alt="">
+                        <p class="dropbtn-text">{{language.name}}</p>
+                    </div>
+                    <div class="dropdown-content">
+                        {% for language in languageList %}
+                            <a href="/change-language/{{ language.alias }}"><img class="dropbtn-img" src="/upload/images/language/{{ language.file_alias }}" alt="">{{ language.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="dropdown" >
+                    <div class="dropbtn">
+                        <p class="dropbtn-text"><b>RUB</b></p>
+                    </div>
+                    <div class="dropdown-content">
+                        {% for currency in currencyList %}
+                            <a href="/change-language/{{ currency.alias }}"><b>{{ currency.code }}</b></a>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </nav>
     </div>

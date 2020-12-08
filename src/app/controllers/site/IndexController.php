@@ -3,28 +3,30 @@
 namespace App\Controllers\Site;
 
 use App\Components\Language;
-use App\Controllers\Controller;
 use App\Models\Site\IndexModel;
 
-class IndexController extends Controller
+class IndexController
 {
+    private $directory = '';
+    private $controllerContext;
+    private $model;
+
     function __construct()
     {
-        parent::__construct();
+        $this->controllerContext = new ControllerContext($this->directory);
         $this->model = new IndexModel();
     }
 
     public function showHomePage()
     {
         $data = $this->model->getHomePageData();
-        $data['page'] = 'main';
-        $this->view->generate('/site/index.twig', $data);
+        $this->controllerContext->render($data, 'index.twig');
     }
 
-    public function actionChangeLanguage()
+    public function actionChangeLanguage($languageAlias)
     {
         $language = new Language();
-        $language->setLanguage($_POST['language']);
+        $language->setLanguage($languageAlias);
         header('Location: ' .$_SERVER['HTTP_REFERER']);
     }
 }

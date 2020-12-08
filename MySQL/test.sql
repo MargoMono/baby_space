@@ -347,3 +347,36 @@ create table order_status
         PRIMARY KEY (id)
 );
 
+create table blog
+(
+    `id`         INT AUTO_INCREMENT,
+    `alias`      VARCHAR(255) NOT NULL,
+    `file_id`    INT          NOT NULL,
+    `created_at` DATETIME     NOT NULL DEFAULT now(),
+    CONSTRAINT blog_pk
+        PRIMARY KEY (id),
+    CONSTRAINT blog_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id) ON UPDATE CASCADE
+);
+
+create table blog_description
+(
+    `id`                INT AUTO_INCREMENT,
+    `blog_id`           INT(11)      NOT NULL,
+    `language_id`       INT(11)      NOT NULL,
+    `name`              VARCHAR(255) NOT NULL,
+    `short_description` VARCHAR(255) NOT NULL,
+    `description`       TEXT,
+    `tag`               VARCHAR(255)          DEFAULT NULL,
+    `meta_title`        VARCHAR(255)          DEFAULT NULL,
+    `meta_description`  VARCHAR(255)          DEFAULT NULL,
+    `meta_keyword`      VARCHAR(255)          DEFAULT NULL,
+    `created_at`        DATETIME     NOT NULL DEFAULT now(),
+    PRIMARY KEY (`id`),
+    KEY `name` (`name`),
+    CONSTRAINT blog_description_blog_id_fk
+        FOREIGN KEY (blog_id) REFERENCES blog (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT blog_description_language_id_fk
+        FOREIGN KEY (language_id) REFERENCES language (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+

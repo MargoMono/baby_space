@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Components\Language;
 use PDO;
 use PDOException;
 
@@ -17,13 +18,20 @@ class BlogRepository extends AbstractRepository implements Entity
             $sort['desc'] = 'ASC';
         }
 
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
         $sql = '
-        SELECT b.*, f.alias AS file_alias
-            FROM blog b
-            LEFT JOIN file f ON b.file_id = f.id
+        SELECT 
+               b.*, f.alias AS file_alias,
+               bd.short_description as short_description, bd.name as name
+        FROM blog b
+            JOIN file f ON b.file_id = f.id
+            JOIN blog_description bd ON b.id = bd.blog_id
+        WHERE bd.language_id = :language_id
         ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
@@ -33,9 +41,12 @@ class BlogRepository extends AbstractRepository implements Entity
     public function getById($id)
     {
         $sql = '
-        SELECT b.*, f.alias AS file_alias
+        SELECT 
+               b.*, f.alias AS file_alias,
+               bd.short_description as short_description, bd.name as name
         FROM blog b
-        LEFT JOIN file f ON b.file_id = f.id
+             JOIN file f ON b.file_id = f.id
+             JOIN blog_description bd ON b.id = bd.blog_id
         WHERE b.id = :id';
 
         $result = $this->db->prepare($sql);
@@ -50,20 +61,13 @@ class BlogRepository extends AbstractRepository implements Entity
     {
         $sql = '
 INSERT INTO blog
-    (name, short_description, description, file_id, alias, tag, meta_title, meta_description, meta_keyword) 
+    (file_id, alias) 
 VALUES 
-    (:name, :short_description, :description, :file_id, :alias, :tag, :meta_title, :meta_description, :meta_keyword) ';
+    (:file_id, :alias) ';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':name', $data['name']);
-        $result->bindParam(':short_description', $data['short_description']);
-        $result->bindParam(':description', $data['description']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':tag', $data['tag']);
-        $result->bindParam(':meta_title', $data['meta_title']);
-        $result->bindParam(':meta_description', $data['meta_description']);
-        $result->bindParam(':meta_keyword', $data['meta_keyword']);
 
         try {
             $result->execute();
@@ -79,27 +83,13 @@ VALUES
         $sql = '
 UPDATE blog
     SET
-    name = :name,
-    short_description = :short_description,
-    description = :description,
     file_id = :file_id,
-    alias = :alias,
-    tag = :tag,
-    meta_title = :meta_title,
-    meta_description = :meta_description,
-    meta_keyword = :meta_keyword
+    alias = :alias
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':name', $data['name']);
-        $result->bindParam(':short_description', $data['short_description']);
-        $result->bindParam(':description', $data['description']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':tag', $data['tag']);
-        $result->bindParam(':meta_title', $data['meta_title']);
-        $result->bindParam(':meta_description', $data['meta_description']);
-        $result->bindParam(':meta_keyword', $data['meta_keyword']);
         $result->bindParam(':id', $data['id']);
 
         try {

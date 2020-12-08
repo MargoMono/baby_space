@@ -8,10 +8,6 @@ use Phroute\Phroute\Dispatcher;
 use Phroute\Phroute\RouteCollector;
 use App\Controllers\Site\IndexController;
 use App\Controllers\Admin;
-use App\Controllers\Admin\NewController;
-use App\Controllers\Admin\CommentController;
-use App\Controllers\Admin\CategoryController;
-use App\Controllers\Admin\UserController;
 
 class Route
 {
@@ -55,7 +51,7 @@ class Route
     private function setRoutes($router)
     {
         $router->get('/', [IndexController::class, 'showHomePage']);
-        $router->post('change-language', [IndexController::class, 'actionChangeLanguage']);
+        $router->get('change-language/{id}', [IndexController::class, 'actionChangeLanguage']);
         $router->get('portfolio', ['App\\Controllers\\Site\\PortfolioController', 'showPortfolioPage']);
         $router->get('portfolio/show-more/{count}', ['App\\Controllers\\Site\\PortfolioController', 'showMore']);
         $router->get('company', ['App\\Controllers\\Site\\CompanyController', 'showCompanyPage']);

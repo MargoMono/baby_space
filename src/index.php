@@ -2,14 +2,10 @@
 
 include __DIR__ . '/vendor/autoload.php';
 
-use App\Components\Language;
 use App\Components\Rates;
 use App\Components\Route;
 
 session_start();
-
-//$languageDetect = new Language();
-//$languageDetect->setContent();
 
 $rates = new Rates();
 $rates->getRates();

@@ -3,90 +3,142 @@
 <div class="content-wrapper">
     <section class="content-header">
         <div class="pull-right">
-            <button type="submit" form="form-blog" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i class="fa fa-save"></i></button>
-            <a href="/admin/blog" data-toggle="tooltip" title="Вернуться" class="btn btn-stile"><i class="fa fa-reply"></i></a>
+            <button type="submit" form="form-blog" data-toggle="tooltip" title="Сохранить" class="btn btn-primary"><i
+                        class="fa fa-save"></i></button>
+            <a href="/admin/blog" data-toggle="tooltip" title="Вернуться" class="btn btn-stile"><i
+                        class="fa fa-reply"></i></a>
         </div>
         <h1>Блог</h1>
     </section>
     <section class="content">
-        <div class="panel panel-default">
-            {% if error_warning %}
-                <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                </div>
-            {% endif %}
-            {% if success %}
-                <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                </div>
-            {% endif %}
-            <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-pencil"></i>Обновить статью</h3>
+        {% if error_warning %}
+            <div class="alert alert-danger alert-dismissible"><i
+                        class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
-            <div class="panel-body">
-                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-blog" class="form-horizontal">
-                    <fieldset>
-                        <input type="hidden" name="id" placeholder="" value="{{ blog.id }}">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="input-name">Название</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" name="name" value="{{ blog.name }}" placeholder="Название" id="input-name" class="form-control" />
-                                <p class="prompt">от 1 до 255 символов</p>
-                            </div>
+        {% endif %}
+        {% if success %}
+            <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endif %}
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-pencil"></i>Обновить статью</h3>
+        </div>
+        <div class="panel-body">
+            <form action="" method="post" enctype="multipart/form-data" id="form-blog" class="form-horizontal">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab-general" data-toggle="tab">Основное</a></li>
+                    <li><a href="#tab-image" data-toggle="tab">Изображения</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-general">
+                        <ul class="nav nav-tabs" id="language">
+                            {% for language in languages %}
+                                <li>
+                                    <a href="#tab-language-{{ language.id }}" data-toggle="tab"> {{ language.name }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content">
+                            {% for language in languages %}
+                                <div class="tab-pane" id="tab-language-{{ language.id }}">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label required"
+                                               for="input-name-{{ language.id }}">Название</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" minlength="1" maxlength="255"
+                                                   name="name-{{ language.id }}"
+                                                   value="{{ language.blog.name }}" id="input-name-{{ language.id }}"
+                                                   class="form-control"/>
+                                            <p class="prompt">от 1 до 255 символов</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label required"
+                                               for="input-short_description-{{ language.id }}">Краткое
+                                            содержание</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" minlength="1" maxlength="255"
+                                                   name="short_description-{{ language.id }}"
+                                                   placeholder="Краткое содержание"
+                                                   value="{{ language.blog.short_description }}"
+                                                   id="input-short_description-{{ language.id }}" class="form-control"/>
+                                            <p class="prompt">от 1 до 255 символов</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-description-{{ language.id }}">Текст</label>
+                                        <div class="col-sm-10">
+                                        <textarea data-toggle="summernote" id="input-description-{{ language.id }}"
+                                                  name="description-{{ language.id }}">{{ language.blog.description }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-meta_title">Мета-тег
+                                            Title</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" minlength="1" maxlength="255"
+                                                   name="meta_title-{{ language.id }}"
+                                                   value="{{ language.blog.meta_title }}"
+                                                   id="input-meta_title" class="form-control"/>
+                                            <p class="prompt">от 1 до 255 символов</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-meta_description">Мета-тег
+                                            Description</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" minlength="1" maxlength="255"
+                                                   name="meta_description-{{ language.id }}"
+                                                   value="{{ language.blog.meta_description }}"
+                                                   id="input-meta_description" class="form-control"/>
+                                            <p class="prompt">от 1 до 255 символов</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-meta_keyword">Мета-тег
+                                            Keyword</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" minlength="1" maxlength="255"
+                                                   name="meta_keyword-{{ language.id }}"
+                                                   value="{{ language.blog.meta_keyword }}"
+                                                   id="input-meta_keyword" class="form-control"/>
+                                            <p class="prompt">от 1 до 255 символов</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-tag">Теги товара</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" minlength="1" maxlength="255"
+                                                   name="tag-{{ language.id }}"
+                                                   value="{{ language.blog.tag }}" id="input-tag" class="form-control"/>
+                                            <p class="prompt">от 1 до 255 символов</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="id-{{ language.id }}" placeholder="" value="{{ language.blog.id }}">
+
+                            {% endfor %}
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="input-short_description">Краткое содержание</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" name="short_description" value="{{ blog.short_description }}" placeholder="Краткое содержание" id="input-short_description" class="form-control" />
-                                <p class="prompt">от 1 до 255 символов</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="input-description">Текст</label>
-                            <div class="col-sm-10">
-                                <textarea data-toggle="summernote" name="description" id="input-description">{{ blog.description }}</textarea>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab-image">
                         <div class="form-group">
                             <label class="col-sm-2 control-label required" for="input-file">Изображение</label>
                             <div class="col-sm-10">
                                 <img src="/upload/images/blog/{{ blog.file_alias }}" width="150" alt=""/>
-                                <input type="hidden" name="file_id" placeholder="" value="{{ blog.file_id }}">
-                                <input type="hidden" name="file_alias" placeholder="" value="{{ blog.file_alias }}">
-                                <input type="file" name="file" id="input-file" class="form-control" />
+                                <input type="file" name="file" id="input-file">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-meta_title">Мета-тег title (для SEO)</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" name="meta_title" value="{{ blog.meta_title }}" placeholder="Мета-тег title (для SEO)" id="input-meta_title" class="form-control" />
-                                <p class="prompt">от 1 до 255 символов</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-meta_description">Мета-тег description (для SEO)</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" name="meta_description" value="{{ blog.meta_description }}" placeholder="Мета-тег description (для SEO))" id="input-meta_description" class="form-control" />
-                                <p class="prompt">от 1 до 255 символов</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-meta_keyword">Мета-теги keywords (для SEO)</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" name="meta_keyword" value="{{ blog.meta_keyword }}" placeholder="Мета-теги keywords (для SEO)" id="input-meta_keyword" class="form-control" />
-                                <p class="prompt">от 1 до 255 символов</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-tag">Теги (через запятую)</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" name="tag" value="{{ blog.tag }}" placeholder="Теги (через запятую)" id="input-tag" class="form-control" />
-                                <p class="prompt">от 1 до 255 символов</p>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="id" placeholder="" value="{{ blog.id }}">
+                <input type="hidden" name="file_id" placeholder="" value="{{ blog.file_id }}">
+                <input type="hidden" name="file_alias" placeholder="" value="{{ blog.file_alias }}">
+
+            </form>
         </div>
     </section>
 </div>
@@ -95,19 +147,24 @@
 
 <script>
     $(document).ready(function () {
+        $('#language a:first').tab('show');
+        $('#option a:first').tab('show');
 
         $('#form-blog').on('submit', function (e) {
-            if (!$('#input-name').val()) {
+
+            {% for language in languages %}
+
+            if (!$('#input-name-{{ language.id }}').val()) {
                 validAlert(e);
                 return;
             }
-            if (!$('#input-short_description').val()) {
+            if (!$('#input-short_description-{{ language.id }}').val()) {
                 validAlert(e);
                 return;
             }
-            if (!$('#input-description').val()) {
-                validAlert(e);
-            }
+
+            {% endfor %}
+
         });
 
         const content = '<div class="alert alert-danger alert-dismissible">\n' +
