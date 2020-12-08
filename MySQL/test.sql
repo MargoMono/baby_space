@@ -380,3 +380,26 @@ create table blog_description
         FOREIGN KEY (language_id) REFERENCES language (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+
+CREATE TABLE IF NOT EXISTS `sale`
+(
+    `id`          int(11)      NOT NULL AUTO_INCREMENT,
+    `status`      tinyint(1)   NOT NULL DEFAULT '1',
+    PRIMARY KEY (`id`)
+);
+
+create table sale_description
+(
+    `id`                INT AUTO_INCREMENT,
+    `sale_id`           INT(11)      NOT NULL,
+    `language_id`       INT(11)      NOT NULL,
+    `name`              VARCHAR(255) NOT NULL,
+    `sale`              VARCHAR(255) NOT NULL,
+    `description`       TEXT,
+    PRIMARY KEY (`id`),
+    KEY `name` (`name`),
+    CONSTRAINT sale_description_sale_id_fk
+        FOREIGN KEY (sale_id) REFERENCES sale (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT sale_description_language_id_fk
+        FOREIGN KEY (language_id) REFERENCES language (id) ON UPDATE CASCADE ON DELETE CASCADE
+);

@@ -35,16 +35,10 @@ class SaleRepository extends AbstractRepository implements Entity
         $sql = '
         UPDATE sale
             SET
-            sale = :sale,
-            name = :name,
-            description = :description,
             status = :status
         WHERE id = :id';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':sale', $data['sale']);
-        $result->bindParam(':name', $data['name']);
-        $result->bindParam(':description', $data['description']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':id', $data['id']);
 

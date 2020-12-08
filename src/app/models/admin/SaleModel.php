@@ -2,15 +2,22 @@
 
 namespace App\Models\Admin;
 
+use App\Helpers\TextHelper;
+use App\Repository\LanguageRepository;
+use App\Repository\SaleDescriptionRepository;
 use App\Repository\SaleRepository;
 
 class SaleModel implements ModelStrategy
 {
     private $saleRepository;
+    private $languageRepository;
+    private $saleDescriptionRepository;
 
     public function __construct()
     {
         $this->saleRepository = new SaleRepository();
+        $this->saleDescriptionRepository = new SaleDescriptionRepository();
+        $this->languageRepository = new LanguageRepository();
     }
 
     public function getFileDirectory()
@@ -32,7 +39,16 @@ class SaleModel implements ModelStrategy
 
     public function getShowUpdatePageData($id)
     {
-        $data['sale'] = $this->saleRepository->getById(1);
+        $sale = $this->saleRepository->getById($id);
+        $languages = $this->languageRepository->getAll();
+
+        foreach ($languages as $key => $language) {
+            $languages[$key]['sale'] = $this->saleDescriptionRepository->getByIdAndLanguageId($sale['id'],
+                $language['id']);
+        }
+
+        $data['sale'] = $sale;
+        $data['languages'] = $languages;
 
         return $data;
     }
@@ -40,6 +56,17 @@ class SaleModel implements ModelStrategy
     public function update($file, $data)
     {
         $this->saleRepository->updateById($data);
+
+        foreach ($data['description'] as $description) {
+            $productDescriptionExist = $this->saleDescriptionRepository->getByIdAndLanguageId($data['id'],
+                $description['language_id']);
+
+            if (empty($productDescriptionExist)) {
+                $this->saleDescriptionRepository->create($data['id'], $description);
+            } else {
+                $this->saleDescriptionRepository->updateById($description);
+            }
+        }
     }
 
     public function getShowDeletePageData($id)
@@ -71,12 +98,24 @@ class SaleModel implements ModelStrategy
 
     public function prepareData($params)
     {
+        $languages = $this->languageRepository->getAll();
+
+        $paramsDescription = [];
+
+        foreach ($languages as $language) {
+            $paramsDescription[$language['id']] = [
+                'language_id' => $language['id'],
+                'id' => $params['id-' . $language['id']],
+                'sale' => $params['sale-' . $language['id']],
+                'name' => $params['name-' . $language['id']],
+                'description' => $params['description-' . $language['id']],
+            ];
+        }
+
         return [
             'id' => $params['id'],
-            'sale' => $params['sale'],
-            'name' => $params['name'],
-            'description' => $params['description'],
             'status' => $params['status'],
+            'description' => $paramsDescription,
         ];
     }
 }
