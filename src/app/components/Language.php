@@ -34,7 +34,7 @@ class Language
     public function setContent()
     {
         if (empty($_SESSION['language'])) {
-            $_SESSION['language'] = $this->getLanguage();
+            $_SESSION['language']['alias'] = $this->getLanguage();
         }
     }
 

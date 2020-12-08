@@ -2,6 +2,9 @@
 
 namespace App\Models\Admin;
 
+use App\Repository\BlogDescriptionRepository;
+use App\Repository\LanguageRepository;
+use App\Repository\NewDescriptionRepository;
 use App\Repository\NewRepository;
 
 class NewModel implements ModelStrategy
@@ -9,11 +12,14 @@ class NewModel implements ModelStrategy
     public $fileDirectory = 'new';
 
     private $newRepository;
-
+    private $newDescriptionRepository;
+    private $languageRepository;
 
     public function __construct()
     {
+        $this->languageRepository = new LanguageRepository();
         $this->newRepository = new NewRepository();
+        $this->newDescriptionRepository = new NewDescriptionRepository();
     }
 
     public function getFileDirectory(): string
@@ -39,6 +45,7 @@ class NewModel implements ModelStrategy
 
     public function getShowCreatePageData($sort = null)
     {
+        $data['languages'] = $this->languageRepository->getAll();
         $data['newList'] = $this->newRepository->getAll($sort);
 
         return $data;
@@ -46,12 +53,27 @@ class NewModel implements ModelStrategy
 
     public function create($data)
     {
-        return $this->newRepository->create($data);
+        $newId = $this->newRepository->create($data);
+
+        foreach ($data['description'] as $description) {
+            $this->newDescriptionRepository->create($newId, $description);
+        }
+
+        return $newId;
     }
 
     public function getShowUpdatePageData($id)
     {
-        $data['new'] = $this->newRepository->getById($id);
+        $new = $this->newRepository->getById($id);
+        $languages = $this->languageRepository->getAll();
+
+        foreach ($languages as $key => $language) {
+            $languages[$key]['new'] = $this->newDescriptionRepository->getByIdAndLanguageId($new['id'],
+                $language['id']);
+        }
+
+        $data['new'] = $new;
+        $data['languages'] = $languages;
 
         return $data;
     }
@@ -59,6 +81,17 @@ class NewModel implements ModelStrategy
     public function update($file, $data)
     {
         $this->newRepository->updateById($data);
+
+        foreach ($data['description'] as $blogDescription) {
+            $productDescriptionExist = $this->newDescriptionRepository->getByIdAndLanguageId($data['id'],
+                $blogDescription['language_id']);
+
+            if (empty($productDescriptionExist)) {
+                $this->newDescriptionRepository->create($data['id'], $blogDescription);
+            } else {
+                $this->newDescriptionRepository->updateById($blogDescription);
+            }
+        }
     }
 
     public function getShowDeletePageData($id)
@@ -95,11 +128,23 @@ class NewModel implements ModelStrategy
 
     public function prepareData($params)
     {
+        $languages = $this->languageRepository->getAll();
+
+        $paramsDescription = [];
+
+        foreach ($languages as $language) {
+            $paramsDescription[$language['id']] = [
+                'language_id' => $language['id'],
+                'id' => $params['id-' . $language['id']],
+                'name' => $params['name-' . $language['id']],
+                'description' => $params['description-' . $language['id']],
+            ];
+        }
+
         return [
             'id' => $params['id'],
-            'name' => $params['name'],
-            'description' => $params['description'],
             'file_id' => $params['file_id'],
+            'description' => $paramsDescription,
         ];
     }
 }

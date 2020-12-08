@@ -49,7 +49,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-left">{{ new.name }}</td>
-                                                    <td class="text-left">{{ new.description }}</td>
+                                                    <td class="text-left">{{ new.description|raw }}</td>
                                                     <td class="text-left">{{ new.created_at }}</td>
                                                     <td class="text-right">
                                                         <a href="/admin/new/update/{{ new.id }}" data-toggle="tooltip" title="Редактировать" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>

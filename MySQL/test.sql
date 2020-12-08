@@ -383,19 +383,19 @@ create table blog_description
 
 CREATE TABLE IF NOT EXISTS `sale`
 (
-    `id`          int(11)      NOT NULL AUTO_INCREMENT,
-    `status`      tinyint(1)   NOT NULL DEFAULT '1',
+    `id`     int(11)    NOT NULL AUTO_INCREMENT,
+    `status` tinyint(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (`id`)
 );
 
 create table sale_description
 (
-    `id`                INT AUTO_INCREMENT,
-    `sale_id`           INT(11)      NOT NULL,
-    `language_id`       INT(11)      NOT NULL,
-    `name`              VARCHAR(255) NOT NULL,
-    `sale`              VARCHAR(255) NOT NULL,
-    `description`       TEXT,
+    `id`          INT AUTO_INCREMENT,
+    `sale_id`     INT(11)      NOT NULL,
+    `language_id` INT(11)      NOT NULL,
+    `name`        VARCHAR(255) NOT NULL,
+    `sale`        VARCHAR(255) NOT NULL,
+    `description` TEXT,
     PRIMARY KEY (`id`),
     KEY `name` (`name`),
     CONSTRAINT sale_description_sale_id_fk
@@ -403,3 +403,42 @@ create table sale_description
     CONSTRAINT sale_description_language_id_fk
         FOREIGN KEY (language_id) REFERENCES language (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+create table new
+(
+    `id`         INT AUTO_INCREMENT,
+    `file_id`    INT      NOT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT now(),
+    CONSTRAINT blog_pk
+        PRIMARY KEY (id),
+    CONSTRAINT blog_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id) ON UPDATE CASCADE
+);
+
+create table new
+(
+    `id`         INT AUTO_INCREMENT,
+    `file_id`    INT      NOT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT now(),
+    CONSTRAINT new_pk
+        PRIMARY KEY (id),
+    CONSTRAINT new_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id) ON UPDATE CASCADE
+);
+
+create table new_description
+(
+    `id`          INT AUTO_INCREMENT,
+    `new_id`      INT(11)      NOT NULL,
+    `language_id` INT(11)      NOT NULL,
+    `name`        VARCHAR(255) NOT NULL,
+    `description` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `name` (`name`),
+    CONSTRAINT new_description_new_id_fk
+        FOREIGN KEY (new_id) REFERENCES new (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT new_description_language_id_fk
+        FOREIGN KEY (language_id) REFERENCES language (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+

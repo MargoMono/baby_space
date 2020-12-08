@@ -57,4 +57,20 @@ class SaleRepository extends AbstractRepository implements Entity
     public function getFileByEntityId($id)
     {
     }
+
+    public function getByLanguageId($languageId)
+    {
+        $sql = '
+        SELECT *
+            FROM sale s
+            JOIN sale_description sd on s.id = sd.sale_id
+        WHERE sd.language_id = :language_id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
 }
