@@ -1,3 +1,3 @@
 FROM mysql:5.6
 
-COPY test.sql /docker-entrypoint-initdb.d/test.sql
+COPY db.sql /docker-entrypoint-initdb.d/db.sql
