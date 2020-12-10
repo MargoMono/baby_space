@@ -695,7 +695,7 @@ a {
         line-height: 50px
     }
 
-    .blog_info.text-right {
+    .blog_img.text-right {
         text-align: left !important;
         margin-bottom: 10px
     }
@@ -1313,7 +1313,8 @@ a {
 }
 
 .button-blog:hover {
-    background: #384aeb !important;
+    background: #fe5407 !important;
+    border-color: #EEEEEE !important;
     color: #fff !important
 }
 
@@ -1440,7 +1441,7 @@ a {
 
 @media (min-width: 1000px) {
     .blog-banner-area {
-        height: 410px
+        height: 200px
     }
 }
 
@@ -1460,7 +1461,7 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #f1f6f7;
+    background: #fcebe2f7;
     z-index: -1
 }
 
@@ -1760,24 +1761,11 @@ a {
     margin-bottom: 40px
 }
 
-.blog_info {
+.blog_img {
     padding-top: 30px
 }
 
-.blog_info .post_tag {
-    padding-bottom: 20px
-}
-
-.blog_info .post_tag a {
-    color: #222;
-    font-size: 14px
-}
-
-.blog_info .post_tag a.active {
-    color: #384aeb
-}
-
-.blog_info .blog_meta li a {
+.blog_img .blog_meta li a {
     color: #777777;
     vertical-align: middle;
     padding-bottom: 10px;
@@ -1785,7 +1773,7 @@ a {
     font-size: 14px
 }
 
-.blog_info .blog_meta li a i {
+.blog_img .blog_meta li a i {
     color: #222;
     font-size: 16px;
     font-weight: 600;
@@ -1794,11 +1782,11 @@ a {
     vertical-align: middle
 }
 
-.blog_info .blog_meta li a:hover {
+.blog_img .blog_meta li a:hover {
     color: #384aeb
 }
 
-.blog_post img {
+.blog_img img {
     max-width: 100%
 }
 

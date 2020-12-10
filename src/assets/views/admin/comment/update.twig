@@ -31,73 +31,129 @@
             </div>
             <div class="panel-body">
                 <form action="" method="post" enctype="multipart/form-data" id="form-comment" class="form-horizontal">
-                    <fieldset>
-                        <legend>Отзыв</legend>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="input-user_name">Имя клиента</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" value="{{ comment.user_name }}" name="user_name" placeholder="Имя клиента" id="input-user_name" class="form-control" />
-                                <p class="prompt">от 1 до 255 символов</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="input-user_email">Эл. почта клиента</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="255" value="{{ comment.user_email }}" name="user_email" placeholder="Эл. почта клиента" id="input-user_email" class="form-control" />
-                                <p class="prompt">от 1 до 255 символов</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="input-description">Текст отзыва</label>
-                            <div class="col-sm-10">
-                                <input type="text" value="{{ comment.description }}" name="description" placeholder="Текст отзыва" id="input-description" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-status">Статус</label>
-                            <div class="col-sm-10">
-                                <select name="status" id="input-status" class="form-control">
-                                    <option value="1" {% if comment.status == 1 %} selected {% endif %}>Отображается</option>
-                                    <option value="0" {% if comment.status == 0 %} selected {% endif %}>На модерации</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-files">Изображения к отзыву</label>
-                            <div class="col-sm-10">
-                                {% for image in commentImages %}
-                                    <img src="/upload/images/comment/{{ image.file_alias }}" width="150" alt=""/>
-                                    <a href="/admin/comment/image/delete/{{ comment.id }}/{{ image.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
-                                    <br><br>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab-general" data-toggle="tab">Основное</a></li>
+                        <li><a href="#tab-data" data-toggle="tab">Данные</a></li>
+                        <li><a href="#tab-image" data-toggle="tab">Изображения</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab-general">
+                            <ul class="nav nav-tabs" id="language">
+                                {% for language in languages %}
+                                    <li>
+                                        <a href="#tab-language-{{ language.id }}" data-toggle="tab"> {{ language.name }}</a>
+                                    </li>
                                 {% endfor %}
-                                <input type='file' name='files[]' multiple id="input-files" class="form-control"  >
+                            </ul>
+                            <div class="tab-content">
+
+                                    {% for language in languages %}
+
+                                        <div class="tab-pane" id="tab-language-{{ language.id }}">
+                                            <fieldset>
+                                                <legend>Отзыв</legend>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label  {% if language.id == 1 %} required {% endif %}" for="input-description-{{ language.id }}">Текст отзыва</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" value="{{ language.comment.description }}" name="description-{{ language.id }}"
+                                                               placeholder="Текст отзыва" id="input-description-{{ language.id }}" class="form-control" />
+                                                    </div>
+                                                </div>
+
+                                                <input type="hidden" name="id-{{ language.id }}" value="{{ language.comment.id }}">
+                                            </fieldset>
+
+                                            <fieldset>
+                                                <legend>Ответ на отзыв</legend>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-answer_description-{{ language.id }}">Текст ответа</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" value="{{ language.commentAnswer.description }}" name="answer_description-{{ language.id }}"
+                                                               placeholder="Текст ответа" id="input-answer_description-{{ language.id }}" class="form-control" />
+                                                    </div>
+                                                </div>
+
+                                                <input type="hidden" name="answer_id-{{ language.id }}" value="{{ language.commentAnswer.id }}">
+
+                                            </fieldset>
+                                        </div>
+
+                                    {% endfor %}
+
                             </div>
                         </div>
-                        <legend>Ответ на отзыв</legend>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-answer_description">Ответ на отзыв</label>
-                            <div class="col-sm-10">
-                                <input type="text" value="{{ commentAnswer.description }}" name="answer_description" placeholder="Текст отзыва" id="input-answer_description" class="form-control" />
+                        <div class="tab-pane" id="tab-data">
+                            <fieldset>
+                            <legend>Отзыв</legend>
+
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label required" for="input-user_name">Имя клиента</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" value="{{ comment.user_name }}" name="user_name"
+                                               placeholder="Имя клиента" id="input-user_name" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label required" for="input-user_email">Почта клиента</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" value="{{ comment.user_email }}" name="user_email"
+                                               placeholder="Почта клиента" id="input-user_email" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input-status">Статус</label>
+                                    <div class="col-sm-10">
+                                        <select name="status" id="input-status" class="form-control">
+                                            <option value="1" {% if comment.status == 1 %} selected {% endif %}>Отображается</option>
+                                            <option value="0" {% if comment.status == 0 %} selected {% endif %}>Скрыт</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
+                            </fieldset>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-files">Изображения к ответу на отзыв</label>
-                            <div class="col-sm-10">
-                                {% for image in commentAnswerImages %}
-                                    <img src="/upload/images/comment/{{ image.file_alias }}" width="150" alt=""/>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <a href="/admin/comment-answer/image/delete/{{ comment.id }}/{{ commentAnswer.id }}/{{ image.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
+                        <div class="tab-pane" id="tab-image">
 
-                                    <br><br>
-                                {% endfor %}
-                                <input type='file' name='files_answer[]' multiple id="input-files" class="form-control"  >
-                            </div>
+                            <fieldset>
+                                <legend>Отзыв</legend>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input-files">Изображения к отзыву</label>
+                                    <div class="col-sm-10">
+                                        {% for image in commentImages %}
+                                            <img src="/upload/images/comment/{{ image.file_alias }}" width="150" alt=""/>
+                                            <a href="/admin/comment/image/delete/{{ comment.id }}/{{ image.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
+                                            <br><br>
+                                        {% endfor %}
+                                        <input type='file' name='files[]' multiple id="input-files" class="form-control"  >
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                            <legend>Ответ на отзыв</legend>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input-files">Изображения к ответу на отзыв</label>
+                                    <div class="col-sm-10">
+                                        {% for image in commentAnswerImages %}
+                                            <img src="/upload/images/comment/{{ image.file_alias }}" width="150" alt=""/>
+                                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                            <a href="/admin/comment-answer/image/delete/{{ comment.id }}/{{ commentAnswer.id }}/{{ image.file_id }}" title="Удалить"><i class="fa fa-times"></i></a>
+                                            <br><br>
+                                        {% endfor %}
+                                        <input type='file' name='files_answer[]' multiple id="input-files" class="form-control"  >
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
+                    </div>
 
-                        <input type="hidden" value="{{ comment.id }}" name="id" />
-                        <input type="hidden" value="{{ commentAnswer.id }}" name="answer_id" />
+                    <input type="hidden" value="{{ comment.id }}" name="id" />
+                    <input type="hidden" value="{{ commentAnswer.id }}" name="answer_id" />
 
-                    </fieldset>
                 </form>
             </div>
         </div>
@@ -108,17 +164,20 @@
 
 <script>
     $(document).ready(function () {
+        $('#language a:first').tab('show');
+        $('#option a:first').tab('show');
 
         $('#form-comment').on('submit', function (e) {
+
+            if (!$('#input-description-1').val()) {
+                validAlert(e);
+                return;
+            }
             if (!$('#input-user_name').val()) {
                 validAlert(e);
                 return;
             }
             if (!$('#input-user_email').val()) {
-                validAlert(e);
-                return;
-            }
-            if (!$('#input-description').val()) {
                 validAlert(e);
             }
         });

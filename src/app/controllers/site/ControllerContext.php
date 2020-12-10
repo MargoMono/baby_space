@@ -27,7 +27,12 @@ class ControllerContext
 
     public function render($data, $page)
     {
-        $data = array_merge($data, $this->getDefaultData());
+        if (!empty($data)){
+            $data = array_merge($data, $this->getDefaultData());
+        } else {
+            $data = $this->getDefaultData();
+        }
+
         $this->view->generate("site/$this->viewDirectory/$page", $data);
     }
 

@@ -1,73 +1,76 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
-<head>
-    <title>KDF trading</title>
-    <meta name="description" content=""/>
-    <meta name="keywords" content=""/>
-    {% include 'site/includes/head.twig' %}
-    <link rel="stylesheet" type="text/css" href="/assets/css/site/index.css">
-</head>
-<body>
+{% extends "site/layout.twig" %}
 
-{% include 'site/includes/header.twig' %}
+{% block content %}
+    <section class="blog-banner-area" id="blog">
+        <div class="container h-100">
+            <div class="blog-banner">
+                <div class="text-center">
+                    <h1>Блог</h1>
+                    <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Главная</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Блог</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="blog_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="blog_left_sidebar">
+                        {% for article in articleList %}
+                            <article class="row blog_item">
+                                <div class="col-md-3">
+                                    <div class="blog_img text-right">
+                                        <a href="/blog/{{ article.alias|e }}/{{ article.id|e }}">
+                                            <img src="/upload/images/blog/{{ article.file_alias|e }}" alt=""
+                                                 class="article-image"/>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="blog_post">
+                                        <div class="blog_details">
+                                            <a href="/blog/{{ article.alias|e }}/{{ article.id|e }}">
+                                                <h2>{{ article.name }}</h2>
+                                            </a>
+                                            <p><b>{{ article.created_at }}</b></p>
+                                            <p>{{ article.short_description }}</p>
+                                            <a class="button button-blog"
+                                               href="/blog/{{ article.alias|e }}/{{ article.id|e }}">{{content.read_more}}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        {% endfor %}
 
-
-<div class="simple-page article">
-    <div class="title">
-        <h2>Полезные статьи</h2>
-    </div>
-
-    <div class="content articles">
-        <div class="articles-list">
-            {% for article in articles %}
-                <div class="block">
-                    <div class="image">
-                        <a href="/blog/{{ article.alias|e }}/{{ article.id|e }}">
-                            <img src="/upload/images/blog/{{ article.file_alias|e }}" alt="" class="article-image"/>
-                        </a>
-                    </div>
-                    <div class="text">
-                        <div class="title">
-                            <a href="/blog/{{ article.alias|e }}/{{ article.id|e }}">
-                                <h3>{{ article.name|e }} </h3>
-                                <p>{{ article.created_at|e }}</p>
-                            </a>
-                        </div>
-                        <div class="description">{{ article.description|e }}</div>
-                        <a href="/blog/{{ article.alias|e }}/{{ article.id|e }}" class="read-more-link">Читать дальше...</a>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
         </div>
+    </section>
 
-        <a class="button show_more" href="/blog">Показать еще</a>
-    </div>
-</div>
-
-{% include 'site/includes/callbackform.twig' %}
-{% include 'site/includes/footer.twig' %}
-
-<script>
-  $(function() {
-    $('.show_more').click(function(e) {
-        e.preventDefault();
-      let newsCount = $('.articles-list .block').length;
-      $.ajax({
-        url: '/blog/show-more/' + newsCount,
-        type: 'GET',
-        success: function(res) {
-          $('.articles-list').append(res);
-        },
-        error: function() {
-        },
-      });
-    });
-  });
-
-  $(document).ready(function() {
-    let lastPage = {{ lastPage }};
-    if (lastPage) {
-      $('.show_more').hide();
-    }
-  });
-</script>
+    <section class="subscribe-position">
+        <div class="container">
+            <div class="subscribe text-center">
+                <h3 class="subscribe__title">{{ content.subscribe_title }}</h3>
+                <p>{{ content.subscribe_description }}</p>
+                <div id="mc_embed_signup">
+                    <form target="_blank" action="" method="get" class="subscribe-form form-inline mt-5 pt-1" novalidate="true">
+                        <div class="form-group ml-sm-auto">
+                            <input class="form-control mb-1" type="email" name="email" placeholder="{{ content.your_email }}">
+                            <div class="info"></div>
+                        </div>
+                        <button class="button button-subscribe mr-auto mb-1" type="submit">{{ content.subscribe_now }}</button>
+                        <div style="position: absolute; left: -5000px;">
+                            <input name="b_36c4fd991d266f23781ded980_aefe40901a" tabindex="-1" value="" type="text">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

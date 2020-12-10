@@ -409,17 +409,6 @@ create table new
     `id`         INT AUTO_INCREMENT,
     `file_id`    INT      NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT now(),
-    CONSTRAINT blog_pk
-        PRIMARY KEY (id),
-    CONSTRAINT blog_file_id_fk
-        FOREIGN KEY (file_id) REFERENCES file (id) ON UPDATE CASCADE
-);
-
-create table new
-(
-    `id`         INT AUTO_INCREMENT,
-    `file_id`    INT      NOT NULL,
-    `created_at` DATETIME NOT NULL DEFAULT now(),
     CONSTRAINT new_pk
         PRIMARY KEY (id),
     CONSTRAINT new_file_id_fk
@@ -441,4 +430,77 @@ create table new_description
         FOREIGN KEY (language_id) REFERENCES language (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+create table comment
+(
+    `id`         INT(11) AUTO_INCREMENT,
+    `user_name`  VARCHAR(255) NOT NULL,
+    `user_email` VARCHAR(255) NOT NULL,
+    `status`     BOOL         NOT NULL DEFAULT 0,
+    `created_at` DATETIME              DEFAULT now() NULL,
+    CONSTRAINT comment_pk
+        PRIMARY KEY (id)
+);
 
+create table comment_description
+(
+    `id`          INT AUTO_INCREMENT,
+    `comment_id`  INT(11) NOT NULL,
+    `language_id` INT(11) NOT NULL,
+    `description` TEXT    NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT comment_description_comment_id_fk
+        FOREIGN KEY (comment_id) REFERENCES comment (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT comment_description_language_id_fk
+        FOREIGN KEY (language_id) REFERENCES language (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+create table comment_answer
+(
+    `id`          INT(11) AUTO_INCREMENT,
+    `comment_id`  INT(11)                NOT NULL,
+    `created_at`  DATETIME DEFAULT now() NULL,
+    CONSTRAINT comment_pk
+        PRIMARY KEY (id),
+    CONSTRAINT comment_answer_comment_id_fk
+        FOREIGN KEY (comment_id) REFERENCES comment (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+create table comment_answer_description
+(
+    `id`                INT(11) AUTO_INCREMENT,
+    `comment_answer_id` INT(11) NOT NULL,
+    `language_id`       INT(11) NOT NULL,
+    `description`       TEXT    NOT NULL,
+    CONSTRAINT comment_answer_description_pk
+        PRIMARY KEY (id),
+    CONSTRAINT comment_answer_description_id_fk
+        FOREIGN KEY (comment_answer_id) REFERENCES comment_answer (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT comment_answer_description_language_id_fk
+        FOREIGN KEY (language_id) REFERENCES language (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+create table comment_file
+(
+    `id`         INT(11) AUTO_INCREMENT,
+    `file_id`    INT(11) NOT NULL,
+    `comment_id` INT(11) NOT NULL,
+    CONSTRAINT comment_file_pk
+        PRIMARY KEY (id),
+    CONSTRAINT comment_file_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id),
+    CONSTRAINT comment_file_comment_id_fk
+        FOREIGN KEY (comment_id) REFERENCES comment (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+create table comment_answer_file
+(
+    `id`                INT(11) AUTO_INCREMENT,
+    `file_id`           INT(11) NOT NULL,
+    `comment_answer_id` INT(11) NOT NULL,
+    CONSTRAINT comment_answer_file_pk
+        PRIMARY KEY (id),
+    CONSTRAINT comment_answer_file_file_id_fk
+        FOREIGN KEY (file_id) REFERENCES file (id),
+    CONSTRAINT comment_answer_file_comment_id_fk
+        FOREIGN KEY (comment_answer_id) REFERENCES comment_answer (id) ON DELETE CASCADE ON UPDATE CASCADE
+);

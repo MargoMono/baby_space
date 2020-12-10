@@ -8,6 +8,7 @@ use Phroute\Phroute\Dispatcher;
 use Phroute\Phroute\RouteCollector;
 use App\Controllers\Site\IndexController;
 use App\Controllers\Admin;
+use App\Controllers\Site\BlogController;
 
 class Route
 {
@@ -52,17 +53,19 @@ class Route
     {
         $router->get('/', [IndexController::class, 'showHomePage']);
         $router->get('change-language/{id}', [IndexController::class, 'actionChangeLanguage']);
-        $router->get('portfolio', ['App\\Controllers\\Site\\PortfolioController', 'showPortfolioPage']);
-        $router->get('portfolio/show-more/{count}', ['App\\Controllers\\Site\\PortfolioController', 'showMore']);
+
+        $router->get('blog', [BlogController::class, 'index']);
+        $router->get('blog/show-more/{count}', ['App\\Controllers\\Site\\BlogController', 'showMore']);
+        $router->get('blog/{alias}/{id}', ['App\\Controllers\\Site\\BlogController', 'showOne']);
+
+
         $router->get('company', ['App\\Controllers\\Site\\CompanyController', 'showCompanyPage']);
         $router->get('delivery', ['App\\Controllers\\Site\\DeliveryController', 'showDeliveryPage']);
         $router->get('contacts', ['App\\Controllers\\Site\\ContactController', 'index']);
         $router->get('comments', ['App\\Controllers\\Site\\CommentController', 'index']);
         $router->get('comments/show-more/{count}', ['App\\Controllers\\Site\\CommentController', 'showMore']);
         $router->post('comments/create-comment', ['App\\Controllers\\Site\\CommentController', 'createComment']);
-        $router->get('blog', ['App\\Controllers\\Site\\BlogController', 'index']);
-        $router->get('blog/show-more/{count}', ['App\\Controllers\\Site\\BlogController', 'showMore']);
-        $router->get('blog/{alias}/{id}', ['App\\Controllers\\Site\\BlogController', 'showOne']);
+
         $router->post('search', ['App\\Controllers\\Site\\SearchController', 'actionIndex']);
 
         $router->get('new', ['App\\Controllers\\Site\\NewController', 'index']);

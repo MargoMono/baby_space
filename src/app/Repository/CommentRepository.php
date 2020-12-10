@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Components\Language;
 use PDO;
 use PDOException;
 
@@ -10,19 +11,24 @@ class CommentRepository extends AbstractRepository
     public function getAll($sort = null)
     {
         if (empty($sort['order'])) {
-            $sort['order'] = 'id';
+            $sort['order'] = 'c.id';
         }
 
         if (empty($sort['desc'])) {
             $sort['desc'] = 'ASC';
         }
 
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
         $sql = '
-        SELECT * 
-            FROM comment 
+        SELECT c.*, cd.description
+            FROM comment c
+            JOIN comment_description cd ON c.id = cd.comment_id
+        WHERE cd.language_id = :language_id
         ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
@@ -48,14 +54,13 @@ class CommentRepository extends AbstractRepository
     {
         $sql = '
         INSERT INTO comment
-            (user_name, user_email, description, status) 
+            (user_name, user_email, status) 
         VALUES 
-            ( :user_name, :user_email, :description, :status) ';
+            ( :user_name, :user_email, :status) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':user_name', $data['user_name']);
         $result->bindParam(':user_email', $data['user_email']);
-        $result->bindParam(':description', $data['description']);
         $result->bindParam(':status', $data['status']);
 
         try {
@@ -74,14 +79,12 @@ class CommentRepository extends AbstractRepository
             SET
             user_email = :user_email,
             user_name = :user_name,
-            description = :description,
             status = :status
         WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':user_email', $data['user_email']);
         $result->bindParam(':user_name', $data['user_name']);
-        $result->bindParam(':description', $data['description']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':id', $data['id']);
 
@@ -182,13 +185,12 @@ class CommentRepository extends AbstractRepository
     {
         $sql = '
         INSERT INTO comment_answer
-            (comment_id, description) 
+            (comment_id) 
         VALUES 
-            ( :comment_id, :description)';
+            ( :comment_id)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':comment_id', $data['comment_id']);
-        $result->bindParam(':description', $data['description']);
 
         try {
             $result->execute();
@@ -196,26 +198,6 @@ class CommentRepository extends AbstractRepository
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage(), $data);
             throw new \RuntimeException('Unable to create comment answer');
-        }
-    }
-
-    public function updateAnswerById($data): void
-    {
-        $sql = '
-        UPDATE comment_answer
-            SET
-            description = :description
-        WHERE comment_id = :comment_id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':description', $data['description']);
-        $result->bindParam(':comment_id', $data['comment_id']);
-
-        try {
-            $result->execute();
-        } catch (PDOException $e) {
-            $this->logger->error($e->getMessage(), $data);
-            throw new \RuntimeException('Unable to update comment answer');
         }
     }
 

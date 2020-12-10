@@ -3,20 +3,29 @@
 namespace App\Models\Admin;
 
 use App\Helpers\FileUploaderHelper;
+use App\Repository\CommentAnswerDescriptionRepository;
+use App\Repository\CommentDescriptionRepository;
 use App\Repository\CommentRepository;
 use App\Repository\FileRepository;
+use App\Repository\LanguageRepository;
 
 class CommentModel implements ModelStrategy
 {
     public $fileDirectory = 'comment';
 
+    private $languageRepository;
     private $commentRepository;
+    private $commentDescriptionRepository;
+    private $commentAnswerDescriptionRepository;
     private $fileUploader;
     private $fileRepository;
 
     public function __construct()
     {
+        $this->languageRepository = new LanguageRepository();
         $this->commentRepository = new CommentRepository();
+        $this->commentDescriptionRepository = new CommentDescriptionRepository();
+        $this->commentAnswerDescriptionRepository = new CommentAnswerDescriptionRepository();
         $this->fileUploader = new FileUploaderHelper();
         $this->fileRepository = new FileRepository();
     }
@@ -53,13 +62,29 @@ class CommentModel implements ModelStrategy
 
     public function getShowUpdatePageData($id)
     {
-        $data['comment'] = $this->commentRepository->getById($id);
+        $languages = $this->languageRepository->getAll();
+
+        $comment = $this->commentRepository->getById($id);
+
+        foreach ($languages as $key => $language) {
+            $languages[$key]['comment'] = $this->commentDescriptionRepository->getByIdAndLanguageId($comment['id'],
+                $language['id']);
+        }
+
+        $data['comment'] = $comment;
         $data['commentImages'] = $this->commentRepository->getFilesByCommentId($id);
 
         $commentAnswer = $this->commentRepository->getAnswerByCommentId($id);
 
+        foreach ($languages as $key => $language) {
+            $languages[$key]['commentAnswer'] = $this->commentAnswerDescriptionRepository->getByIdAndLanguageId($commentAnswer['id'],
+                $language['id']);
+        }
+
         $data['commentAnswer'] = $commentAnswer;
         $data['commentAnswerImages'] = $this->commentRepository->getAnswerFilesByAnswerCommentId($commentAnswer['id']);
+
+        $data['languages'] = $languages;
 
         return $data;
     }
@@ -68,11 +93,32 @@ class CommentModel implements ModelStrategy
     {
         $this->commentRepository->updateById($data['comment']);
 
+        foreach ($data['comment']['description'] as $description) {
+            $productDescriptionExist = $this->commentDescriptionRepository->getByIdAndLanguageId($data['comment']['id'],
+                $description['language_id']);
+
+            if (empty($productDescriptionExist)) {
+                $this->commentDescriptionRepository->create($data['comment']['id'], $description);
+            } else {
+                $this->commentDescriptionRepository->updateById($description);
+            }
+        }
+
         if (empty($data['comment_answer']['id'])) {
             $answerId = $this->commentRepository->createAnswer($data['comment_answer']);
         } else {
             $answerId = $data['comment_answer']['id'];
-            $this->commentRepository->updateAnswerById($data['comment_answer']);
+        }
+
+        foreach ($data['comment_answer']['description'] as $description) {
+            $productDescriptionExist = $this->commentAnswerDescriptionRepository->getByIdAndLanguageId($data['comment_answer']['id'],
+                $description['language_id']);
+
+            if (empty($productDescriptionExist)) {
+                $this->commentAnswerDescriptionRepository->create($data['comment_answer']['id'], $description);
+            } else {
+                $this->commentAnswerDescriptionRepository->updateById($description);
+            }
         }
 
         if (!empty($file['files_answer']['name'][0])) {
@@ -137,18 +183,40 @@ class CommentModel implements ModelStrategy
 
     public function prepareData($params): array
     {
+        $languages = $this->languageRepository->getAll();
+
+        $paramsCommentDescription = [];
+
+        foreach ($languages as $language) {
+            $paramsCommentDescription[$language['id']] = [
+                'language_id' => $language['id'],
+                'id' => $params['id-' . $language['id']],
+                'description' => $params['description-' . $language['id']],
+            ];
+        }
+
+        $paramsCommentAnswerDescription = [];
+
+        foreach ($languages as $language) {
+            $paramsCommentAnswerDescription[$language['id']] = [
+                'language_id' => $language['id'],
+                'id' => $params['answer_id-' . $language['id']],
+                'description' => $params['answer_description-' . $language['id']],
+            ];
+        }
+
         return [
             'comment' => [
                 'id' => $params['id'],
                 'user_name' => $params['user_name'],
                 'user_email' => $params['user_email'],
-                'description' => $params['description'],
                 'status' => $params['status'],
+                'description' => $paramsCommentDescription,
             ],
             'comment_answer' => [
                 'id' => $params['answer_id'],
                 'comment_id' => $params['id'],
-                'description' => $params['answer_description'],
+                'description' => $paramsCommentAnswerDescription,
             ]
         ];
     }

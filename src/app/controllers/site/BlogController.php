@@ -5,19 +5,23 @@ namespace App\Controllers\Site;
 use App\Controllers\Controller;
 use App\Models\Site\BlogModel;
 
-class BlogController extends Controller
+class BlogController
 {
+
+    private $directory = 'blog';
+    private $controllerContext;
+    private $model;
+
     public function __construct()
     {
-        parent::__construct();
+        $this->controllerContext = new ControllerContext($this->directory);
         $this->model = new BlogModel();
     }
 
     public function index()
     {
         $data = $this->model->getIndexData();
-        $data['page'] = 'company';
-        $this->view->generate('site/blog/index.twig', $data);
+        $this->controllerContext->render($data, 'index.twig');
     }
 
     public function showOne($alias, $id)

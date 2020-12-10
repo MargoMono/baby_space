@@ -2,8 +2,10 @@
 
 namespace App\Models\Site;
 
-use App\Models\Models;
+use App\Components\Language;
+use App\Models\Model;
 use App\Repository\BlogRepository;
+use App\Repository\LanguageRepository;
 use DateTime;
 use Exception;
 
@@ -19,25 +21,26 @@ class BlogModel extends Model
     {
         $lastPage = 0;
 
-        $blogRepository = new BlogRepository();
-        $articles = $blogRepository->getLastArticles(self::ARTICLES_COUNT);
-        $allArticles = $blogRepository->getAllArticles();
+        $language = (new LanguageRepository())->getByAlias((new Language())->getLanguage());
 
-        foreach ($articles as $key => $article) {
-            $date = new DateTime($article['date']);
-            $articles[$key]['created_at'] = $date->format('d/m/Y');
+        $blogRepository = new BlogRepository();
+        $lastArticles = $blogRepository->getLastByLanguageId($language['id'], self::ARTICLES_COUNT);
+
+        foreach ($lastArticles as $key => $article) {
+            $date = new DateTime($article['created_at']);
+            $lastArticles[$key]['created_at'] = $date->format('d/m/Y');
         }
+
+        $allArticles = $blogRepository->getAllByLanguageId($language['id']);
 
         if (count($allArticles) <= self::ARTICLES_COUNT) {
             $lastPage = 1;
         }
 
-        $params = [
-            'articles' => $articles,
+        return [
+            'articleList' => $lastArticles,
             'lastPage' => $lastPage,
         ];
-
-        return $params;
     }
 
     public function getShowOneData($id)
