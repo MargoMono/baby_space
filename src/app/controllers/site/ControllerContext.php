@@ -36,6 +36,11 @@ class ControllerContext
         $this->view->generate("site/$this->viewDirectory/$page", $data);
     }
 
+    public function generateAjax($data = [])
+    {
+        echo json_encode($data);
+    }
+
     private function getDefaultData()
     {
         $languagesRepository = new LanguageRepository();

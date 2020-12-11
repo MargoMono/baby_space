@@ -54,10 +54,10 @@ class Route
         $router->get('/', [IndexController::class, 'showHomePage']);
         $router->get('change-language/{id}', [IndexController::class, 'actionChangeLanguage']);
 
-        $router->get('blog', [BlogController::class, 'index']);
-        $router->get('blog/show-more/{count}', ['App\\Controllers\\Site\\BlogController', 'showMore']);
-        $router->get('blog/{alias}/{id}', ['App\\Controllers\\Site\\BlogController', 'showOne']);
-
+        $router->get('blog', [BlogController::class, 'actionIndex']);
+        $router->get('blog/show-more/{count}', [BlogController::class, 'actionShowMore']);
+        $router->get('blog/last-page/{count}', [BlogController::class, 'actionLastPage']);
+        $router->get('blog/{alias}/{id}', [BlogController::class, 'actionShowSingle']);
 
         $router->get('company', ['App\\Controllers\\Site\\CompanyController', 'showCompanyPage']);
         $router->get('delivery', ['App\\Controllers\\Site\\DeliveryController', 'showDeliveryPage']);

@@ -7,7 +7,6 @@ use App\Models\Site\BlogModel;
 
 class BlogController
 {
-
     private $directory = 'blog';
     private $controllerContext;
     private $model;
@@ -18,22 +17,27 @@ class BlogController
         $this->model = new BlogModel();
     }
 
-    public function index()
+    public function actionIndex()
     {
         $data = $this->model->getIndexData();
         $this->controllerContext->render($data, 'index.twig');
     }
 
-    public function showOne($alias, $id)
+    public function actionShowSingle($alias, $id)
     {
         $data = $this->model->getShowOneData($id);
-        $data['page'] = 'company';
-        $this->view->generate('site/blog/showOne.twig', $data);
+        $this->controllerContext->render($data, 'single.twig');
     }
 
-    public function showMore($count)
+    public function actionShowMore($count)
     {
         $data = $this->model->getShowMoreData($count);
-        $this->view->generate('site/blog/showMore.twig', $data);
+        $this->controllerContext->render($data, 'more.twig');
+    }
+
+    public function actionLastPage($count)
+    {
+        $data = $this->model->checkLastPage($count);
+        $this->controllerContext->generateAjax($data);
     }
 }

@@ -25,10 +25,6 @@ class View
         echo $template->render($data);
     }
 
-    function generateAjax($data = [])
-    {
-        echo json_encode($data);
-    }
 
     function generateEmail($templateName, $data = [])
     {

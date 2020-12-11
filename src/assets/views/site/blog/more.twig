@@ -1,0 +1,25 @@
+{% for article in articleList %}
+    <article class="row blog_item">
+        <div class="col-md-3">
+            <div class="blog_img text-right">
+                <a href="/blog/{{ article.alias|e }}/{{ article.id|e }}">
+                    <img src="/upload/images/blog/{{ article.file_alias|e }}" alt=""
+                         class="article-image"/>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="blog_post">
+                <div class="blog_details">
+                    <a href="/blog/{{ article.alias|e }}/{{ article.id|e }}">
+                        <h2>{{ article.name }}</h2>
+                    </a>
+                    <p><b>{{ article.created_at }}</b></p>
+                    <p>{{ article.short_description }}</p>
+                    <a class="button button-blog"
+                       href="/blog/{{ article.alias|e }}/{{ article.id|e }}">{{content.read_more}}</a>
+                </div>
+            </div>
+        </div>
+    </article>
+{% endfor %}

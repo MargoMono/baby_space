@@ -43,7 +43,7 @@ class BlogRepository extends AbstractRepository implements Entity
         $sql = '
         SELECT 
                b.*, f.alias AS file_alias,
-               bd.short_description as short_description, bd.name as name
+               bd.short_description as short_description, bd.description as description, bd.name as name
         FROM blog b
              JOIN file f ON b.file_id = f.id
              JOIN blog_description bd ON b.id = bd.blog_id
@@ -131,27 +131,6 @@ WHERE id = :id';
         return $result->fetch();
     }
 
-    public function getLastByLanguageId($languageId, $count)
-    {
-        $sql = '
-        SELECT 
-               b.*, f.alias AS file_alias,
-               bd.short_description as short_description, bd.name as name
-        FROM blog b
-            JOIN file f ON b.file_id = f.id
-            JOIN blog_description bd ON b.id = bd.blog_id
-        WHERE bd.language_id = :language_id
-        ORDER BY b.created_at DESC 
-        LIMIT ' . $count;
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':language_id', $languageId);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
     public function getAllByLanguageId($languageId)
     {
         $sql = '
@@ -172,4 +151,66 @@ WHERE id = :id';
         return $result->fetchAll();
     }
 
+    public function getLastByLanguageId($languageId, $limit)
+    {
+        $sql = '
+        SELECT 
+               b.*, f.alias AS file_alias,
+               bd.short_description as short_description, bd.name as name
+        FROM blog b
+            JOIN file f ON b.file_id = f.id
+            JOIN blog_description bd ON b.id = bd.blog_id
+        WHERE bd.language_id = :language_id
+        ORDER BY b.created_at DESC 
+        LIMIT ' . $limit;
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getMoreByLanguageId($languageId, $limit, $offset)
+    {
+        $sql = '
+        SELECT 
+            b.*, f.alias AS file_alias,
+            bd.short_description as short_description, bd.name as name
+        FROM blog b
+            JOIN file f ON b.file_id = f.id
+            JOIN blog_description bd ON b.id = bd.blog_id
+        WHERE bd.language_id = :language_id
+        ORDER BY b.created_at DESC 
+        LIMIT ' . $limit . ' OFFSET ' . $offset;
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getByIdAndLanguageId($id, $languageId)
+    {
+        $sql = '
+        SELECT 
+               b.*, f.alias AS file_alias,
+               bd.short_description as short_description, bd.description as description, bd.name as name
+        FROM blog b
+             JOIN file f ON b.file_id = f.id
+             JOIN blog_description bd ON b.id = bd.blog_id
+        WHERE b.id = :id
+        AND bd.language_id = :language_id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
 }

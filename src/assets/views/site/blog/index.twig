@@ -46,10 +46,12 @@
                                 </div>
                             </article>
                         {% endfor %}
-
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="justify-content-center d-flex">
+            <a href="#" class="button show-more">Показать ещё</a>
         </div>
     </section>
 
@@ -66,11 +68,52 @@
                         </div>
                         <button class="button button-subscribe mr-auto mb-1" type="submit">{{ content.subscribe_now }}</button>
                         <div style="position: absolute; left: -5000px;">
-                            <input name="b_36c4fd991d266f23781ded980_aefe40901a" tabindex="-1" value="" type="text">
+                            <input name="" tabindex="-1" value="" type="text">
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        $(document).ready(function() {
+            checkIfLastPage();
+        });
+
+        $('.show-more').click(function(e) {
+            e.preventDefault();
+            let count = $('.blog_item').length;
+            $.ajax({
+                url: '/blog/show-more/' + count,
+                type: 'GET',
+                success: function(res) {
+                    $('.blog_left_sidebar').append(res);
+                    checkIfLastPage()
+                },
+                error: function() {
+                },
+            });
+        });
+
+        function checkIfLastPage() {
+            let count = $('.blog_item').length;
+            $.ajax({
+                url: '/blog/last-page/' + count,
+                type: 'GET',
+                success: function(res) {
+                    let response = JSON.parse(res);
+                    if (response) {
+                        $('.show-more').hide();
+                    }
+                },
+                error: function() {
+                },
+            });
+        }
+    </script>
+
 {% endblock %}
