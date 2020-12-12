@@ -9,6 +9,8 @@ use Phroute\Phroute\RouteCollector;
 use App\Controllers\Site\IndexController;
 use App\Controllers\Admin;
 use App\Controllers\Site\BlogController;
+use App\Controllers\Site\ContactController;
+use App\Controllers\Site\CatalogController;
 
 class Route
 {
@@ -59,9 +61,17 @@ class Route
         $router->get('blog/last-page/{count}', [BlogController::class, 'actionLastPage']);
         $router->get('blog/{alias}/{id}', [BlogController::class, 'actionShowSingle']);
 
+        $router->get('contacts', [ContactController::class, 'index']);
+
+
+        $router->get('catalog', [CatalogController::class, 'actionIndex']);
+        $router->get('catalog/show-more/{categoryId}/{count}', [CatalogController::class, 'actionShowMore']);
+        $router->get('catalog/last-page/{categoryId}/{count}', [CatalogController::class, 'actionLastPage']);
+        $router->get('catalog/{alias}/{id}', [CatalogController::class, 'actionShowCategory']);
+
+
         $router->get('company', ['App\\Controllers\\Site\\CompanyController', 'showCompanyPage']);
         $router->get('delivery', ['App\\Controllers\\Site\\DeliveryController', 'showDeliveryPage']);
-        $router->get('contacts', ['App\\Controllers\\Site\\ContactController', 'index']);
         $router->get('comments', ['App\\Controllers\\Site\\CommentController', 'index']);
         $router->get('comments/show-more/{count}', ['App\\Controllers\\Site\\CommentController', 'showMore']);
         $router->post('comments/create-comment', ['App\\Controllers\\Site\\CommentController', 'createComment']);
@@ -72,9 +82,6 @@ class Route
         $router->get('new/show-more/{count}', ['App\\Controllers\\Site\\NewController', 'showMore']);
         $router->get('new/{alias}/{id}', ['App\\Controllers\\Site\\NewController', 'showOne']);
 
-        $router->get('catalog/{alias}/{id}', ['App\\Controllers\\Site\\CatalogController', 'showCatalogPage']);
-        $router->get('catalog/show-more/{categoryId}/{count}', ['App\\Controllers\\Site\\CatalogController', 'getMoreByCategory']);
-        $router->get('catalog/comparison-products', ['App\\Controllers\\Site\\CatalogController', 'showProductComparisonPage']);
         $router->post('price-list/order', ['App\\Controllers\\Site\\PriceListController', 'sendPriceListToClient']);
 
         $router->get('product/{alias}/{id}', ['App\\Controllers\\Site\\ProductController', 'showProductPage']);

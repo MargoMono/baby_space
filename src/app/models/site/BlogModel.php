@@ -17,15 +17,15 @@ class BlogModel
 
     public function __construct()
     {
-        $this->language =(new LanguageRepository())->getByAlias((new Language())->getLanguage());
-        $this->blogRepository =  new BlogRepository();
+        $this->language = (new LanguageRepository())->getByAlias((new Language())->getLanguage());
+        $this->blogRepository = new BlogRepository();
     }
 
     /**
      * @return array|void
      * @throws Exception
      */
-    public function getIndexData() : array
+    public function getIndexData(): array
     {
         $lastArticles = $this->blogRepository->getLastByLanguageId($this->language['id'], self::ARTICLES_COUNT);
 
@@ -46,7 +46,8 @@ class BlogModel
      */
     public function getShowMoreData($offset): array
     {
-        $moreArticles = $this->blogRepository->getMoreByLanguageId($this->language['id'], self::ARTICLES_COUNT, $offset);
+        $moreArticles = $this->blogRepository->getMoreByLanguageId($this->language['id'], self::ARTICLES_COUNT,
+            $offset);
 
         foreach ($moreArticles as $key => $article) {
             $date = new DateTime($article['date']);
@@ -57,7 +58,6 @@ class BlogModel
             'articleList' => $moreArticles,
         ];
     }
-
 
     public function checkLastPage($count)
     {
@@ -74,8 +74,14 @@ class BlogModel
 
     public function getShowOneData($id)
     {
+        $article = $this->blogRepository->getByIdAndLanguageId($id, $this->language['id']);
+        $previous = $this->blogRepository->getPrevious($article['created_at'], $this->language['id']);
+        $next = $this->blogRepository->getNext($article['created_at'], $this->language['id']);
+
         return [
-            'article' => $this->blogRepository->getByIdAndLanguageId($id, $this->language['id']),
+            'article' => $article,
+            'previous' => $previous,
+            'next' => $next,
         ];
     }
 }

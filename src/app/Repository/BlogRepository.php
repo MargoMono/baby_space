@@ -213,4 +213,48 @@ WHERE id = :id';
 
         return $result->fetch();
     }
+
+    public function getPrevious($createdAt, $languageId)
+    {
+        $sql = '
+        SELECT 
+               b.*, f.alias AS file_alias,
+               bd.short_description as short_description, bd.description as description, bd.name as name
+        FROM blog b
+             JOIN file f ON b.file_id = f.id
+             JOIN blog_description bd ON b.id = bd.blog_id
+        WHERE bd.language_id = :language_id
+        AND b.created_at < :created_at
+        LIMIT 1';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':created_at', $createdAt);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
+
+    public function getNext($createdAt, $languageId)
+    {
+        $sql = '
+        SELECT 
+               b.*, f.alias AS file_alias,
+               bd.short_description as short_description, bd.description as description, bd.name as name
+        FROM blog b
+             JOIN file f ON b.file_id = f.id
+             JOIN blog_description bd ON b.id = bd.blog_id
+        WHERE bd.language_id = :language_id
+        AND b.created_at > :created_at
+        LIMIT 1';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':created_at', $createdAt);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
 }

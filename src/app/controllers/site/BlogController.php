@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Site;
 
-use App\Controllers\Controller;
 use App\Models\Site\BlogModel;
 
 class BlogController

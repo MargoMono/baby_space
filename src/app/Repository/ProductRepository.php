@@ -325,9 +325,93 @@ class ProductRepository extends AbstractRepository
             JOIN category c ON p.category_id = c.id 
             JOIN product_description pd ON p.id = pd.product_id
         WHERE language_id = :language_id
-        AND c.status = 1';
+        AND c.status = 1
+        AND p.status = 1';
 
         $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getAllByCategoryAndLanguageId($categoryId, $languageId)
+    {
+        $sql = '
+        SELECT 
+            p.*, 
+            f.alias AS file_alias, 
+            c.name AS category_name,
+            pd.description as description, pd.name as product_name
+        FROM product p
+            JOIN file f ON p.file_id = f.id 
+            JOIN category c ON p.category_id = c.id 
+            JOIN product_description pd ON p.id = pd.product_id
+        WHERE language_id = :language_id
+        AND p.category_id = :category_id
+        AND c.status = 1
+        AND p.status = 1
+        ORDER BY p.sort';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':category_id', $categoryId);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getByCatageoryAndLanguageId($categoryId, $languageId, $limit)
+    {
+        $sql = '
+        SELECT 
+            p.*, 
+            f.alias AS file_alias, 
+            c.name AS category_name,
+            pd.description as description, pd.name as product_name
+        FROM product p
+            JOIN file f ON p.file_id = f.id 
+            JOIN category c ON p.category_id = c.id 
+            JOIN product_description pd ON p.id = pd.product_id
+        WHERE language_id = :language_id
+        AND p.category_id = :category_id
+        AND c.status = 1
+        AND p.status = 1
+        ORDER BY p.sort  
+        LIMIT ' . $limit;
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':category_id', $categoryId);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getMoreByCatageoryAndLanguageId($categoryId, $languageId, $limit, $offset)
+    {
+        $sql = '
+        SELECT 
+            p.*, 
+            f.alias AS file_alias, 
+            c.name AS category_name,
+            pd.description as description, pd.name as product_name
+        FROM product p
+            JOIN file f ON p.file_id = f.id 
+            JOIN category c ON p.category_id = c.id 
+            JOIN product_description pd ON p.id = pd.product_id
+        WHERE language_id = :language_id
+        AND p.category_id = :category_id
+        AND c.status = 1
+        AND p.status = 1
+        ORDER BY p.sort
+        LIMIT ' . $limit . ' OFFSET ' . $offset;
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':category_id', $categoryId);
         $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();

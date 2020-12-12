@@ -2,13 +2,18 @@
 
 namespace App\Controllers\Site;
 
-use App\Controllers\Controller;
-
-class ContactController extends Controller
+class ContactController
 {
+    private $directory = '';
+    private $controllerContext;
+
+    public function __construct()
+    {
+        $this->controllerContext = new ControllerContext($this->directory);
+    }
+
     public function index()
     {
-        $data['page'] = 'contact';
-        $this->view->generate('/site/contact.twig', $data);
+        $this->controllerContext->render([], 'contact.twig');
     }
 }

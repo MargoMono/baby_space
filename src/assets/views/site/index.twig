@@ -29,7 +29,7 @@
                     {% for category in categoryList %}
                         <div class="col-md-6 col-lg-4 col-xl-4">
                             <div class="card text-center card-product">
-                                <div class="card-product__img">
+                                <div class="">
                                     <img class="card-img" src="/upload/images/category/{{ category.file_alias }}"
                                          alt="">
                                     <ul class="catalog-item">
@@ -171,47 +171,25 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                        <div class="card card-blog">
-                            <div class="card-blog__img">
-                                <img class="card-img rounded-0" src="assets/images/site/blog/blog1.png" alt="">
-                            </div>
-                            <div class="card-body">
-                                <h4 class="card-blog__title"><a href="single-blog.html">Тут типа умный заголовок</a>
-                                </h4>
-                                <p>А тут ой какой интересный и завлекающий текст, прям не текст, а конфетка</p>
-                                <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                        <div class="card card-blog">
-                            <div class="card-blog__img">
-                                <img class="card-img rounded-0" src="assets/images/site/blog/blog2.png" alt="">
-                            </div>
-                            <div class="card-body">
-                                <h4 class="card-blog__title"><a href="single-blog.html">А этого заголовок очень
-                                        веселый</a></h4>
-                                <p>Веселый текст, веселый заголовок, веселые дети и прочая красота</p>
-                                <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                        <div class="card card-blog">
-                            <div class="card-blog__img">
-                                <img class="card-img rounded-0" src="assets/images/site/blog/blog3.png" alt="">
-                            </div>
-                            <div class="card-body">
-                                <h4 class="card-blog__title"><a href="single-blog.html">Продажный заголовок</a></h4>
-                                <p>Вот ты думаешь это будет полезная статья? Как бы не так, после не ты побежишь
-                                    покупать мои товары</p>
-                                <a class="card-blog__link" href="#">Читать далее <i class="ti-arrow-right"></i></a>
+                    {% for article in articleList %}
+                        <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                            <div class="card card-blog">
+                                <div class="card-blog__img">
+                                    <img class="card-img rounded-0" src="/upload/images/blog/{{ article.file_alias }}" alt="">
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-blog__title">
+                                        <a href="blog/{{ article.alias }}/{{ article.id }}">{{article.name}}</a>
+                                    </h4>
+                                    <div class="card-blog__body">
+                                        <p>{{article.short_description}}</p>
+                                    </div>
+                                    <a class="card-blog__link" href="#">{{content.read_more}}<i class="ti-arrow-right"></i></a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </section>

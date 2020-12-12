@@ -167,6 +167,6 @@ class ControllerContext
     public function actionFilter()
     {
         $data = $this->modelStrategy->getFilteredData($_POST);
-        $this->view->generateAjax($data);
+        echo json_encode($data);
     }
 }

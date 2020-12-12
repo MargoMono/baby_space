@@ -6,12 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Aroma Shop - Home</title>
     <link rel="icon" href="img/Fevicon.png" type="image/png">
-    <link rel="stylesheet" href="/assets/vendor/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="/assets/vendor/themify-icons/themify-icons.css">
-    <link rel="stylesheet" href="/assets/vendor/nice-select/nice-select.css">
-    <link rel="stylesheet" href="/assets/vendor/owl-carousel/owl.theme.default.min.css">
-    <link rel="stylesheet" href="/assets/vendor/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/site/all.min.css">
     <link rel="stylesheet" href="/assets/css/site/style.css">
 </head>
 <body>
@@ -20,7 +16,7 @@
     <div class="main_menu">
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
-                <a class="navbar-brand logo_h" href="index.html"><img src="assets/images/site/logo.jpg" alt="">Baby's
+                <a class="navbar-brand logo_h" href="/"><img src="assets/images/site/logo.jpg" alt="">Baby's
                     space</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent"
@@ -33,33 +29,29 @@
                     <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
                         <li class="nav-item active"><a class="nav-link" href="/">Главная</a></li>
                         <li class="nav-item submenu dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                            <a href="/catalog" class="nav-link dropdown-toggle" role="button"
                                aria-haspopup="true"
                                aria-expanded="false">Каталог</a>
                             <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="category.html">Shop Category</a></li>
-                                <li class="nav-item"><a class="nav-link" href="single-product.html">Product Details</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="checkout.html">Product Checkout</a></li>
-                                <li class="nav-item"><a class="nav-link" href="confirmation.html">Confirmation</a></li>
-                                <li class="nav-item"><a class="nav-link" href="cart.html">Shopping Cart</a></li>
+                                {% for category in categoryList %}
+                                    <li class="nav-item"><a class="nav-link" href="/catalog/{{ category.alias }}/{{ category.id }}">{{ category.name }}</a></li>
+                                {% endfor %}
                             </ul>
-                        </li>
-                        <li class="nav-item submenu dropdown">
-                            <a href="/blog" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-                               aria-haspopup="true" aria-expanded="false">Блог</a>
                         </li>
                         <li class="nav-item submenu dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                aria-haspopup="true"
-                               aria-expanded="false">Аккаунт</a>
+                               aria-expanded="false">Компания</a>
                             <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
-                                <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
-                                <li class="nav-item"><a class="nav-link" href="tracking-order.html">Tracking</a></li>
+                                <li class="nav-item"><a class="nav-link" href="tracking-order.html">О нас</a></li>
+                                <li class="nav-item"><a class="nav-link" href="tracking-order.html">Доставка и оплата</a></li>
+                                <li class="nav-item"><a class="nav-link" href="tracking-order.html">Блог</a></li>
+                                <li class="nav-item"><a class="nav-link" href="tracking-order.html">Новости</a></li>
+                                <li class="nav-item"><a class="nav-link" href="tracking-order.html">Отзывы</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="contact.html">Контакты</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/contacts">Отслеживание</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/contacts">Контакты</a></li>
                     </ul>
 
                     <ul class="nav-shop">
@@ -107,13 +99,8 @@
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="single-footer-widget tp_widgets">
                         <h4 class="footer_title large_title">Baby's space</h4>
-                        <p>
-                            РАЗВИВАЮЩИЕ БИЗИБОДРЫ ДЛЯ ДЕТЕЙ ОТ 6 МЕСЯЦЕВ
-                        </p>
-                        <p>
-                            Развивает логику и мышление, учит решать сложные задачи, ориентироваться в бытовой среде и
-                            быть самостоятельным.
-                        </p>
+                        <p>{{content.footer_title}}</p>
+                        <p>{{content.footer_text}}</p>
                         <span class="fab fa-telegram social-links"></span>
                         <span class="fab fa-whatsapp social-links"></span>
                         <span class="fab fa-instagram social-links"></span>
@@ -121,10 +108,10 @@
                 </div>
                 <div class="offset-lg-1 col-lg-2 col-md-6 col-sm-6">
                     <div class="single-footer-widget tp_widgets">
-                        <h4 class="footer_title">Детям</h4>
+                        <h4 class="footer_title">Каталог</h4>
                         <ul class="list">
                             {% for category in categoryList %}
-                                <li><a href="{{ category.alias }}">{{ category.name }}</a></li>
+                                <li><a href="/catalog/{{ category.alias }}/{{ category.id }}">{{ category.name }}</a></li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -134,12 +121,12 @@
                         <h4 class="footer_title">Страницы</h4>
                         <ul class="list">
                             <li><a href="#">О нас</a></li>
-                            <li><a href="#">Каталог</a></li>
-                            <li><a href="#">Блог</a></li>
                             <li><a href="#">Доставка и оплата</a></li>
+                            <li><a href="/blog">Блог</a></li>
+                            <li><a href="/blog">Новости</a></li>
                             <li><a href="#">Отзывы</a></li>
-                            <li><a href="#">Brand</a></li>
-                            <li><a href="#">Контакты</a></li>
+                            <li><a href="#">Отслеживание</a></li>
+                            <li><a href="/contacts">Контакты</a></li>
                         </ul>
                     </div>
                 </div>

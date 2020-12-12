@@ -2,59 +2,40 @@
 
 namespace App\Controllers\Site;
 
-use App\Controllers\Controller;
 use App\Models\Site\CatalogModel;
 
-class CatalogController extends Controller
+class CatalogController
 {
-    function __construct()
+    private $directory = 'catalog';
+    private $controllerContext;
+    private $model;
+
+    public function __construct()
     {
-        parent::__construct();
+        $this->controllerContext = new ControllerContext($this->directory);
         $this->model = new CatalogModel();
     }
 
-    public function showCatalogPage($alias, $id)
+    public function actionIndex()
     {
-        $data = $this->model->getCatalogPageData($id);
-
-        if (!$data){
-            http_response_code(404);
-            $this->view->generate('site/404.twig');
-            return;
-        }
-
-        $data['page'] = 'catalog';
-
-        switch ($data['template']) {
-            case 'childCategory' :
-                $this->view->generate('site/catalog/childCategory.twig', $data);
-                break;
-            case 'products' :
-                $this->view->generate('site/catalog/products.twig', $data);
-                break;
-            case 'categoryAndProducts' :
-                $this->view->generate('site/catalog/categoryAndProducts.twig', $data);
-                break;
-            case 'category' :
-                $this->view->generate('site/catalog/category.twig', $data);
-                break;
-            default:
-                $this->view->generate('site/catalog/category.twig', $data);
-                break;
-        }
+        $this->controllerContext->render([], 'index.twig');
     }
 
-    public function getMoreByCategory($categoryId, $count)
+    public function actionShowCategory($alias, $id)
     {
-        $data = $this->model->getMoreByCategoryData($categoryId, $count);
-        $this->view->generate('site/catalog/showMore.twig', $data);
+        $data = $this->model->getCategoryData($id);
+        $this->controllerContext->render($data, 'category.twig');
     }
 
-    public function showProductComparisonPage()
+    public function actionShowMore($categoryId, $count)
     {
-        $data = $this->model->getComparisonData($_SESSION['comparison_product']);
+        $data = $this->model->getShowMoreData($categoryId, $count);
+        $this->controllerContext->render($data, 'more.twig');
+    }
 
-        $data['page'] = 'catalog';
-        $this->view->generate('site/catalog/comparisonProducts.twig', $data);
+    public function actionLastPage($categoryId, $count)
+    {
+        $data = $this->model->checkLastPage($categoryId, $count);
+        $this->controllerContext->generateAjax($data);
     }
 }
