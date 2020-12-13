@@ -13,6 +13,7 @@ use App\Repository\ProductDescriptionRepository;
 use App\Repository\ProductRecommendationsRepository;
 use App\Repository\ProductRepository;
 use App\Repository\SizeRepository;
+use App\Repository\TypeRepository;
 
 class ProductModel implements ModelStrategy
 {
@@ -20,6 +21,7 @@ class ProductModel implements ModelStrategy
     public $productRepository;
     public $categoryRepository;
     public $sizeRepository;
+    public $typeRepository;
     public $productDescriptionRepository;
     public $productRecommendationsRepository;
     public $languageRepository;
@@ -32,6 +34,7 @@ class ProductModel implements ModelStrategy
         $this->productRepository = new ProductRepository();
         $this->categoryRepository = new CategoryRepository();
         $this->sizeRepository = new SizeRepository();
+        $this->typeRepository = new TypeRepository();
         $this->languageRepository = new LanguageRepository();
         $this->countryRepository = new CountryRepository();
         $this->currencyRepository = new CurrencyRepository();
@@ -89,6 +92,7 @@ class ProductModel implements ModelStrategy
     {
         $data['categoryList'] = $this->categoryRepository->getAll();
         $data['sizeList'] = $this->sizeRepository->getAll();
+        $data['typeList'] = $this->typeRepository->getAll();
         $data['countryList'] = $this->countryRepository->getAll();
         $data['languages'] = $this->languageRepository->getAll();
         $data['productRecommendationList'] = $this->productRepository->getAll();
@@ -134,6 +138,7 @@ class ProductModel implements ModelStrategy
 
         $data['categoryList'] = $this->categoryRepository->getAll();
         $data['sizeList'] = $this->sizeRepository->getAll();
+        $data['typeList'] = $this->typeRepository->getAll();
         $data['productFilesList'] = $this->productRepository->getProductFilesByProductId($id);
         $data['productRecommendationList'] = $this->productRepository->getRecomendations($id);
         $data['productRecommendationListActual'] = $this->productRecommendationsRepository->getProductRecommendationsIdsByProductId($id);
@@ -236,6 +241,7 @@ class ProductModel implements ModelStrategy
             'id' => $params['id'],
             'category_id' => $params['category_id'],
             'size_id' => $params['size_id'],
+            'type_id' => $params['type_id'],
             'price' => $params['price'],
             'sale' => $params['sale'],
             'status' => $params['status'],

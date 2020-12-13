@@ -2,15 +2,15 @@
 
 namespace App\Models\Admin;
 
-use App\Repository\SizeRepository;
+use App\Repository\TypeRepository;
 
-class SizeModel implements ModelStrategy
+class TypeModel implements ModelStrategy
 {
-    private $sizeRepository;
+    private $typeRepository;
 
     public function __construct()
     {
-        $this->sizeRepository = new SizeRepository();
+        $this->typeRepository = new TypeRepository();
     }
 
     public function getFileDirectory()
@@ -20,7 +20,7 @@ class SizeModel implements ModelStrategy
 
     public function getIndexData($sort = null): array
     {
-        $data['sizeList'] = $this->sizeRepository->getAll($sort);
+        $data['typeList'] = $this->typeRepository->getAll($sort);
 
         if ($sort['desc'] == 'DESC') {
             $sort['desc'] = 'ASC';
@@ -35,38 +35,38 @@ class SizeModel implements ModelStrategy
 
     public function getShowCreatePageData($sort = null): array
     {
-        $data['sizeList'] = $this->sizeRepository->getAll($sort);
+        $data['typeList'] = $this->typeRepository->getAll($sort);
 
         return $data;
     }
 
     public function create($data): int
     {
-        return $this->sizeRepository->create($data);
+        return $this->typeRepository->create($data);
     }
 
     public function getShowUpdatePageData($id): array
     {
-        $data['size'] = $this->sizeRepository->getById($id);
+        $data['type'] = $this->typeRepository->getById($id);
 
         return $data;
     }
 
     public function update($file, $data): void
     {
-        $this->sizeRepository->updateById($data);
+        $this->typeRepository->updateById($data);
     }
 
     public function getShowDeletePageData($id): array
     {
-        $data['size'] = $this->sizeRepository->getById($id);
+        $data['type'] = $this->typeRepository->getById($id);
 
         return $data;
     }
 
     public function delete($id): void
     {
-        $this->sizeRepository->deleteById($id);
+        $this->typeRepository->deleteById($id);
     }
 
     public function createFilesConnection($id, $fileId)
@@ -79,7 +79,7 @@ class SizeModel implements ModelStrategy
 
     public function getFile($id)
     {
-        return $this->sizeRepository->getFileByEntityId($id);
+        return $this->typeRepository->getFileByEntityId($id);
     }
 
     public function getFiles($id)

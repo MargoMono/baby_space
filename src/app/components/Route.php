@@ -191,6 +191,16 @@ class Route
         $router->get('admin/size/delete/{id}', [Admin\SizeController::class, 'actionShowDeletePage']);
         $router->post('admin/size/delete', [Admin\SizeController::class, 'delete']);
 
+        // Страницы видов товаров
+        $router->any('admin/type', [Admin\TypeController::class, 'actionIndex']);
+        $router->any('admin/type/sort/{id}?', [Admin\TypeController::class, 'actionIndex']);
+        $router->get('admin/type/create', [Admin\TypeController::class, 'actionShowCreatePage']);
+        $router->post('admin/type/create', [Admin\TypeController::class, 'create']);
+        $router->get('admin/type/update/{id}', [Admin\TypeController::class, 'actionShowUpdatePage']);
+        $router->post('admin/type/update/{id}', [Admin\TypeController::class, 'update']);
+        $router->get('admin/type/delete/{id}', [Admin\TypeController::class, 'actionShowDeletePage']);
+        $router->post('admin/type/delete', [Admin\TypeController::class, 'delete']);
+
         // Блог
         $router->any('admin/blog', [Admin\BlogController::class, 'actionIndex']);
         $router->any('admin/blog/sort/{id}?', [Admin\BlogController::class, 'actionIndex']);

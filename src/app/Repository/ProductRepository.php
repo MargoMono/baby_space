@@ -91,13 +91,14 @@ class ProductRepository extends AbstractRepository
     {
         $sql = '
         INSERT INTO product 
-            (category_id, size_id, price, sale, file_id, status, popular, alias, sort) 
+            (category_id, size_id, type_id, price, sale, file_id, status, popular, alias, sort) 
         VALUES 
-            (:category_id, :size_id, :price, :sale, :file_id, :status, :popular, :alias, :sort)';
+            (:category_id, :size_id, :type_id, :price, :sale, :file_id, :status, :popular, :alias, :sort)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
         $result->bindParam(':size_id', $data['size_id']);
+        $result->bindParam(':type_id', $data['type_id']);
         $result->bindParam(':price', $data['price']);
         $result->bindParam(':sale', $data['sale']);
         $result->bindParam(':file_id', $data['file_id']);
@@ -122,6 +123,7 @@ class ProductRepository extends AbstractRepository
             SET
             category_id = :category_id,
             size_id = :size_id,
+            type_id = :type_id,
             price = :price,
             sale = :sale,
             file_id = :file_id,
@@ -134,6 +136,7 @@ class ProductRepository extends AbstractRepository
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
         $result->bindParam(':size_id', $data['size_id']);
+        $result->bindParam(':type_id', $data['type_id']);
         $result->bindParam(':price', $data['price']);
         $result->bindParam(':sale', $data['sale']);
         $result->bindParam(':file_id', $data['file_id']);
