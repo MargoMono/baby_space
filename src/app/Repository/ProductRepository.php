@@ -6,7 +6,7 @@ use App\Components\Language;
 use PDO;
 use PDOException;
 
-class ProductRepository extends AbstractRepository
+class ProductRepository extends AbstractRepository implements Entity
 {
     public function getAll($sort = null)
     {
@@ -69,22 +69,37 @@ class ProductRepository extends AbstractRepository
         return $result->fetchAll();
     }
 
-    public function getById($id)
+    public function getById($id, $params = null)
     {
+        $languageId = $params['language_id'] ?? Language::DEFAUL_LANGUGE_ID;
+
         $sql = '
         SELECT 
-            p.*, cp.id as category_id, cp.name AS category_name, f.alias AS file_alias
+            p.*, cp.id as category_id, 
+            cp.name AS category_name, f.alias AS file_alias, 
+            pd.description as description, pd.name as product_name,
+            s.name as size_name, t.name as type_name
         FROM product p
             JOIN category cp ON p.category_id = cp.id
             JOIN file f ON p.file_id = f.id
-        WHERE p.id = :id';
+            JOIN product_description pd ON p.id = pd.product_id
+            JOIN size s ON s.id = p.size_id
+            JOIN type t ON t.id = p.type_id
+        WHERE p.id = :id
+        AND language_id = :language_id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
 
-        return $result->fetch();
+        try {
+            $result->execute();
+            return $result->fetch();
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage(), [$id, $params]);
+            throw new \RuntimeException('Unable to get product');
+        }
     }
 
     public function create($data)
@@ -370,6 +385,10 @@ class ProductRepository extends AbstractRepository
         $result->execute();
 
         return $result->fetchAll();
+    }
+
+    public function getFileByEntityId($id)
+    {
     }
 }
 

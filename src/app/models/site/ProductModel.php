@@ -2,75 +2,31 @@
 
 namespace App\Models\Site;
 
-use App\Models\Models;
-use App\Repository\Site\ProductRecommendationsRepository;
-use App\Repository\Site\ProductRepository;
+use App\Components\Language;
+use App\Repository\LanguageRepository;
+use App\Repository\ProductRepository;
 
-class ProductModel extends Model
+class ProductModel
 {
-    public function getProductData($productId)
+    private $language;
+    private $productRepository;
+
+    public function __construct()
     {
-        return $this->getCoatingProductData($productId);
+        $this->language = (new LanguageRepository())->getByAlias((new Language())->getLanguage());
+        $this->productRepository = new ProductRepository();
     }
 
-    private function getCoatingProductData($productId)
+    public function getIndexData($id = null)
     {
-        $productRepository = new ProductRepository();
-        $product = $productRepository->getEnableProductById($productId);
+        $product = $this->productRepository->getById(
+            $id,
+            ['language_id' => $this->language['id']],
+        );
 
-        if (!$product) {
-            return false;
-        }
-
-        $productRecommendationsRepository = new ProductRecommendationsRepository();
-        $productRecommendationList = $productRecommendationsRepository->getProductRecommendationsIdsByProductId($productId);
-        $product['recommendationList'] = $productRecommendationList;
-        $product['isComparison'] = $this->isComparisonProduct($productId);
-
-        $params = [
-            'breadcrumbs' => $this->getBreadcrumbs($product['category_id']),
+        return [
             'product' => $product,
         ];
-
-        return $params;
-    }
-
-    public function isComparisonProduct($id)
-    {
-        if (empty($_SESSION['comparison_product'])) {
-            return false;
-        }
-
-        return array_search($id, $_SESSION['comparison_product']);
-    }
-
-    public function addToComparison($id)
-    {
-        if(empty($_SESSION['comparison_product'])){
-            $_SESSION['comparison_product'][] = $id;
-        } else {
-            $key = array_search($id, $_SESSION['comparison_product']);
-            if ($key === false){
-                $_SESSION['comparison_product'][] = $id;
-            }
-        }
-
-        $data['comparison_product_count'] = count($_SESSION['comparison_product']);
-
-        return $data;
-    }
-
-    public function deleteFromComparison($id)
-    {
-        $key = array_search($id, $_SESSION['comparison_product']);
-
-        if ($key !== false){
-            unset($_SESSION['comparison_product'][$key]);
-        }
-
-        $data['comparison_product_count'] = count($_SESSION['comparison_product']);
-
-        return $data;
     }
 }
 

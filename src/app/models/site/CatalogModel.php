@@ -11,7 +11,7 @@ use App\Repository\TypeRepository;
 
 class CatalogModel
 {
-    const PRODUCT_COUNT = 4;
+    const PRODUCT_COUNT = 12;
 
     private $language;
     private $categoryRepository;

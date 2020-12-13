@@ -225,6 +225,7 @@ WHERE id = :id';
              JOIN blog_description bd ON b.id = bd.blog_id
         WHERE bd.language_id = :language_id
         AND b.created_at < :created_at
+        ORDER BY created_at DESC 
         LIMIT 1';
 
         $result = $this->db->prepare($sql);
@@ -247,6 +248,7 @@ WHERE id = :id';
              JOIN blog_description bd ON b.id = bd.blog_id
         WHERE bd.language_id = :language_id
         AND b.created_at > :created_at
+        ORDER BY created_at  
         LIMIT 1';
 
         $result = $this->db->prepare($sql);

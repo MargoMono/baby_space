@@ -1,0 +1,126 @@
+{% extends "site/layout.twig" %}
+
+{% block content %}
+    <section class="blog-banner-area" id="blog">
+        <div class="container h-100">
+            <div class="blog-banner">
+                <div class="text-center">
+                    <h1>Shop Single</h1>
+                    <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">{{ content.main_page_title }}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Shop Single</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="product_image_area">
+        <div class="container">
+            <div class="row s_product_inner">
+                <div class="col-lg-6">
+                    <div class="owl-carousel owl-theme s_Product_carousel">
+                        <div class="single-prd-item">
+                            <img class="img-fluid" src="/upload/images/product/{{ product.file_alias|e }}" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 offset-lg-1">
+                    <div class="s_product_text">
+                        <h3>{{ product.product_name|e }}</h3>
+                        <h2>{{ product.price|e }}</h2>
+                        <ul class="list">
+                            <li><span>Категория</span>: {{ product.category_name|e }}</li>
+                            <li><span>Размер</span>: {{ product.size_name|e }}</li>
+                            <li><span>Вид</span>: {{ product.type_name|e }}</li>
+                        </ul>
+                        <br>
+                        <div class="product_count">
+                            <label for="qty">Quantity:</label>
+                            <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+                                    class="increase items-count" type="button"><i class="ti-angle-left"></i></button>
+                            <input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:"
+                                   class="input-text qty">
+                            <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
+                                    class="reduced items-count" type="button"><i class="ti-angle-right"></i></button>
+                            <a class="button primary-btn" href="#">Add to Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="product_description_area">
+        <div class="container">
+            <ul class="nav nav-tabs">
+            </ul>
+            <p class="product_description_delimiter"></p>
+            <div class="product_description_text">
+                {{ product.description|raw }}
+            </div>
+        </div>
+    </section>
+    <section class="related-product-area section-margin--small mt-0">
+        <div class="container">
+            <div class="section-intro pb-60px">
+                <h2><img src="/assets/images/site/logo4.jpg" alt="">Рекомендованные <span class="section-intro__style">товары</span>
+                </h2>
+            </div>
+            <div class="row mt-30">
+                {% for product in productList %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card text-center card-product">
+                            <div class="card-product__img">
+                                <a href="/product/{{ product.alias|e }}/{{ product.id|e }}">
+                                    <img class="card-img" src="/upload/images/product/{{ product.file_alias|e }}" alt="">
+                                </a>
+                                <ul class="card-product__imgOverlay">
+                                    <li>
+                                        <button><i class="ti-search"></i></button>
+                                    </li>
+                                    <li>
+                                        <button><i class="ti-shopping-cart"></i></button>
+                                    </li>
+                                    <li>
+                                        <button><i class="ti-heart"></i></button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <p>{{ product.category_name }}</p>
+                                <h4 class="card-product__title"><a href="#">{{ product.product_name }}</a></h4>
+                                <p class="card-product__price">{{ product.price }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <section class="subscribe-position">
+        <div class="container">
+            <div class="subscribe text-center">
+                <h3 class="subscribe__title">{{ content.subscribe_title }}</h3>
+                <p>{{ content.subscribe_description }}</p>
+                <div id="mc_embed_signup">
+                    <form target="_blank" action="" method="get" class="subscribe-form form-inline mt-5 pt-1"
+                          novalidate="true">
+                        <div class="form-group ml-sm-auto">
+                            <input class="form-control mb-1" type="email" name="email"
+                                   placeholder="{{ content.your_email }}">
+                            <div class="info"></div>
+                        </div>
+                        <button class="button button-subscribe mr-auto mb-1"
+                                type="submit">{{ content.subscribe_now }}</button>
+                        <div style="position: absolute; left: -5000px;">
+                            <input name="" tabindex="-1" value="" type="text">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+

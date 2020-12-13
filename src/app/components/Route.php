@@ -11,6 +11,7 @@ use App\Controllers\Admin;
 use App\Controllers\Site\BlogController;
 use App\Controllers\Site\ContactController;
 use App\Controllers\Site\CatalogController;
+use App\Controllers\Site\ProductController;
 
 class Route
 {
@@ -63,12 +64,12 @@ class Route
 
         $router->get('contacts', [ContactController::class, 'index']);
 
-
         $router->get('catalog/{id}?', [CatalogController::class, 'actionIndex']);
         $router->post('catalog/show-more', [CatalogController::class, 'actionShowMore']);
         $router->post('catalog/last-page', [CatalogController::class, 'actionLastPage']);
         $router->post('catalog/get-filtered-product-list', [CatalogController::class, 'actionGetFilteredProductList']);
 
+        $router->get('product/{alias}/{id}', [ProductController::class, 'actionIndex']);
 
         $router->get('company', ['App\\Controllers\\Site\\CompanyController', 'showCompanyPage']);
         $router->get('delivery', ['App\\Controllers\\Site\\DeliveryController', 'showDeliveryPage']);
@@ -84,9 +85,7 @@ class Route
 
         $router->post('price-list/order', ['App\\Controllers\\Site\\PriceListController', 'sendPriceListToClient']);
 
-        $router->get('product/{alias}/{id}', ['App\\Controllers\\Site\\ProductController', 'showProductPage']);
-        $router->post('product/add-to-comparison', ['App\\Controllers\\Site\\ProductController', 'addToComparison']);
-        $router->post('product/delete-from-comparison', ['App\\Controllers\\Site\\ProductController', 'deleteFromComparison']);
+
 
         $router->get('user/login', ['App\\Controllers\\Site\\UserController', 'showLoginPage']);
         $router->post('user/login', ['App\\Controllers\\Site\\UserController', 'actionLogin']);

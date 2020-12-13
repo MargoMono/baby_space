@@ -2,45 +2,23 @@
 
 namespace App\Controllers\Site;
 
-use App\Controllers\Controller;
 use App\Models\Site\ProductModel;
 
-class ProductController extends Controller
+class ProductController
 {
-    function __construct()
+    private $directory = 'product';
+    private $controllerContext;
+    private $model;
+
+    public function __construct()
     {
-        parent::__construct();
+        $this->controllerContext = new ControllerContext($this->directory);
         $this->model = new ProductModel();
     }
 
-    public function showProductPage($alias, $productId)
+    public function actionIndex($alias, $id)
     {
-        $data = $this->model->getProductData($productId);
-
-        if (!$data) {
-            http_response_code(404);
-            $this->view->generate('site/404.twig');
-            return;
-        }
-
-        $data['page'] = 'catalog';
-
-        $this->view->generate('site/product/coating.twig', $data);
-    }
-
-    public function addToComparison()
-    {
-        $data = $this->model->addToComparison($_POST['id']);
-        $data['result'] = true;
-        $data['action'] = 'add';
-        $this->view->generateAjax($data);
-    }
-
-    public function deleteFromComparison()
-    {
-        $data = $this->model->deleteFromComparison($_POST['id']);
-        $data['result'] = true;
-        $data['action'] = 'delete';
-        $this->view->generateAjax($data);
+        $data = $this->model->getIndexData($id);
+        $this->controllerContext->render($data, 'index.twig');
     }
 }
