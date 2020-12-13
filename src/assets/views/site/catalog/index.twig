@@ -5,21 +5,17 @@
         <div class="container h-100">
             <div class="blog-banner">
                 <div class="text-center">
-                    <h1>Shop Category</h1>
+                    <h1>{{content.catalog_title}}</h1>
                     <nav aria-label="breadcrumb" class="banner-breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Shop Category</li>
+                            <li class="breadcrumb-item"><a href="/">{{content.main_page_title}}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{content.catalog_title}}</li>
                         </ol>
                     </nav>
                 </div>
             </div>
         </div>
     </section>
-    <!-- ================ end banner area ================= -->
-
-
-    <!-- ================ category section start ================= -->
     <section class="section-margin--small mb-5">
         <div class="container">
             <div class="row">
@@ -32,10 +28,15 @@
                                     <ul>
                                         {% for category in categoryList %}
                                             <li class="filter-list">
-                                                <input class="pixel-radio" type="radio" id="{{ category.alias }}" name="category">
-                                                <label for="men">{{ category.name }}</span></label>
+                                                <input {% if category_id == category.id %} checked {% endif %} class="pixel-radio" type="radio" id="{{ category.id }}"
+                                                       name="category">
+                                                <label for="{{ category.id }}"><span>{{ category.name }}</span></label>
                                             </li>
                                         {% endfor %}
+                                        <li class="filter-list">
+                                            <input {% if category_id is empty  %} checked {% endif %} class="pixel-radio" type="radio" id="0" name="category">
+                                            <label for="0"><span><b>Все</b></span></label>
+                                        </li>
                                     </ul>
                                 </form>
                             </li>
@@ -47,21 +48,31 @@
                             <div class="head">{{ content.filter_size_title }}</div>
                             <form action="#">
                                 <ul>
-                                    <li class="filter-list"><input class="pixel-radio" type="radio" id="apple"
-                                                                   name="brand"><label
-                                                for="apple">Apple<span>(29)</span></label></li>
-                                    <li class="filter-list"><input class="pixel-radio" type="radio" id="asus"
-                                                                   name="brand"><label for="asus">Asus<span>(29)</span></label>
+                                    {% for size in sizeList %}
+                                        <li class="filter-list">
+                                            <input class="pixel-radio" type="radio" id="{{ size.id }}" name="size">
+                                            <label for="{{ size.id }}">{{ size.name }}</span></label>
+                                        </li>
+                                    {% endfor %}
+                                    <li class="filter-list">
+                                        <input checked class="pixel-radio" type="radio" id="0" name="size">
+                                        <label for="0"><span><b>Все</b></span></label>
                                     </li>
-                                    <li class="filter-list"><input class="pixel-radio" type="radio" id="gionee"
-                                                                   name="brand"><label
-                                                for="gionee">Gionee<span>(19)</span></label></li>
-                                    <li class="filter-list"><input class="pixel-radio" type="radio" id="micromax"
-                                                                   name="brand"><label
-                                                for="micromax">Micromax<span>(19)</span></label></li>
-                                    <li class="filter-list"><input class="pixel-radio" type="radio" id="samsung"
-                                                                   name="brand"><label
-                                                for="samsung">Samsung<span>(19)</span></label></li>
+                                </ul>
+                            </form>
+                            <div class="head">{{ content.filter_type_title }}</div>
+                            <form action="#">
+                                <ul>
+                                    {% for type in typeList %}
+                                        <li class="filter-list">
+                                            <input class="pixel-radio" type="radio" id="{{ type.id }}" name="type">
+                                            <label for="{{ type.id }}">{{ type.name }}</span></label>
+                                        </li>
+                                    {% endfor %}
+                                    <li class="filter-list">
+                                        <input checked class="pixel-radio" type="radio" id="0" name="type">
+                                        <label for="0"><span><b>Все</b></span></label>
+                                    </li>
                                 </ul>
                             </form>
                         </div>
@@ -79,31 +90,18 @@
                                 </div>
                             </div>
                         </div>
+                        <br>
                     </div>
                 </div>
                 <div class="col-xl-9 col-lg-8 col-md-7">
-                    <!-- Start Filter Bar -->
-                    <div class="filter-bar d-flex flex-wrap align-items-center">
-                        <div>
-                            <div class="input-group pull-right filter-bar-search">
-                                <input type="text" placeholder="Search">
-                                <div class="input-group-append">
-                                    <button type="button"><i class="ti-search"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Filter Bar -->
-                    <!-- Start Best Seller -->
                     <section class="lattest-product-area pb-40 category-list">
-                        <div class="row product__list">
+                        <div id="product__list" class="row">
                             {% for product in productList %}
                                 <div class="col-md-6 col-lg-4">
                                     <div class="card text-center card-product">
                                         <div class="card-product__img">
                                             <a href="/product/{{ product.alias|e }}/{{ product.id|e }}">
-                                                <img class="card-img"
-                                                     src="/upload/images/product/{{ product.file_alias|e }}" alt="">
+                                                <img class="card-img" src="/upload/images/product/{{ product.file_alias|e }}" alt="">
                                             </a>
                                             <ul class="card-product__imgOverlay">
                                                 <li>
@@ -118,8 +116,8 @@
                                             </ul>
                                         </div>
                                         <div class="card-body">
-                                            <p>Accessories</p>
-                                            <h4 class="card-product__title"><a href="#">{{ product.name }}</a></h4>
+                                            <p>{{ product.category_name }}</p>
+                                            <h4 class="card-product__title"><a href="#">{{ product.product_name }}</a></h4>
                                             <p class="card-product__price">{{ product.price }}</p>
                                         </div>
                                     </div>
@@ -130,25 +128,25 @@
                             <a href="#" class="button show-more">Показать ещё</a>
                         </div>
                     </section>
-                    <!-- End Best Seller -->
                 </div>
             </div>
         </div>
     </section>
-    <!-- ================ category section end ================= -->
-
     <section class="subscribe-position">
         <div class="container">
             <div class="subscribe text-center">
                 <h3 class="subscribe__title">{{ content.subscribe_title }}</h3>
                 <p>{{ content.subscribe_description }}</p>
                 <div id="mc_embed_signup">
-                    <form target="_blank" action="" method="get" class="subscribe-form form-inline mt-5 pt-1" novalidate="true">
+                    <form target="_blank" action="" method="get" class="subscribe-form form-inline mt-5 pt-1"
+                          novalidate="true">
                         <div class="form-group ml-sm-auto">
-                            <input class="form-control mb-1" type="email" name="email" placeholder="{{ content.your_email }}">
+                            <input class="form-control mb-1" type="email" name="email"
+                                   placeholder="{{ content.your_email }}">
                             <div class="info"></div>
                         </div>
-                        <button class="button button-subscribe mr-auto mb-1" type="submit">{{ content.subscribe_now }}</button>
+                        <button class="button button-subscribe mr-auto mb-1"
+                                type="submit">{{ content.subscribe_now }}</button>
                         <div style="position: absolute; left: -5000px;">
                             <input name="" tabindex="-1" value="" type="text">
                         </div>
@@ -163,17 +161,57 @@
 
     <script>
         $(document).ready(function () {
+            actionGetFilteredProducts();
             checkIfLastPage();
         });
 
+        $("input[name='category']").click(function () {
+            actionGetFilteredProducts();
+        });
+
+        $("input[name='size']").click(function () {
+            actionGetFilteredProducts();
+        });
+
+        $("input[name='type']").click(function () {
+            actionGetFilteredProducts();
+        });
+
+        function getParams() {
+            return {
+                category_id: $('input[name=category]:checked').attr('id'),
+                size_id: $('input[name=size]:checked').attr('id'),
+                type_id:  $('input[name=type]:checked').attr('id'),
+                count: document.getElementsByClassName('card-product').length,
+                max: document.getElementById('upper-value').innerText,
+                min: document.getElementById('lower-value').innerText,
+            }
+        }
+
+        function actionGetFilteredProducts() {
+            $.ajax({
+                url: '/catalog/get-filtered-product-list/',
+                type: 'POST',
+                data:  getParams(),
+                success: function (res) {
+                    let parent = $('#product__list');
+                    parent.empty();
+                    parent.append(res);
+                    checkIfLastPage()
+                },
+                error: function () {
+                },
+            });
+        }
+
         $('.show-more').click(function (e) {
             e.preventDefault();
-            let count = $('.card-product').length;
             $.ajax({
-                url: '/catalog/show-more/' + count,
-                type: 'GET',
+                url: '/catalog/show-more/',
+                type: 'POST',
+                data: getParams(),
                 success: function (res) {
-                    $('.product__list').append(res);
+                    $('#product__list').append(res);
                     checkIfLastPage()
                 },
                 error: function () {
@@ -182,14 +220,16 @@
         });
 
         function checkIfLastPage() {
-            let count = $('.card-product').length;
             $.ajax({
-                url: '/catalog/last-page/' + count,
-                type: 'GET',
+                url: '/catalog/last-page/',
+                type: 'POST',
+                data: getParams(),
                 success: function (res) {
                     let response = JSON.parse(res);
                     if (response) {
                         $('.show-more').hide();
+                    } else  {
+                        $('.show-more').show();
                     }
                 },
                 error: function () {
@@ -199,26 +239,28 @@
 
 
         let nonLinearSlider = document.getElementById('price-range');
+        let min = {{ min }};
+        let max = {{ max }};
 
         noUiSlider.create(nonLinearSlider, {
             connect: true,
             behaviour: 'tap',
-            start: [ 500, 4000 ],
+            start: [min, max],
+            step: 1,
             range: {
-                'min': [ 0 ],
-                '10%': [ 500, 500 ],
-                '50%': [ 4000, 1000 ],
-                'max': [ 10000 ]
+                'min': [min],
+                'max': [max]
             }
         });
 
         let nodes = [
-            document.getElementById('lower-value'), // 0
-            document.getElementById('upper-value')  // 1
+            document.getElementById('lower-value'),
+            document.getElementById('upper-value')
         ];
 
-        nonLinearSlider.noUiSlider.on('update', function ( values, handle) {
+        nonLinearSlider.noUiSlider.on('update', function (values, handle) {
             nodes[handle].innerHTML = values[handle];
+            actionGetFilteredProducts();
         });
 
     </script>

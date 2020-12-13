@@ -30,12 +30,12 @@
                         <div class="col-md-6 col-lg-4 col-xl-4">
                             <div class="card text-center card-product">
                                 <div class="">
-                                    <a href="/catalog/{{ category.alias }}/{{ category.id }}">
+                                    <a href="/catalog/{{ category.id }}">
                                         <img class="card-img" src="/upload/images/category/{{ category.file_alias }}"
                                              alt="">
                                     </a>
                                     <ul class="catalog-item">
-                                        <li><a href="/catalog/{{ category.alias }}/{{ category.id }}">
+                                        <li><a href="/catalog/{{ category.id }}">
                                                 <h2>Для детей<br>
                                                     <span class="section-intro__style">
                                                 {{ category.name }}
@@ -202,11 +202,11 @@
         </section>
 
         <section class="instagram_area">
-            <div class="container box_1620">
+            <div class="container">
                 <div class="insta_btn">
                     <a class="btn theme_btn" href="#">Подпишись на нас в инстаграмм</a>
                 </div>
-                <div class="instagram_image row m0">
+                <div class="instagram_image row">
                     <a href="#"><img src="assets/images/site/instagram/ins-1.jpg" alt=""></a>
                     <a href="#"><img src="assets/images/site/instagram/ins-2.jpg" alt=""></a>
                     <a href="#"><img src="assets/images/site/instagram/ins-3.jpg" alt=""></a>
@@ -215,9 +215,6 @@
                     <a href="#"><img src="assets/images/site/instagram/ins-6.jpg" alt=""></a>
                 </div>
             </div>
-        </section>    <!-- ================ Subscribe section end ================= -->
-
-
+        </section>
     </main>
-
 {% endblock %}

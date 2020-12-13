@@ -23,5 +23,6 @@ $_['catalog_title']                            = 'Каталог';
 $_['filter_category_title']                    = 'Категории';
 $_['filter_title']                             = 'Фильтры';
 $_['filter_size_title']                        = 'Размеры';
+$_['filter_type_title']                        = 'Виды';
 
 

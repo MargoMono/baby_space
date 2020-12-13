@@ -16,21 +16,27 @@ class CatalogController
         $this->model = new CatalogModel();
     }
 
-    public function actionIndex()
+    public function actionIndex($id = null)
     {
-        $data = $this->model->getIndexData();
+        $data = $this->model->getIndexData($id);
         $this->controllerContext->render($data, 'index.twig');
     }
 
-    public function actionShowMore($count)
+    public function actionGetFilteredProductList()
     {
-        $data = $this->model->getShowMoreData($count);
+        $data = $this->model->getFilteredProductList($_POST);
         $this->controllerContext->render($data, 'more.twig');
     }
 
-    public function actionLastPage($count)
+    public function actionShowMore()
     {
-        $data = $this->model->checkLastPage($count);
+        $data = $this->model->getShowMoreData($_POST);
+        $this->controllerContext->render($data, 'more.twig');
+    }
+
+    public function actionLastPage()
+    {
+        $data = $this->model->checkLastPage($_POST);
         $this->controllerContext->generateAjax($data);
     }
 }

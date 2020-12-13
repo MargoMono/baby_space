@@ -321,8 +321,21 @@ class ProductRepository extends AbstractRepository
         $languageId = $params['language_id'] ?? Language::DEFAUL_LANGUGE_ID;
 
         if (!empty($params['category_id'])) {
-            $where .= ' AND category_id = ' . $params['category_id'];
+            $where .= " AND category_id = {$params['category_id']}";
         }
+
+        if (!empty($params['size_id'])) {
+            $where .= " AND size_id = {$params['size_id']}";
+        }
+
+        if (!empty($params['type_id'])) {
+            $where .= " AND type_id = {$params['type_id']}";
+        }
+
+        if (!empty($params['max']) || !empty($params['min'])) {
+            $where .= " AND p.price BETWEEN {$params['min']} AND {$params['max']}";
+        }
+
 
         $limitAndOffset = '';
 
@@ -348,6 +361,7 @@ class ProductRepository extends AbstractRepository
         ' . $where . '
         AND c.status = 1
         AND p.status = 1
+        
         ORDER BY p.sort' . $limitAndOffset;
 
         $result = $this->db->prepare($sql);

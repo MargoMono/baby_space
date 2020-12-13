@@ -64,9 +64,10 @@ class Route
         $router->get('contacts', [ContactController::class, 'index']);
 
 
-        $router->get('catalog', [CatalogController::class, 'actionIndex']);
-        $router->get('catalog/show-more/{count}', [CatalogController::class, 'actionShowMore']);
-        $router->get('catalog/last-page/{count}', [CatalogController::class, 'actionLastPage']);
+        $router->get('catalog/{id}?', [CatalogController::class, 'actionIndex']);
+        $router->post('catalog/show-more', [CatalogController::class, 'actionShowMore']);
+        $router->post('catalog/last-page', [CatalogController::class, 'actionLastPage']);
+        $router->post('catalog/get-filtered-product-list', [CatalogController::class, 'actionGetFilteredProductList']);
 
 
         $router->get('company', ['App\\Controllers\\Site\\CompanyController', 'showCompanyPage']);
