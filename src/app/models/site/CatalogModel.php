@@ -9,7 +9,7 @@ use App\Repository\ProductRepository;
 
 class CatalogModel
 {
-    const PRODUCT_COUNT = 12;
+    const PRODUCT_COUNT = 4;
 
     private $language;
     private $categoryRepository;
@@ -22,26 +22,27 @@ class CatalogModel
         $this->productRepository = new ProductRepository();
     }
 
-    public function getCategoryData($categoryId)
+    public function getIndexData()
     {
-        $category = $this->categoryRepository->getById($categoryId);
-        $productList = $this->productRepository->getByCatageoryAndLanguageId(
-            $categoryId,
-            $this->language['id'],
+        $productList = $this->productRepository->getAllByParams(
+            [
+                'language_id' => $this->language['id']
+            ],
             self::PRODUCT_COUNT
         );
 
         return [
-            'category' => $category,
             'productList' => $productList,
         ];
     }
 
-    public function getShowMoreData($categoryId, $offset)
+
+    public function getShowMoreData($offset)
     {
-        $productList = $this->productRepository->getMoreByCatageoryAndLanguageId(
-            $categoryId,
-            $this->language['id'],
+        $productList = $this->productRepository->getAllByParams(
+            [
+                'language_id' => $this->language['id']
+            ],
             self::PRODUCT_COUNT,
             $offset
         );
@@ -51,11 +52,13 @@ class CatalogModel
         ];
     }
 
-    public function checkLastPage($categoryId, $count)
+    public function checkLastPage($count)
     {
         $lastPage = false;
 
-        $allProducts = $this->productRepository->getAllByCategoryAndLanguageId($categoryId, $this->language['id']);
+        $allProducts = $this->productRepository->getAllByParams([
+            'language_id' => $this->language['id']
+        ]);
 
         if (count($allProducts) == $count) {
             $lastPage = true;

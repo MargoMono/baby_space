@@ -65,9 +65,8 @@ class Route
 
 
         $router->get('catalog', [CatalogController::class, 'actionIndex']);
-        $router->get('catalog/show-more/{categoryId}/{count}', [CatalogController::class, 'actionShowMore']);
-        $router->get('catalog/last-page/{categoryId}/{count}', [CatalogController::class, 'actionLastPage']);
-        $router->get('catalog/{alias}/{id}', [CatalogController::class, 'actionShowCategory']);
+        $router->get('catalog/show-more/{count}', [CatalogController::class, 'actionShowMore']);
+        $router->get('catalog/last-page/{count}', [CatalogController::class, 'actionLastPage']);
 
 
         $router->get('company', ['App\\Controllers\\Site\\CompanyController', 'showCompanyPage']);
@@ -181,6 +180,16 @@ class Route
         $router->post('admin/category/update/{id}', [Admin\CategoryController::class, 'update']);
         $router->get('admin/category/delete/{id}', [Admin\CategoryController::class, 'actionShowDeletePage']);
         $router->post('admin/category/delete', [Admin\CategoryController::class, 'delete']);
+
+        // Страницы размеров
+        $router->any('admin/size', [Admin\SizeController::class, 'actionIndex']);
+        $router->any('admin/size/sort/{id}?', [Admin\SizeController::class, 'actionIndex']);
+        $router->get('admin/size/create', [Admin\SizeController::class, 'actionShowCreatePage']);
+        $router->post('admin/size/create', [Admin\SizeController::class, 'create']);
+        $router->get('admin/size/update/{id}', [Admin\SizeController::class, 'actionShowUpdatePage']);
+        $router->post('admin/size/update/{id}', [Admin\SizeController::class, 'update']);
+        $router->get('admin/size/delete/{id}', [Admin\SizeController::class, 'actionShowDeletePage']);
+        $router->post('admin/size/delete', [Admin\SizeController::class, 'delete']);
 
         // Блог
         $router->any('admin/blog', [Admin\BlogController::class, 'actionIndex']);

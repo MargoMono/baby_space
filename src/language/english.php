@@ -20,3 +20,6 @@ $_['main_page_title']                           = 'Главная страниц
 //Раздел каталога
 
 $_['catalog_title']                             = 'Каталог';
+$_['filter_category_title']                     = 'Категории';
+$_['filter_title']                              = 'Фильтры';
+$_['filter_size_title']                         = 'Размеры';

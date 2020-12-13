@@ -18,24 +18,19 @@ class CatalogController
 
     public function actionIndex()
     {
-        $this->controllerContext->render([], 'index.twig');
+        $data = $this->model->getIndexData();
+        $this->controllerContext->render($data, 'index.twig');
     }
 
-    public function actionShowCategory($alias, $id)
+    public function actionShowMore($count)
     {
-        $data = $this->model->getCategoryData($id);
-        $this->controllerContext->render($data, 'category.twig');
-    }
-
-    public function actionShowMore($categoryId, $count)
-    {
-        $data = $this->model->getShowMoreData($categoryId, $count);
+        $data = $this->model->getShowMoreData($count);
         $this->controllerContext->render($data, 'more.twig');
     }
 
-    public function actionLastPage($categoryId, $count)
+    public function actionLastPage($count)
     {
-        $data = $this->model->checkLastPage($categoryId, $count);
+        $data = $this->model->checkLastPage($count);
         $this->controllerContext->generateAjax($data);
     }
 }

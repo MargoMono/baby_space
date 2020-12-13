@@ -32,7 +32,7 @@ class IndexModel extends Model
      */
     public function getHomePageData()
     {
-        $data['productList'] =  $this->productRepository->getAllAvailable();
+        $data['productList'] =  $this->productRepository->getAllByParams();
         $data['articleList'] =  $this->blogRepository->getLastByLanguageId($this->language['id'], 3);
         $data['sale'] =  $this->saleRepository->getByLanguageId($this->language['id']);
 

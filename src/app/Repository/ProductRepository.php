@@ -91,12 +91,13 @@ class ProductRepository extends AbstractRepository
     {
         $sql = '
         INSERT INTO product 
-            (category_id, price, sale, file_id, status, popular, alias, sort) 
+            (category_id, size_id, price, sale, file_id, status, popular, alias, sort) 
         VALUES 
-            (:category_id, :price, :sale, :file_id, :status, :popular, :alias, :sort)';
+            (:category_id, :size_id, :price, :sale, :file_id, :status, :popular, :alias, :sort)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
+        $result->bindParam(':size_id', $data['size_id']);
         $result->bindParam(':price', $data['price']);
         $result->bindParam(':sale', $data['sale']);
         $result->bindParam(':file_id', $data['file_id']);
@@ -120,6 +121,7 @@ class ProductRepository extends AbstractRepository
         UPDATE product
             SET
             category_id = :category_id,
+            size_id = :size_id,
             price = :price,
             sale = :sale,
             file_id = :file_id,
@@ -131,6 +133,7 @@ class ProductRepository extends AbstractRepository
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
+        $result->bindParam(':size_id', $data['size_id']);
         $result->bindParam(':price', $data['price']);
         $result->bindParam(':sale', $data['sale']);
         $result->bindParam(':file_id', $data['file_id']);
@@ -255,8 +258,6 @@ class ProductRepository extends AbstractRepository
 
     public function getFilteredData($data)
     {
-        $languageId = Language::DEFAUL_LANGUGE_ID;
-
         $filter = '';
 
         if (!empty($data['name'])) {
@@ -310,9 +311,25 @@ class ProductRepository extends AbstractRepository
         return $result->fetchAll();
     }
 
-    public function getAllAvailable()
+    public function getAllByParams($params = null, $limit = null, $offset = null)
     {
-        $languageId = Language::DEFAUL_LANGUGE_ID;
+        $where = '';
+
+        $languageId = $params['language_id'] ?? Language::DEFAUL_LANGUGE_ID;
+
+        if (!empty($params['category_id'])) {
+            $where .= ' AND category_id = ' . $params['category_id'];
+        }
+
+        $limitAndOffset = '';
+
+        if (!empty($limit)) {
+            $limitAndOffset .= ' LIMIT ' . $limit;
+
+            if (!empty($offset)) {
+                $limitAndOffset .= ' OFFSET ' . $offset;
+            }
+        }
 
         $sql = '
         SELECT 
@@ -325,93 +342,12 @@ class ProductRepository extends AbstractRepository
             JOIN category c ON p.category_id = c.id 
             JOIN product_description pd ON p.id = pd.product_id
         WHERE language_id = :language_id
-        AND c.status = 1
-        AND p.status = 1';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':language_id', $languageId);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getAllByCategoryAndLanguageId($categoryId, $languageId)
-    {
-        $sql = '
-        SELECT 
-            p.*, 
-            f.alias AS file_alias, 
-            c.name AS category_name,
-            pd.description as description, pd.name as product_name
-        FROM product p
-            JOIN file f ON p.file_id = f.id 
-            JOIN category c ON p.category_id = c.id 
-            JOIN product_description pd ON p.id = pd.product_id
-        WHERE language_id = :language_id
-        AND p.category_id = :category_id
+        ' . $where . '
         AND c.status = 1
         AND p.status = 1
-        ORDER BY p.sort';
+        ORDER BY p.sort' . $limitAndOffset;
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':category_id', $categoryId);
-        $result->bindParam(':language_id', $languageId);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getByCatageoryAndLanguageId($categoryId, $languageId, $limit)
-    {
-        $sql = '
-        SELECT 
-            p.*, 
-            f.alias AS file_alias, 
-            c.name AS category_name,
-            pd.description as description, pd.name as product_name
-        FROM product p
-            JOIN file f ON p.file_id = f.id 
-            JOIN category c ON p.category_id = c.id 
-            JOIN product_description pd ON p.id = pd.product_id
-        WHERE language_id = :language_id
-        AND p.category_id = :category_id
-        AND c.status = 1
-        AND p.status = 1
-        ORDER BY p.sort  
-        LIMIT ' . $limit;
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':category_id', $categoryId);
-        $result->bindParam(':language_id', $languageId);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getMoreByCatageoryAndLanguageId($categoryId, $languageId, $limit, $offset)
-    {
-        $sql = '
-        SELECT 
-            p.*, 
-            f.alias AS file_alias, 
-            c.name AS category_name,
-            pd.description as description, pd.name as product_name
-        FROM product p
-            JOIN file f ON p.file_id = f.id 
-            JOIN category c ON p.category_id = c.id 
-            JOIN product_description pd ON p.id = pd.product_id
-        WHERE language_id = :language_id
-        AND p.category_id = :category_id
-        AND c.status = 1
-        AND p.status = 1
-        ORDER BY p.sort
-        LIMIT ' . $limit . ' OFFSET ' . $offset;
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':category_id', $categoryId);
         $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();

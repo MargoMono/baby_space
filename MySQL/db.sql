@@ -931,6 +931,38 @@ INSERT INTO `user` (`id`, `name`, `email`, `password`, `salt`, `active_hex`, `ro
 (1, 'Маргарита Моногарова', 'margomonogarova@gmail.com', '3518eaf64ced211c19c16e606c1aa049', 'e0393605', 'c9b07bf4beefedaabcf3828a3675b99a', 1),
 (5, 'Динара', 'h.d.n@list.ru', '19024cb8d4cf5d570e4c975bef94f88b', '87001643', 'f11c913118785d448940343ebe06c457', 2);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `size`
+--
+
+CREATE TABLE IF NOT EXISTS `size`
+(
+    `id`   int(11)      NOT NULL AUTO_INCREMENT,
+    `name` varchar(100) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 3
+  DEFAULT CHARSET = utf8mb4;
+
+
+--
+-- Table structure for table `product_size`
+--
+
+CREATE TABLE IF NOT EXISTS `product_size`
+(
+    `id`         int(11) NOT NULL AUTO_INCREMENT,
+    `size_id`    int(11) NOT NULL,
+    `product_id` int(11) NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `product_size_product_id_fk` (`product_id`),
+    KEY `product_size_size_id_fk` (`size_id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 56
+  DEFAULT CHARSET = utf8mb4;
+
 --
 -- Constraints for dumped tables
 --
@@ -1073,3 +1105,11 @@ ALTER TABLE `sale_description`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `user_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`);
+
+--
+-- Constraints for table `product_size`
+--
+ALTER TABLE `product_size`
+    ADD CONSTRAINT `product_size_product_id_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `product_size_size_id_fk` FOREIGN KEY (`size_id`) REFERENCES `size` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
