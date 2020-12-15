@@ -8,9 +8,9 @@ use PDOException;
 
 class ProductRecommendationsRepository extends AbstractRepository
 {
-    public function getProductRecommendationsIdsByProductId($id)
+    public function getByProductId(int $id, $languageId = null): array
     {
-        $languageId = Language::DEFAUL_LANGUGE_ID;
+        $languageId = $languageId ?? Language::DEFAUL_LANGUGE_ID;
 
         $sql = '
         SELECT 
@@ -20,7 +20,7 @@ class ProductRecommendationsRepository extends AbstractRepository
             JOIN file f ON p.file_id = f.id
             JOIN product_description pd ON p.id = pd.product_id
         WHERE pr.product_id = :id
-        AND  pd.language_id = :language_id';
+        AND pd.language_id = :language_id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);

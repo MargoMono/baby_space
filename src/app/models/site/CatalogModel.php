@@ -3,6 +3,7 @@
 namespace App\Models\Site;
 
 use App\Components\Language;
+use App\Helpers\TextHelper;
 use App\Repository\CategoryRepository;
 use App\Repository\LanguageRepository;
 use App\Repository\ProductRepository;
@@ -51,7 +52,7 @@ class CatalogModel
 
     public function getFilteredProductList($params)
     {
-        $params['language_id'] = $this->language['id'];
+        $params = $this->prepareData($params);
 
         $productList = $this->productRepository->getAllByParams(
             $params,
@@ -80,9 +81,9 @@ class CatalogModel
 
     public function checkLastPage($params)
     {
-        $lastPage = false;
+        $params = $this->prepareData($params);
 
-        $params['language_id'] = $this->language['id'];
+        $lastPage = false;
 
         $allProducts = $this->productRepository->getAllByParams(
             $params
@@ -93,6 +94,19 @@ class CatalogModel
         }
 
         return $lastPage;
+    }
+
+    public function prepareData($params): array
+    {
+        return [
+            'language_id' => $this->language['id'],
+            'category_id' => mb_substr($params['category_id'], -1),
+            'size_id' => mb_substr($params['size_id'], -1),
+            'type_id' => mb_substr($params['type_id'], -1),
+            'max' => $params['max'] ?? null,
+            'min' => $params['min'] ?? null,
+            'count' => $params['count'] ?? null,
+        ];
     }
 }
 

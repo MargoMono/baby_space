@@ -28,19 +28,20 @@
                                     <ul>
                                         {% for category in categoryList %}
                                             <li class="filter-list">
-                                                <input {% if category_id == category.id %} checked {% endif %} class="pixel-radio" type="radio" id="{{ category.id }}"
+                                                <input {% if category_id == category.id %} checked {% endif %} class="pixel-radio" type="radio" id="category-{{ category.id }}"
                                                        name="category">
                                                 <label for="{{ category.id }}"><span>{{ category.name }}</span></label>
                                             </li>
                                         {% endfor %}
                                         <li class="filter-list">
-                                            <input {% if category_id is empty  %} checked {% endif %} class="pixel-radio" type="radio" id="0" name="category">
+                                            <input {% if category_id is empty  %} checked {% endif %} class="pixel-radio" type="radio" id="category-0" name="category">
                                             <label for="0"><span><b>Все</b></span></label>
                                         </li>
                                     </ul>
                                 </form>
                             </li>
                         </ul>
+
                     </div>
                     <div class="sidebar-filter">
                         <div class="top-filter-head">{{ content.filter_title }}</div>
@@ -50,12 +51,12 @@
                                 <ul>
                                     {% for size in sizeList %}
                                         <li class="filter-list">
-                                            <input class="pixel-radio" type="radio" id="{{ size.id }}" name="size">
+                                            <input class="pixel-radio" type="radio" id="size-{{ size.id }}" name="size">
                                             <label for="{{ size.id }}">{{ size.name }}</span></label>
                                         </li>
                                     {% endfor %}
                                     <li class="filter-list">
-                                        <input checked class="pixel-radio" type="radio" id="0" name="size">
+                                        <input checked class="pixel-radio" type="radio" id="size-0" name="size">
                                         <label for="0"><span><b>Все</b></span></label>
                                     </li>
                                 </ul>
@@ -65,12 +66,12 @@
                                 <ul>
                                     {% for type in typeList %}
                                         <li class="filter-list">
-                                            <input class="pixel-radio" type="radio" id="{{ type.id }}" name="type">
+                                            <input class="pixel-radio" type="radio" id="type-{{ type.id }}" name="type">
                                             <label for="{{ type.id }}">{{ type.name }}</span></label>
                                         </li>
                                     {% endfor %}
                                     <li class="filter-list">
-                                        <input checked class="pixel-radio" type="radio" id="0" name="type">
+                                        <input checked class="pixel-radio" type="radio" id="type-0" name="type">
                                         <label for="0"><span><b>Все</b></span></label>
                                     </li>
                                 </ul>
@@ -96,33 +97,6 @@
                 <div class="col-xl-9 col-lg-8 col-md-7">
                     <section class="lattest-product-area pb-40 category-list">
                         <div id="product__list" class="row">
-                            {% for product in productList %}
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="card text-center card-product">
-                                        <div class="card-product__img">
-                                            <a href="/product/{{ product.alias|e }}/{{ product.id|e }}">
-                                                <img class="card-img" src="/upload/images/product/{{ product.file_alias|e }}" alt="">
-                                            </a>
-                                            <ul class="card-product__imgOverlay">
-                                                <li>
-                                                    <button><i class="ti-search"></i></button>
-                                                </li>
-                                                <li>
-                                                    <button><i class="ti-shopping-cart"></i></button>
-                                                </li>
-                                                <li>
-                                                    <button><i class="ti-heart"></i></button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="card-body">
-                                            <p>{{ product.category_name }}</p>
-                                            <h4 class="card-product__title"><a href="#">{{ product.product_name }}</a></h4>
-                                            <p class="card-product__price">{{ product.price }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
                         </div>
                         <div class="justify-content-center d-flex">
                             <a href="#" class="button show-more">Показать ещё</a>
@@ -260,6 +234,9 @@
 
         nonLinearSlider.noUiSlider.on('update', function (values, handle) {
             nodes[handle].innerHTML = values[handle];
+        });
+
+        nonLinearSlider.noUiSlider.on('change', function () {
             actionGetFilteredProducts();
         });
 

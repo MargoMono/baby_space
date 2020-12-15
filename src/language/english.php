@@ -24,3 +24,4 @@ $_['filter_category_title']                     = 'Категории';
 $_['filter_title']                              = 'Фильтры';
 $_['filter_size_title']                         = 'Размеры';
 $_['filter_type_title']                         = 'Виды';
+$_['empty_products']                            = 'Ничего на найдено, попробуйте изменить настройки поиска';

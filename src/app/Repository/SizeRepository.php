@@ -21,6 +21,7 @@ class SizeRepository extends AbstractRepository implements Entity
         SELECT 
               *
         FROM size 
+        GROUP BY id
         ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);

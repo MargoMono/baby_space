@@ -276,6 +276,8 @@ class ProductRepository extends AbstractRepository implements Entity
 
     public function getFilteredData($data)
     {
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
         $filter = '';
 
         if (!empty($data['name'])) {
@@ -293,6 +295,7 @@ class ProductRepository extends AbstractRepository implements Entity
         if ($data['status'] !== '') {
             $filter .= ' AND p.status = ' . $data['status'];
         }
+
 
         $sql = "
         SELECT 
@@ -347,10 +350,13 @@ class ProductRepository extends AbstractRepository implements Entity
             $where .= " AND type_id = {$params['type_id']}";
         }
 
-        if (!empty($params['max']) || !empty($params['min'])) {
-            $where .= " AND p.price BETWEEN {$params['min']} AND {$params['max']}";
-        }
+        if (!empty($params['min'])) {
+            $where .= " AND p.price BETWEEN {$params['min']}";
 
+            if (!empty($params['max'])) {
+                $where .= " AND {$params['max']}";
+            }
+        }
 
         $limitAndOffset = '';
 
@@ -376,7 +382,6 @@ class ProductRepository extends AbstractRepository implements Entity
         ' . $where . '
         AND c.status = 1
         AND p.status = 1
-        
         ORDER BY p.sort' . $limitAndOffset;
 
         $result = $this->db->prepare($sql);

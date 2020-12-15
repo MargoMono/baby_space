@@ -141,7 +141,7 @@ class ProductModel implements ModelStrategy
         $data['typeList'] = $this->typeRepository->getAll();
         $data['productFilesList'] = $this->productRepository->getProductFilesByProductId($id);
         $data['productRecommendationList'] = $this->productRepository->getRecomendations($id);
-        $data['productRecommendationListActual'] = $this->productRecommendationsRepository->getProductRecommendationsIdsByProductId($id);
+        $data['productRecommendationListActual'] = $this->productRecommendationsRepository->getByProductId($id);
 
         $data['countryList'] = $this->countryRepository->getAll();
         $data['countryListActual'] = $this->productCountryRepository->getProductCountryIdsByProductId($id);
