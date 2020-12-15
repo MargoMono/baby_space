@@ -974,6 +974,7 @@ a {
 .card-product__img img {
     object-fit: cover;
     height: 200px;
+    width: 200px;
 }
 
 .catalog-item {

@@ -8,6 +8,7 @@ class AdminException extends RuntimeException
 {
     public const USER_PASSWORD_CONFIRM_ERROR = 10;
     public const USER_ALREADY_EXIST = 11;
+    public const LARGE_FILE = 12;
 
     public function __construct($code) {
         $message = $this->codeToMessage($code);
@@ -22,6 +23,9 @@ class AdminException extends RuntimeException
                 break;
             case self::USER_ALREADY_EXIST:
                 $message = 'пользователь с такой почтой уже существует';
+                break;
+            case self::LARGE_FILE:
+                $message = 'слишком большой размер файла (не более 3МБ)';
                 break;
 
             default:

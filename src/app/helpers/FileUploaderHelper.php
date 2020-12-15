@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Exceptions\AdminException;
 use App\Exceptions\UploadFileException;
 use RuntimeException;
 
@@ -38,7 +39,7 @@ class FileUploaderHelper
         }
 
         if (($file["size"]) > 1024 * 3 * 1024) {
-            throw new RuntimeException('Большой размер файла');
+            throw new AdminException(AdminException::LARGE_FILE);
         }
 
         if (!in_array($file["type"], $this->imagesFormat)) {
@@ -78,7 +79,7 @@ class FileUploaderHelper
             }
 
             if (($fileList["size"][$i]) > 1024 * 3 * 1024) {
-                throw new RuntimeException('Большой размер файла');
+                throw new AdminException(AdminException::LARGE_FILE);
             }
 
             if (!in_array($fileList["type"][$i], $this->imagesFormat)) {
