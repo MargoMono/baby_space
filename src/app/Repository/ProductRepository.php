@@ -384,6 +384,7 @@ class ProductRepository extends AbstractRepository implements Entity
         AND p.status = 1
         ORDER BY p.sort' . $limitAndOffset;
 
+
         $result = $this->db->prepare($sql);
         $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);

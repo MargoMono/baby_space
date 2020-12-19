@@ -28,13 +28,14 @@
                                     <ul>
                                         {% for category in categoryList %}
                                             <li class="filter-list">
-                                                <input {% if category_id == category.id %} checked {% endif %} class="pixel-radio" type="radio" id="category-{{ category.id }}"
-                                                       name="category">
+                                                <input {% if category_id == category.id %} checked {% endif %} class="pixel-radio"
+                                                       type="radio" id="category-{{ category.id }}" name="category" value="{{ category.id }}">
                                                 <label for="{{ category.id }}"><span>{{ category.name }}</span></label>
                                             </li>
                                         {% endfor %}
                                         <li class="filter-list">
-                                            <input {% if category_id is empty  %} checked {% endif %} class="pixel-radio" type="radio" id="category-0" name="category">
+                                            <input {% if category_id is empty  %} checked {% endif %} class="pixel-radio"
+                                                      type="radio" id="category-0" name="category" value="0">
                                             <label for="0"><span><b>Все</b></span></label>
                                         </li>
                                     </ul>
@@ -51,13 +52,13 @@
                                 <ul>
                                     {% for size in sizeList %}
                                         <li class="filter-list">
-                                            <input class="pixel-radio" type="radio" id="size-{{ size.id }}" name="size">
-                                            <label for="{{ size.id }}">{{ size.name }}</span></label>
+                                            <input class="pixel-radio" type="radio" id="size-{{ size.id }}" name="size" value="{{ size.id }}">
+                                            <label for="size-{{ size.id }}">{{ size.name }}</span></label>
                                         </li>
                                     {% endfor %}
                                     <li class="filter-list">
-                                        <input checked class="pixel-radio" type="radio" id="size-0" name="size">
-                                        <label for="0"><span><b>Все</b></span></label>
+                                        <input checked class="pixel-radio" type="radio" id="size-0" name="size" value="0">
+                                        <label for="size-0"><span><b>Все</b></span></label>
                                     </li>
                                 </ul>
                             </form>
@@ -66,13 +67,13 @@
                                 <ul>
                                     {% for type in typeList %}
                                         <li class="filter-list">
-                                            <input class="pixel-radio" type="radio" id="type-{{ type.id }}" name="type">
-                                            <label for="{{ type.id }}">{{ type.name }}</span></label>
+                                            <input class="pixel-radio" type="radio" id="type-{{ type.id }}" name="type" value="{{ type.id }}">
+                                            <label for="type-{{ type.id }}">{{ type.name }}</span></label>
                                         </li>
                                     {% endfor %}
                                     <li class="filter-list">
-                                        <input checked class="pixel-radio" type="radio" id="type-0" name="type">
-                                        <label for="0"><span><b>Все</b></span></label>
+                                        <input checked class="pixel-radio" type="radio" id="type-0" name="type" value="0">
+                                        <label for="type-0"><span><b>Все</b></span></label>
                                     </li>
                                 </ul>
                             </form>
@@ -153,9 +154,9 @@
 
         function getParams() {
             return {
-                category_id: $('input[name=category]:checked').attr('id'),
-                size_id: $('input[name=size]:checked').attr('id'),
-                type_id:  $('input[name=type]:checked').attr('id'),
+                category_id:document.querySelector('input[name="category"]:checked').value,
+                size_id:document.querySelector('input[name="size"]:checked').value,
+                type_id:document.querySelector('input[name="type"]:checked').value,
                 count: document.getElementsByClassName('card-product').length,
                 max: document.getElementById('upper-value').innerText,
                 min: document.getElementById('lower-value').innerText,

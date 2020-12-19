@@ -100,9 +100,9 @@ class CatalogModel
     {
         return [
             'language_id' => $this->language['id'],
-            'category_id' => mb_substr($params['category_id'], -1),
-            'size_id' => mb_substr($params['size_id'], -1),
-            'type_id' => mb_substr($params['type_id'], -1),
+            'category_id' => $params['category_id'],
+            'size_id' => $params['size_id'],
+            'type_id' => $params['type_id'],
             'max' => $params['max'] ?? null,
             'min' => $params['min'] ?? null,
             'count' => $params['count'] ?? null,

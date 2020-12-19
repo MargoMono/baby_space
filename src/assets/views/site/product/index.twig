@@ -1,6 +1,7 @@
 {% extends "site/layout.twig" %}
 
 {% block content %}
+    <link rel="stylesheet" href="/assets/css/vendors/stepper.css">
     <section class="blog-banner-area" id="blog">
         <div class="container h-100">
             <div class="blog-banner">
@@ -37,16 +38,15 @@
                             <li><span>Вид</span>: {{ product.type_name|e }}</li>
                         </ul>
                         <br>
-                        <div class="product_count">
-                            <label for="qty">Quantity:</label>
-                            <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                    class="increase items-count" type="button"><i class="ti-angle-left"></i></button>
-                            <input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:"
-                                   class="input-text qty">
-                            <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-                                    class="reduced items-count" type="button"><i class="ti-angle-right"></i></button>
-                            <a class="button primary-btn" href="#">Add to Cart</a>
-                        </div>
+                            <div class="stepper stepper--style-2 js-spinner">
+                                <input id="count_265" type="number" name="count" min="0" max="100" step="1" value="1" class="stepper__input " data-stepper-debounce="400">
+                                <div class="stepper__controls">
+                                    <button type="button" spinner-button="up">+</button>
+                                    <button type="button" spinner-button="down">-</button>
+                                </div>
+                            </div>
+                            <br><br>
+                            <a class="button primary-btn" href="#"><i class="fa fa-shopping-cart"></i>Add to Cart</a>
                     </div>
                 </div>
             </div>
@@ -116,3 +116,6 @@
 
 {% endblock %}
 
+{% block scripts %}
+    <script src="/assets/js/vendors/stepper.js"></script>
+{% endblock %}

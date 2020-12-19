@@ -1014,6 +1014,18 @@ a {
     color: #fe5407
 }
 
+.card-product hr  {
+    color: #fe5407;
+    width: 90%;
+    border: 1px solid #fe5407;
+    text-align: center;
+    padding: 0;
+}
+
+.card-product .primary-btn {
+    margin: 10px 0 0;
+}
+
 .popular-product__category {
     text-transform: capitalize;
 }
