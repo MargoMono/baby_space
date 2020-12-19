@@ -110,9 +110,10 @@ class CurrencyRepository extends AbstractRepository
     public function getAllCurrencyForConvert()
     {
         $sql = "
-        SELECT c.*, r.rate
-            FROM currency c
-        LEFT JOIN rate r on c.id = r.currency_id
+        SELECT 
+            c.*, r.rate
+        FROM currency c
+            LEFT JOIN rate r on c.id = r.currency_id
         WHERE code != 'RUB'";
 
         $result = $this->db->prepare($sql);
@@ -120,5 +121,22 @@ class CurrencyRepository extends AbstractRepository
         $result->execute();
 
         return $result->fetchAll();
+    }
+
+    public function getByCode($code)
+    {
+        $sql = '
+        SELECT 
+            c.*, r.rate
+        FROM currency c 
+            LEFT JOIN rate r on c.id = r.currency_id
+        WHERE code = :code';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':code', $code);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
     }
 }

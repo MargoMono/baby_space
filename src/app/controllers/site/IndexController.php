@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Site;
 
+use App\Components\Currency;
 use App\Components\Language;
 use App\Models\Site\IndexModel;
 
@@ -27,6 +28,14 @@ class IndexController
     {
         $language = new Language();
         $language->setLanguage($languageAlias);
+        header('Location: ' .$_SERVER['HTTP_REFERER']);
+    }
+
+    public function actionChangeCurrency($currencyCode)
+    {
+        $currency = new Currency();
+        $currency->setCurrency($currencyCode);
+
         header('Location: ' .$_SERVER['HTTP_REFERER']);
     }
 }

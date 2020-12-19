@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Site;
 
+use App\Components\Currency;
 use App\Components\Language;
 use App\Repository\CategoryRepository;
 use App\Repository\CurrencyRepository;
@@ -54,6 +55,9 @@ class ControllerContext
         $language->setContent();
         $data['language'] = $languagesRepository->getByAlias($language->getLanguage());
         $data['content'] = $language->getContent();
+
+        $currency = new Currency();
+        $data['currency'] = $currency->getCurrency();
 
         $categoryRepository = new CategoryRepository();
         $data['categoryList'] = $categoryRepository->getAllAvailable();

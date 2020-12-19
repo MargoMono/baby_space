@@ -77,11 +77,11 @@
                 </div>
                 <div class="dropdown" >
                     <div class="dropbtn">
-                        <p class="dropbtn-text"><b>RUB</b></p>
+                        <p class="dropbtn-text"><b>{{currency.code }}</b></p>
                     </div>
                     <div class="dropdown-content">
                         {% for currency in currencyList %}
-                            <a href="/change-language/{{ currency.alias }}"><b>{{ currency.code }}</b></a>
+                            <a href="/change-currency/{{ currency.code }}"><b>{{ currency.code }}</b></a>
                         {% endfor %}
                     </div>
                 </div>

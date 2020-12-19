@@ -63,16 +63,31 @@
                 <div class="row">
                     {% for product in productList %}
                         {% if product.popular == 1 %}
-                            <div class="col-md-6 col-lg-4 col-sm-6">
+                            <div class="col-md-6 col-lg-3 col-sm-6">
                                 <div class="card text-center card-product">
                                     <div class="card-product__img">
+                                        <a href="/product/{{ product.alias|e }}/{{ product.id|e }}">
                                         <img src="/upload/images/product/{{ product.file_alias }}" alt="">
+                                        </a>
                                     </div>
                                     <div class="card-body">
                                         <p class="popular-product__category">{{ product.category_name }}</p>
-                                        <h4 class="card-product__title"><a
-                                                    href="single-product.html">{{ product.product_name }}</a></h4>
-                                        <p class="card-product__price">{{ product.price }} руб.</p>
+                                        <h4 class="card-product__title">
+                                            <a href="/product/{{ product.alias|e }}/{{ product.id|e }}">
+                                                {{ product.product_name }}
+                                            </a>
+                                        </h4>
+                                        <p class="card-product__price">
+                                            {% if product.convert_sale %}
+                                                &#8776;  {{ product.convert_sale }} {{ currency.alias }} <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                                            {% elseif product.convert_price %}
+                                                &#8776; {{ product.convert_price }} {{ currency.alias }} <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                                            {% elseif product.sale_price %}
+                                                {{ product.sale_price }} {{ currency.alias }}
+                                            {% else %}
+                                                {{ product.price }} {{ currency.alias }}
+                                            {% endif %}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +186,9 @@
                         <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
                             <div class="card card-blog">
                                 <div class="card-blog__img">
-                                    <img class="card-img rounded-0" src="/upload/images/blog/{{ article.file_alias }}" alt="">
+                                    <a href="blog/{{ article.alias }}/{{ article.id }}">
+                                        <img class="blog-img" src="/upload/images/blog/{{ article.file_alias }}" alt="">
+                                    </a>
                                 </div>
                                 <div class="card-body">
                                     <h4 class="card-blog__title">

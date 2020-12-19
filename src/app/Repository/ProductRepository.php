@@ -350,6 +350,10 @@ class ProductRepository extends AbstractRepository implements Entity
             $where .= " AND type_id = {$params['type_id']}";
         }
 
+        if (!empty($params['popular'])) {
+            $where .= ' AND popular = 1';
+        }
+
         if (!empty($params['min'])) {
             $where .= " AND p.price BETWEEN {$params['min']}";
 

@@ -87,7 +87,7 @@ a {
 }
 
 .dropdown {
-    margin: 0 20px 0 0;
+    margin: 0 30px 0 0;
 }
 
 .dropdown-content {
@@ -1026,6 +1026,31 @@ a {
     margin: 10px 0 0;
 }
 
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute; /
+    width: 300px;
+    left: 0; top: 0;
+    background: #fe5407;
+    color: #fff;
+    padding: 0.5em;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    opacity: 0;
+    transition: 0.5s;
+    font-family: "Oswald", sans-serif;
+    font-size: 12px;
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1; /* Показываем подсказку */
+    top: 2em; /* Положение подсказки */
+}
+
 .popular-product__category {
     text-transform: capitalize;
 }
@@ -1126,11 +1151,11 @@ a {
     padding: 25px 25px 25px 0
 }
 
-.card-blog__img {
-    height: 400px;
+.card-blog__img a {
+    height: 300px;
 }
 
-.card-blog__img img {
+.blog-img {
     object-fit: cover;
     height: 100%;
     width: 100%;

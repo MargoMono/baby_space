@@ -56,6 +56,7 @@ class Route
     {
         $router->get('/', [IndexController::class, 'showHomePage']);
         $router->get('change-language/{id}', [IndexController::class, 'actionChangeLanguage']);
+        $router->get('change-currency/{id}', [IndexController::class, 'actionChangeCurrency']);
 
         $router->get('blog', [BlogController::class, 'actionIndex']);
         $router->get('blog/show-more/{count}', [BlogController::class, 'actionShowMore']);
