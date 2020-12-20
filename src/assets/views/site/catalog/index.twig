@@ -83,12 +83,11 @@
                             <div class="price-range-area">
                                 <div id="price-range"></div>
                                 <div class="value-wrapper d-flex">
-                                    <div class="price">Price:</div>
-                                    <span>$</span>
                                     <div id="lower-value"></div>
-                                    <div class="to">to</div>
-                                    <span>$</span>
+                                    <span><b>{{ currency.alias }}</b></span>
+                                    <div class="between"> - </div>
                                     <div id="upper-value"></div>
+                                    <span><b> {{ currency.alias }}</b></span>
                                 </div>
                             </div>
                         </div>
@@ -214,14 +213,26 @@
 
 
         let nonLinearSlider = document.getElementById('price-range');
-        let min = {{ min }};
-        let max = {{ max }};
+
+        {% if max_convert %}
+            let max = {{ max_convert }};
+            let step = 1;
+        {% else %}
+            let max = {{ max }};
+            let step = 50;
+        {% endif %}
+
+        {% if min_convert %}
+            let min = {{ min_convert }};
+        {% else %}
+            let min = {{ min }};
+        {% endif %}
 
         noUiSlider.create(nonLinearSlider, {
             connect: true,
             behaviour: 'tap',
             start: [min, max],
-            step: 1,
+            step: step,
             range: {
                 'min': [min],
                 'max': [max]

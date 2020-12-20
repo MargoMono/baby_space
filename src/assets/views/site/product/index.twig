@@ -30,8 +30,18 @@
                 </div>
                 <div class="col-lg-5 offset-lg-1">
                     <div class="s_product_text">
-                        <h3>{{ product.product_name|e }}</h3>
-                        <h2>{{ product.price|e }}</h2>
+                        <h2>{{ product.product_name|e }}</h2>
+                        <p class="product_price">
+                            {% if product.convert_sale %}
+                                &#8776;  {{ product.convert_sale }} {{ currency.alias }} <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                            {% elseif product.convert_price %}
+                                &#8776; {{ product.convert_price }} {{ currency.alias }} <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                            {% elseif product.sale_price %}
+                                {{ product.sale_price }} {{ currency.alias }}
+                            {% else %}
+                                {{ product.price }} {{ currency.alias }}
+                            {% endif %}
+                        </p>
                         <ul class="list">
                             <li><span>Категория</span>: {{ product.category_name|e }}</li>
                             <li><span>Размер</span>: {{ product.size_name|e }}</li>

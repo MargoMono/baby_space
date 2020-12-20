@@ -122,65 +122,6 @@ class NewRepository extends AbstractRepository implements Entity
         }
     }
 
-    public function getLastNewList($count)
-    {
-        $sql = '
-        SELECT n.*, f.alias AS file_alias
-        FROM new n
-            LEFT JOIN file f ON n.file_id = f.id
-        ORDER BY n.created_at 
-        LIMIT ' . $count;
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getAllNewList()
-    {
-        $sql = 'SELECT * FROM new';
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getMoreNews($count, $limit)
-    {
-        $sql = '
-        SELECT n.*, f.alias AS file_alias
-        FROM new n
-            LEFT JOIN file f ON n.file_id = f.id
-        ORDER BY n.created_at  
-        LIMIT ' . $limit . ' OFFSET ' . $count;
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetchAll();
-    }
-
-    public function getLastNew()
-    {
-        $sql = '
-        SELECT n.*, f.alias AS file_alias
-        FROM new n
-        LEFT JOIN file f ON n.file_id = f.id
-        ORDER BY n.created_at DESC
-        LIMIT 1';
-
-        $result = $this->db->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $result->execute();
-
-        return $result->fetch();
-    }
-
     public function getFileByEntityId($id)
     {
         $sql = '
@@ -195,5 +136,37 @@ class NewRepository extends AbstractRepository implements Entity
         $result->execute();
 
         return $result->fetch();
+    }
+
+    public function getAllByParams($params = null, $limit = null, $offset = null)
+    {
+        $languageId = $params['language_id'] ?? Language::DEFAUL_LANGUGE_ID;
+
+        $limitAndOffset = '';
+
+        if (!empty($limit)) {
+            $limitAndOffset .= ' LIMIT ' . $limit;
+
+            if (!empty($offset)) {
+                $limitAndOffset .= ' OFFSET ' . $offset;
+            }
+        }
+
+        $sql = '
+        SELECT 
+               n.*, f.alias AS file_alias,
+               nd.description as description, nd.name as name
+        FROM new n
+            JOIN file f ON n.file_id = f.id
+            JOIN new_description nd ON n.id = nd.new_id
+        WHERE nd.language_id = :language_id
+        ORDER BY n.created_at DESC ' . $limitAndOffset;
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
     }
 }

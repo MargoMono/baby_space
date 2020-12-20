@@ -12,6 +12,8 @@ use App\Controllers\Site\BlogController;
 use App\Controllers\Site\ContactController;
 use App\Controllers\Site\CatalogController;
 use App\Controllers\Site\ProductController;
+use App\Controllers\Site\UserController;
+use App\Controllers\Site\NewController;
 
 class Route
 {
@@ -54,14 +56,21 @@ class Route
      */
     private function setRoutes($router)
     {
+        // Общие
         $router->get('/', [IndexController::class, 'showHomePage']);
         $router->get('change-language/{id}', [IndexController::class, 'actionChangeLanguage']);
         $router->get('change-currency/{id}', [IndexController::class, 'actionChangeCurrency']);
 
+        // Страницы блога
         $router->get('blog', [BlogController::class, 'actionIndex']);
         $router->get('blog/show-more/{count}', [BlogController::class, 'actionShowMore']);
         $router->get('blog/last-page/{count}', [BlogController::class, 'actionLastPage']);
         $router->get('blog/{alias}/{id}', [BlogController::class, 'actionShowSingle']);
+
+        // Страницы новостей
+        $router->get('new', [NewController::class, 'actionIndex']);
+        $router->get('new/show-more/{count}', [NewController::class, 'actionShowMore']);
+        $router->get('new/last-page/{count}', [NewController::class, 'actionLastPage']);
 
         $router->get('contacts', [ContactController::class, 'index']);
 
@@ -80,21 +89,14 @@ class Route
 
         $router->post('search', ['App\\Controllers\\Site\\SearchController', 'actionIndex']);
 
-        $router->get('new', ['App\\Controllers\\Site\\NewController', 'index']);
-        $router->get('new/show-more/{count}', ['App\\Controllers\\Site\\NewController', 'showMore']);
-        $router->get('new/{alias}/{id}', ['App\\Controllers\\Site\\NewController', 'showOne']);
 
-        $router->post('price-list/order', ['App\\Controllers\\Site\\PriceListController', 'sendPriceListToClient']);
-
-
-
-        $router->get('user/login', ['App\\Controllers\\Site\\UserController', 'showLoginPage']);
-        $router->post('user/login', ['App\\Controllers\\Site\\UserController', 'actionLogin']);
-        $router->get('user/logout', ['App\\Controllers\\Site\\UserController', 'actionLogout']);
-        $router->get('user/restore-password', ['App\\Controllers\\Site\\UserController', 'showRestorePasswordPage']);
-        $router->post('user/restore-password', ['App\\Controllers\\Site\\UserController', 'restorePassword']);
-        $router->get('user/update-password/{activeHex}', ['App\\Controllers\\Site\\UserController', 'showUpdatePasswordPage']);
-        $router->post('user/update-password', ['App\\Controllers\\Site\\UserController', 'updatePassword']);
+        $router->get('user/login', [UserController::class, 'showLoginPage']);
+        $router->post('user/login', [UserController::class, 'actionLogin']);
+        $router->get('user/logout', [UserController::class, 'actionLogout']);
+        $router->get('user/restore-password', [UserController::class, 'showRestorePasswordPage']);
+        $router->post('user/restore-password', [UserController::class, 'restorePassword']);
+        $router->get('user/update-password/{activeHex}', [UserController::class, 'showUpdatePasswordPage']);
+        $router->post('user/update-password', [UserController::class, 'updatePassword']);
 
         // Страница уведомелний о cookie
         $router->get('cookie', ['App\\Controllers\\site\\CookieController', 'showCookiePage']);

@@ -2922,13 +2922,17 @@ a {
     color: #777777
 }
 
-.price-range-area .value-wrapper .to {
+.price-range-area .value-wrapper .between {
     margin: 0 5px
 }
 
 .price-range-area .price {
     margin-right: 5px;
     color: #777
+}
+
+#lower-value, #upper-value {
+    margin-right: 5px;
 }
 
 .single-search-product {
@@ -4343,14 +4347,15 @@ a {
     }
 }
 
-.s_product_text h3 {
+.s_product_text h2 {
     font-size: 24px;
     font-weight: 500;
+    text-transform: uppercase;
     color: #222;
     margin-bottom: 20px
 }
 
-.s_product_text h2 {
+.product_price {
     font-family: "Roboto", sans-serif;
     font-size: 24px;
     font-weight: 700;

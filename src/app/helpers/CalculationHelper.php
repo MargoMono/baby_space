@@ -21,4 +21,13 @@ class CalculationHelper
 
         return round($sum - ($sum * ($sale / 100)));
     }
+
+    public static function unconvert($sum, $currency)
+    {
+        if (empty($currency)) {
+            return null;
+        }
+
+        return ceil($sum * $currency);
+    }
 }

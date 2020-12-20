@@ -1,0 +1,18 @@
+{% for new in newList %}
+    <new class="row new_item">
+        <div class="col-md-3">
+            <div class="blog_img text-right">
+                <img src="/upload/images/new/{{ new.file_alias|e }}" alt="" class="new-image"/>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="blog_post">
+                <div class="blog_details">
+                    <h2>{{ new.name }}</h2>
+                    <p><b>{{ new.created_at }}</b></p>
+                    <p>{{ new.description }}</p>
+                </div>
+            </div>
+        </div>
+    </new>
+{% endfor %}

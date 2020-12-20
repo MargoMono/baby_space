@@ -355,11 +355,7 @@ class ProductRepository extends AbstractRepository implements Entity
         }
 
         if (!empty($params['min'])) {
-            $where .= " AND p.price BETWEEN {$params['min']}";
-
-            if (!empty($params['max'])) {
-                $where .= " AND {$params['max']}";
-            }
+            $where .= " AND p.price BETWEEN {$params['min']} AND {$params['max']}";
         }
 
         $limitAndOffset = '';

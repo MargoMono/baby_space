@@ -2,34 +2,35 @@
 
 namespace App\Controllers\Site;
 
-use App\Controllers\Controller;
 use App\Models\Site\NewModel;
 
-class NewController extends Controller
+class NewController
 {
-    function __construct()
+    private $directory = 'new';
+    private $controllerContext;
+    private $model;
+
+    public function __construct()
     {
-        parent::__construct();
+        $this->controllerContext = new ControllerContext($this->directory);
         $this->model = new NewModel();
     }
 
-    public function index()
+    public function actionIndex()
     {
         $data = $this->model->getIndexData();
-        $data['page'] = 'company';
-        $this->view->generate('site/new/index.twig', $data);
+        $this->controllerContext->render($data, 'index.twig');
     }
 
-    public function showOne($alias, $id)
+    public function actionShowMore($offset)
     {
-        $data = $this->model->getShowOneData($id);
-        $data['page'] = 'company';
-        $this->view->generate('site/new/showOne.twig', $data);
+        $data = $this->model->getShowMoreData($offset);
+        $this->controllerContext->render($data, 'more.twig');
     }
 
-    public function showMore($count)
+    public function actionLastPage($count)
     {
-        $data = $this->model->getShowMoreData($count);
-        $this->view->generate('site/new/showMore.twig', $data);
+        $data = $this->model->checkLastPage($count);
+        $this->controllerContext->generateAjax($data);
     }
 }

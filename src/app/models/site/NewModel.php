@@ -2,14 +2,24 @@
 
 namespace App\Models\Site;
 
-use App\Models\Models;
+use App\Components\Language;
+use App\Repository\LanguageRepository;
 use App\Repository\NewRepository;
 use DateTime;
 use Exception;
 
-class NewModel extends Model
+class NewModel
 {
     const NEWS_COUNT = 4;
+
+    private $language;
+    private $newRepository;
+
+    public function __construct()
+    {
+        $this->language = (new LanguageRepository())->getByAlias((new Language())->getLanguage());
+        $this->newRepository = new NewRepository();
+    }
 
     /**
      * @return array|void
@@ -17,67 +27,58 @@ class NewModel extends Model
      */
     public function getIndexData()
     {
-        $lastPage = 0;
-
-        $newRepository = new NewRepository();
-        $newList = $newRepository->getLastNewList(self::NEWS_COUNT);
-        $allArticles = $newRepository->getAllNewList();
+        $newList = $this->newRepository->getAllByParams(
+            [
+                'language_id' => $this->language['id']
+            ],
+            self::NEWS_COUNT
+        );
 
         foreach ($newList as $key => $article) {
-            $date = new DateTime($article['date']);
+            $date = new DateTime($article['created_at']);
             $newList[$key]['created_at'] = $date->format('d/m/Y');
         }
 
-        if (count($allArticles) <= self::NEWS_COUNT) {
-            $lastPage = 1;
-        }
-
-        $params = [
-            'blogList' => $newList,
-            'lastPage' => $lastPage,
+        return [
+            'newList' => $newList,
         ];
-
-        return $params;
-    }
-
-    public function getShowOneData($id)
-    {
-        $newsRepository = new NewRepository();
-        $new = $newsRepository->getById($id);
-
-        $params = [
-            'new' => $new,
-        ];
-
-        return $params;
     }
 
     /**
-     * @param $count
-     * @return array
+     * @param $offset
+     * @return array|void
      * @throws Exception
      */
-    public function getShowMoreData($count)
+    public function getShowMoreData($offset)
     {
-        $lastPage = 0;
+        $moreArticles = $this->newRepository->getAllByParams(
+            [
+                'language_id' => $this->language['id']
+            ],
+            self::NEWS_COUNT,
+            $offset
+        );
 
-        $newsRepository = new NewRepository();
-        $moreNews = $newsRepository->getMoreNews($count, self::NEWS_COUNT);
-
-        foreach ($moreNews as $key => $article) {
+        foreach ($moreArticles as $key => $article) {
             $date = new DateTime($article['date']);
-            $moreNews[$key]['created_at'] = $date->format('d/m/Y');
+            $articles[$key]['created_at'] = $date->format('d/m/Y');
         }
 
-        if (count($moreNews) !== self::NEWS_COUNT) {
-            $lastPage = 1;
-        }
-
-        $params = [
-            'blogList' => $moreNews,
-            'lastPage' => $lastPage,
+        return [
+            'newList' => $moreArticles,
         ];
+    }
 
-        return $params;
+    public function checkLastPage($count)
+    {
+        $lastPage = false;
+
+        $allArticles = $this->newRepository->getAllByParams();
+
+        if (count($allArticles) == $count) {
+            $lastPage = true;
+        }
+
+        return $lastPage;
     }
 }
