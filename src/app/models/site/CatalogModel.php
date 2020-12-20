@@ -46,7 +46,7 @@ class CatalogModel
         return [
             'category_id' => $id ?? null,
             'productList' => $this->getProductConvertAndSalePrice($productList),
-            'sizeList' => $this->sizeRepository->getAll(),
+            'sizeList' => $this->sizeRepository->getAllByParams(['language_id' => $this->language['id']]),
             'typeList' => $this->typeRepository->getAllByParams(['language_id' => $this->language['id']]),
             'max' => max($priceList),
             'max_convert' => CalculationHelper::convert(max($priceList), $this->currency['rate']),

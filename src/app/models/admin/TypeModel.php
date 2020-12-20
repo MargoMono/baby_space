@@ -17,6 +17,7 @@ class TypeModel implements ModelStrategy
      * @var TypeRepository
      */
     private $typeRepository;
+
     /**
      * @var TypeDescriptionRepository
      */
@@ -77,8 +78,6 @@ class TypeModel implements ModelStrategy
             $languages[$key]['type'] = $this->typeDescriptionRepository->getByIdAndLanguageId($type['id'],
                 $language['id']);
         }
-
-
 
         $data['type'] = $type;
         $data['languageList'] = $languages;

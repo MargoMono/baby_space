@@ -36,7 +36,7 @@
                                         <li class="filter-list">
                                             <input {% if category_id is empty  %} checked {% endif %} class="pixel-radio"
                                                       type="radio" id="category-0" name="category" value="0">
-                                            <label for="0"><span><b>Все</b></span></label>
+                                            <label for="0"><span><b>{{ content.all }}</b></span></label>
                                         </li>
                                     </ul>
                                 </form>
@@ -58,7 +58,7 @@
                                     {% endfor %}
                                     <li class="filter-list">
                                         <input checked class="pixel-radio" type="radio" id="size-0" name="size" value="0">
-                                        <label for="size-0"><span><b>Все</b></span></label>
+                                        <label for="size-0"><span><b>{{ content.all }}</b></span></label>
                                     </li>
                                 </ul>
                             </form>
@@ -73,7 +73,7 @@
                                     {% endfor %}
                                     <li class="filter-list">
                                         <input checked class="pixel-radio" type="radio" id="type-0" name="type" value="0">
-                                        <label for="type-0"><span><b>Все</b></span></label>
+                                        <label for="type-0"><span><b>{{ content.all }}</b></span></label>
                                     </li>
                                 </ul>
                             </form>
@@ -99,7 +99,7 @@
                         <div id="product__list" class="row">
                         </div>
                         <div class="justify-content-center d-flex">
-                            <a href="#" class="button show-more">Показать ещё</a>
+                            <a href="#" class="button show-more">{{content.show_more}}</a>
                         </div>
                     </section>
                 </div>

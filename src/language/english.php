@@ -26,3 +26,7 @@ $_['filter_title']                              = 'Фильтры';
 $_['filter_size_title']                         = 'Размеры';
 $_['filter_type_title']                         = 'Виды';
 $_['empty_products']                            = 'Ничего на найдено, попробуйте изменить настройки поиска';
+$_['all']                                       = 'All';
+$_['show_more']                                 = 'Show more';
+$_['add_to_cart']                               = 'Add to cart';
+
