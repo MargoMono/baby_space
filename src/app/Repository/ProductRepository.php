@@ -24,13 +24,15 @@ class ProductRepository extends AbstractRepository implements Entity
         SELECT 
             p.*, 
             f.alias AS file_alias, 
-            c.name AS category_name,
+            cd.name AS category_name,
             pd.description as description, pd.name as product_name
         FROM product p
             JOIN file f ON p.file_id = f.id 
-            JOIN category c ON p.category_id = c.id 
             JOIN product_description pd ON p.id = pd.product_id
-        WHERE language_id = :language_id
+            JOIN category c ON p.category_id = c.id 
+            JOIN category_description cd ON cd.category_id = c.id 
+        WHERE pd.language_id = :language_id
+            AND cd.language_id = :language_id
         ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
 
@@ -50,14 +52,16 @@ class ProductRepository extends AbstractRepository implements Entity
         SELECT 
             p.*, 
             f.alias AS file_alias, 
-            c.name AS category_name,
+            cd.name AS category_name,
             pd.description as description, pd.name as product_name
         FROM product p
             JOIN file f ON p.file_id = f.id 
-            JOIN category c ON p.category_id = c.id 
             JOIN product_description pd ON p.id = pd.product_id
-        WHERE language_id = :language_id
-        AND p.id != :id';
+            JOIN category c ON p.category_id = c.id 
+            JOIN category_description cd ON cd.category_id = c.id 
+        WHERE pd.language_id = :language_id
+            AND cd.language_id = :language_id
+            AND p.id != :id';
 
 
         $result = $this->db->prepare($sql);
@@ -75,18 +79,20 @@ class ProductRepository extends AbstractRepository implements Entity
 
         $sql = '
         SELECT 
-            p.*, cp.id as category_id, 
-            cp.name AS category_name, f.alias AS file_alias, 
+            p.*, c.id as category_id, 
+            cd.name AS category_name, f.alias AS file_alias, 
             pd.description as description, pd.name as product_name,
             s.name as size_name, t.name as type_name
         FROM product p
-            JOIN category cp ON p.category_id = cp.id
+            JOIN category c ON p.category_id = c.id
+            JOIN category_description cd ON cd.category_id = c.id
             JOIN file f ON p.file_id = f.id
             JOIN product_description pd ON p.id = pd.product_id
             JOIN size s ON s.id = p.size_id
             JOIN type t ON t.id = p.type_id
         WHERE p.id = :id
-        AND language_id = :language_id';
+        AND pd.language_id = :language_id
+        AND cd.language_id = :language_id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -339,7 +345,7 @@ class ProductRepository extends AbstractRepository implements Entity
         $languageId = $params['language_id'] ?? Language::DEFAUL_LANGUGE_ID;
 
         if (!empty($params['category_id'])) {
-            $where .= " AND category_id = {$params['category_id']}";
+            $where .= " AND c.id = {$params['category_id']}";
         }
 
         if (!empty($params['size_id'])) {
@@ -372,16 +378,18 @@ class ProductRepository extends AbstractRepository implements Entity
         SELECT 
             p.*, 
             f.alias AS file_alias, 
-            c.name AS category_name,
+            cd.name AS category_name,
             pd.description as description, pd.name as product_name
         FROM product p
             JOIN file f ON p.file_id = f.id 
             JOIN category c ON p.category_id = c.id 
+            JOIN category_description cd ON cd.category_id = c.id 
             JOIN product_description pd ON p.id = pd.product_id
-        WHERE language_id = :language_id
-        ' . $where . '
-        AND c.status = 1
-        AND p.status = 1
+        WHERE pd.language_id = :language_id
+            AND cd.language_id = :language_id
+            ' . $where . '
+            AND c.status = 1
+            AND p.status = 1
         ORDER BY p.sort' . $limitAndOffset;
 
 

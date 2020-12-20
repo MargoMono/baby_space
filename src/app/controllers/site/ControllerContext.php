@@ -60,7 +60,8 @@ class ControllerContext
         $data['currency'] = $currency->getCurrency();
 
         $categoryRepository = new CategoryRepository();
-        $data['categoryList'] = $categoryRepository->getAllAvailable();
+        $data['categoryList'] = $categoryRepository->getAllAvailable($data['language']['id']);
+
 
         return $data;
     }

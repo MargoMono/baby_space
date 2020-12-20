@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Components\Language;
 use PDO;
 use PDOException;
 
@@ -17,16 +18,21 @@ class CategoryRepository extends AbstractRepository implements Entity
             $sort['desc'] = 'ASC';
         }
 
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
         $sql = '
         SELECT 
-            c.*, cp.name AS parent_name, cp.id AS parent_id, f.alias AS file_alias
+            c.*, cd.name AS name, cd.short_description AS short_description,
+            cd.description AS description,
+            f.alias AS file_alias
         FROM category c
-            LEFT JOIN category cp ON c.parent_id = cp.id
-            LEFT JOIN file f ON c.file_id = f.id
+            JOIN category_description cd ON cd.category_id = c.id
+            JOIN file f ON c.file_id = f.id
+        WHERE cd.language_id = :language_id
         ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $sort);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
@@ -37,10 +43,12 @@ class CategoryRepository extends AbstractRepository implements Entity
     {
         $sql = '
         SELECT 
-            c.*, cp.name AS parent_name, f.alias AS file_alias
+            c.*, cd.name AS name, cd.short_description AS short_description,
+            cd.description AS description,
+            f.alias AS file_alias
         FROM category c
-            LEFT JOIN category cp ON c.parent_id = cp.id
-            LEFT JOIN file f ON c.file_id = f.id
+            JOIN category_description cd ON cd.category_id = c.id
+            JOIN file f ON c.file_id = f.id
         WHERE c.id = :id';
 
         $result = $this->db->prepare($sql);
@@ -55,22 +63,15 @@ class CategoryRepository extends AbstractRepository implements Entity
     {
         $sql = '
 INSERT INTO category 
-    (parent_id, name, short_description, description, file_id, status, alias, tag, meta_title, meta_description, meta_keyword) 
+    (parent_id, file_id, status, alias) 
 VALUES 
-    (:parent_id, :name, :short_description, :description, :file_id, :status, :alias, :tag, :meta_title, :meta_description, :meta_keyword) ';
+    (:parent_id, :file_id, :status, :alias) ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':parent_id', $data['parent']);
-        $result->bindParam(':name', $data['name']);
-        $result->bindParam(':short_description', $data['short_description']);
-        $result->bindParam(':description', $data['description']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':tag', $data['tag']);
-        $result->bindParam(':meta_title', $data['meta_title']);
-        $result->bindParam(':meta_description', $data['meta_description']);
-        $result->bindParam(':meta_keyword', $data['meta_keyword']);
 
         try {
             $result->execute();
@@ -87,30 +88,16 @@ VALUES
 UPDATE category
     SET
     parent_id = :parent_id,
-    name = :name,
-    short_description = :short_description,
-    description = :description,
     file_id = :file_id,
     status = :status,
-    alias = :alias,
-    tag = :tag,
-    meta_title = :meta_title,
-    meta_description = :meta_description,
-    meta_keyword = :meta_keyword
+    alias = :alias
 WHERE id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':parent_id', $data['parent']);
-        $result->bindParam(':name', $data['name']);
-        $result->bindParam(':short_description', $data['short_description']);
-        $result->bindParam(':description', $data['description']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
         $result->bindParam(':alias', $data['alias']);
-        $result->bindParam(':tag', $data['tag']);
-        $result->bindParam(':meta_title', $data['meta_title']);
-        $result->bindParam(':meta_description', $data['meta_description']);
-        $result->bindParam(':meta_keyword', $data['meta_keyword']);
         $result->bindParam(':id', $data['id']);
 
         try {
@@ -141,7 +128,7 @@ WHERE id = :id';
         $sql = '
         SELECT f.*
             FROM category c
-            LEFT JOIN file f ON c.file_id = f.id
+            JOIN file f ON c.file_id = f.id
         WHERE c.id = :id';
 
         $result = $this->db->prepare($sql);
@@ -152,17 +139,23 @@ WHERE id = :id';
         return $result->fetch();
     }
 
-    public function getAllAvailable()
+    public function getAllAvailable($languageId = null)
     {
+        $languageId = $languageId ?? Language::DEFAUL_LANGUGE_ID;
+
         $sql = '
         SELECT 
-            c.*, cp.name AS parent_name, cp.id AS parent_id, f.alias AS file_alias
+            c.*, cd.name AS name, cd.short_description AS short_description,
+            cd.description AS description,
+            f.alias AS file_alias
         FROM category c
-            LEFT JOIN category cp ON c.parent_id = cp.id
+            JOIN category_description cd ON cd.category_id = c.id
             LEFT JOIN file f ON c.file_id = f.id
-        WHERE c.status = 1';
+        WHERE c.status = 1
+            AND cd.language_id = :language_id ';
 
         $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

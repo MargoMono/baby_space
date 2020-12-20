@@ -22,10 +22,6 @@ class Model
             $data['comparison_product_count'] = 0;
         }
 
-        $newRepository = new NewRepository();
-        $lastNew = $newRepository->getLastNew();
-
-        $data['lastNew'] = $lastNew;
 
         $languagesRepository = new LanguageRepository();
         $data['languages'] = $languagesRepository->getAll();

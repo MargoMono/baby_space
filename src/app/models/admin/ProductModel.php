@@ -102,25 +102,25 @@ class ProductModel implements ModelStrategy
 
     public function create($data): int
     {
-        $newProductId = $this->productRepository->create($data);
+        $newEntityId = $this->productRepository->create($data);
 
         foreach ($data['description'] as $description) {
-            $this->productDescriptionRepository->create($newProductId, $description);
+            $this->productDescriptionRepository->create($newEntityId, $description);
         }
 
         if (!empty($data['product_recommendation'])) {
             foreach ($data['product_recommendation'] as $country) {
-                $this->productRecommendationsRepository->create($newProductId, $country);
+                $this->productRecommendationsRepository->create($newEntityId, $country);
             }
         }
 
         if (!empty($data['product_country'])) {
             foreach ($data['product_country'] as $country) {
-                $this->productCountryRepository->create($newProductId, $country);
+                $this->productCountryRepository->create($newEntityId, $country);
             }
         }
 
-        return $newProductId;
+        return $newEntityId;
     }
 
     public function getShowUpdatePageData($id): array
@@ -153,14 +153,14 @@ class ProductModel implements ModelStrategy
     {
         $this->productRepository->updateById($data);
 
-        foreach ($data['description'] as $productDescription) {
+        foreach ($data['description'] as $description) {
             $productDescriptionExist = $this->productDescriptionRepository->getByIdAndLanguageId($data['id'],
-                $productDescription['language_id']);
+                $description['language_id']);
 
             if (empty($productDescriptionExist)) {
-                $this->productDescriptionRepository->create($data['id'], $productDescription);
+                $this->productDescriptionRepository->create($data['id'], $description);
             } else {
-                $this->productDescriptionRepository->updateById($productDescription);
+                $this->productDescriptionRepository->updateById($description);
             }
         }
 
