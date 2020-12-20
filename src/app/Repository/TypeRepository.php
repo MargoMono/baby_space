@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Components\Language;
 use PDO;
 use PDOException;
 
@@ -17,13 +18,18 @@ class TypeRepository extends AbstractRepository implements Entity
             $sort['desc'] = 'ASC';
         }
 
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
         $sql = '
         SELECT 
-              *
-        FROM type 
+              t.*, td.name
+        FROM type t 
+            JOIN type_description td on t.id = td.type_id
+        WHERE language_id = :language_id
         ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
@@ -33,10 +39,11 @@ class TypeRepository extends AbstractRepository implements Entity
     public function getById($id)
     {
         $sql = '
-        SELECT 
-               *
-        FROM type 
-        WHERE id = :id';
+         SELECT 
+              t.*, td.name
+        FROM type t 
+            JOIN type_description td on t.id = td.type_id
+        WHERE t.id = :id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);
@@ -49,10 +56,10 @@ class TypeRepository extends AbstractRepository implements Entity
     public function create($data)
     {
         $sql = '
-INSERT INTO type
-    (name) 
-VALUES 
-    (:name) ';
+        INSERT INTO type
+            () 
+        VALUES 
+            () ';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':name', $data['name']);
@@ -66,24 +73,7 @@ VALUES
         }
     }
 
-    public function updateById($data)
-    {
-        $sql = '
-UPDATE type
-    SET
-    name = :name
-WHERE id = :id';
-
-        $result = $this->db->prepare($sql);
-        $result->bindParam(':name', $data['name']);
-        $result->bindParam(':id', $data['id']);
-
-        try {
-            $result->execute();
-        } catch (PDOException $e) {
-            $this->logger->error($e->getMessage(), $data);
-            throw new \RuntimeException('Unable to update size');
-        }
+    public function updateById($data){
     }
 
     public function deleteById($id)
@@ -103,5 +93,24 @@ WHERE id = :id';
 
     public function getFileByEntityId($id)
     {
+    }
+
+    public function getAllByParams($params = null)
+    {
+        $languageId = $params['language_id'] ?? Language::DEFAUL_LANGUGE_ID;
+
+        $sql = '
+        SELECT 
+              t.*, td.name
+        FROM type t 
+            JOIN type_description td on t.id = td.type_id
+        WHERE language_id = :language_id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
     }
 }

@@ -162,7 +162,7 @@ class CategoryModel implements ModelStrategy
             'parent_id' => $params['parent_id'],
             'file_id' => $params['file_id'],
             'status' => $params['status'],
-            'alias' => TextHelper::getTranslit($params['name']),
+            'alias' => TextHelper::getTranslit($params['name-1']),
             'description' => $paramsDescription,
         ];
     }

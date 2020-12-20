@@ -52,13 +52,13 @@ class BlogModel implements ModelStrategy
 
     public function create($data): int
     {
-        $newId = $this->blogRepository->create($data);
+        $newEntityId = $this->blogRepository->create($data);
 
         foreach ($data['description'] as $description) {
-            $this->blogDescriptionRepository->create($newId, $description);
+            $this->blogDescriptionRepository->create($newEntityId, $description);
         }
 
-        return $newId;
+        return $newEntityId;
     }
 
     public function getShowUpdatePageData($id): array
