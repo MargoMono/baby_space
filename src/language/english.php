@@ -11,22 +11,24 @@ $_['subscribe_description']                    = 'Просим на англ. с
 $_['subscribe_now']                            = 'Подписаться';
 $_['your_email']                               = 'Ваша почта';
 
-$_['footer_title']                             = 'РАЗВИВАЮЩИЕ БИЗИБОДРЫ ДЛЯ ДЕТЕЙ ОТ 6 МЕСЯЦЕВ';
+$_['footer_title']                             = 'DEVELOPMENT BIZBOARDS FOR CHILDREN OVER 6 MONTHS';
 $_['footer_text']                              = 'Развивает логику и мышление, учит решать сложные задачи, ориентироваться в бытовой среде и быть самостоятельным.';
 
-$_['main_page_title']                           = 'Главная страница';
-$_['rate_price']                                = 'Итоговая цена зависит от конверации валюты вашего банка';
+$_['main_page_title']                           = 'Main page';
+$_['rate_price']                                = 'The final price depends on the currency conversion of your bank';
 
 
 //Раздел каталога
 
-$_['catalog_title']                             = 'Каталог';
-$_['filter_category_title']                     = 'Категории';
-$_['filter_title']                              = 'Фильтры';
-$_['filter_size_title']                         = 'Размеры';
-$_['filter_type_title']                         = 'Виды';
-$_['empty_products']                            = 'Ничего на найдено, попробуйте изменить настройки поиска';
+$_['catalog_title']                             = 'Catalog';
+$_['filter_category_title']                     = 'Category list';
+$_['filter_title']                              = 'Filter list';
+$_['filter_size_title']                         = 'Size list';
+$_['filter_type_title']                         = 'Type list';
+$_['empty_products']                            = 'Nothing found, try changing your search settings';
 $_['all']                                       = 'All';
 $_['show_more']                                 = 'Show more';
 $_['add_to_cart']                               = 'Add to cart';
+$_['go_to_cart']                                = 'Go to cart';
+
 

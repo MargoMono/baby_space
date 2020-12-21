@@ -96,7 +96,6 @@ button {
     top: 0;
     bottom: -1px;
     width: 2.5rem;
-    z-index: 1;
     line-height: 200%;
 }
 .stepper--style-2 [spinner-button="up"] {

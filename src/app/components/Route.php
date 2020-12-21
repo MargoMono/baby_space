@@ -6,8 +6,9 @@ use App\Models\Model;
 use App\View\View;
 use Phroute\Phroute\Dispatcher;
 use Phroute\Phroute\RouteCollector;
-use App\Controllers\Site\IndexController;
 use App\Controllers\Admin;
+use App\Controllers\Site;
+use App\Controllers\Site\IndexController;
 use App\Controllers\Site\BlogController;
 use App\Controllers\Site\ContactController;
 use App\Controllers\Site\CatalogController;
@@ -60,6 +61,7 @@ class Route
         $router->get('/', [IndexController::class, 'showHomePage']);
         $router->get('change-language/{id}', [IndexController::class, 'actionChangeLanguage']);
         $router->get('change-currency/{id}', [IndexController::class, 'actionChangeCurrency']);
+        $router->post('add-to-cart', [IndexController::class, 'actionAddToCart']);
 
         // Страницы блога
         $router->get('blog', [BlogController::class, 'actionIndex']);
@@ -81,8 +83,9 @@ class Route
 
         $router->get('product/{alias}/{id}', [ProductController::class, 'actionIndex']);
 
-        $router->get('company', ['App\\Controllers\\Site\\CompanyController', 'showCompanyPage']);
-        $router->get('delivery', ['App\\Controllers\\Site\\DeliveryController', 'showDeliveryPage']);
+        $router->get('o-nas', [Site\PageController::class, 'actionShowCompanyPage']);
+        $router->get('dostavka-i-oplata', [Site\PageController::class, 'actionShowDeliveryPage']);
+
         $router->get('comments', ['App\\Controllers\\Site\\CommentController', 'index']);
         $router->get('comments/show-more/{count}', ['App\\Controllers\\Site\\CommentController', 'showMore']);
         $router->post('comments/create-comment', ['App\\Controllers\\Site\\CommentController', 'createComment']);
@@ -237,6 +240,11 @@ class Route
         $router->get('admin/comment/image/delete/{id}/{photoId}', [Admin\CommentController::class, 'imageDelete']);
         $router->get('admin/comment-answer/image/delete/{commentId}/{commentAnswerId}/{photoId}', [Admin\CommentController::class, 'commentAnswerImageDelete']);
 
+        // Страницы
+        $router->any('admin/page', [Admin\PageController::class, 'actionIndex']);
+        $router->any('admin/page/sort/{id}?', [Admin\PageController::class, 'actionIndex']);
+        $router->get('admin/page/update/{id}', [Admin\PageController::class, 'actionShowUpdatePage']);
+        $router->post('admin/page/update/{id}', [Admin\PageController::class, 'update']);
 
         $router->any('admin/user', [Admin\UserController::class, 'actionIndex']);
         $router->any('admin/user/sort/{id}?', [Admin\UserController::class, 'actionIndex']);

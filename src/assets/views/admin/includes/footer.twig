@@ -3,7 +3,6 @@
     <strong>Copyright &copy; 2020 <a href="https://vk.com/id390775691">MonoCat</a>.</strong> Все права защищены
     <script src="/assets/js/admin/jquery.min.js"></script>
     <script src="/assets/js/admin/jquery-ui.min.js"></script>
-    <script src="/assets/js/admin/opencart.js"></script>
     <script>
         $.widget.bridge('uibutton', $.ui.button);
     </script>
@@ -26,11 +25,8 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#summernote').summernote({
-                height: 200,                 // set editor height
-                minHeight: null,             // set minimum height of editor
-                maxHeight: null,             // set maximum height of editor
-                focus: true                  // set focus to editable area after initializing summernote
+            $('.summernote').summernote({
+                height: 300
             });
         });
     </script>

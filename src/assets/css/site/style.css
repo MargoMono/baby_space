@@ -82,13 +82,9 @@ a {
 }
 
 .dropbtn {
-    padding: 5px;
     cursor: pointer;
 }
 
-.dropdown {
-    margin: 0 30px 0 0;
-}
 
 .dropdown-content {
     display: none;
@@ -99,7 +95,6 @@ a {
 
 .dropbtn
 {
-    width: 40px;
     display: flex;
     flex-direction: row;
 }
@@ -115,7 +110,6 @@ a {
 
 .dropbtn-text {
     margin: 0;
-    padding: 10px 5px 5px 5px;
 }
 
 .dropbtn-img {
@@ -477,10 +471,6 @@ a {
     transition: all 0.3s ease 0s
 }
 
-.nav-shop {
-    padding-right: 40px;
-}
-
 .nav-shop li {
     display: inline-block;
     margin-right: 15px
@@ -498,12 +488,12 @@ a {
     position: relative
 }
 
-.nav-shop li button .nav-shop__circle {
+.nav-shop li button .product_in_cart_count {
     font-size: 9px;
     display: inline-block;
     background: #fe5407;
     color: #fff;
-    padding: 0px 5px;
+    padding: 0 5px;
     border-radius: 50%;
     position: absolute;
     top: -8px;
@@ -1004,6 +994,20 @@ a {
     font-weight: 500
 }
 
+.card-product__add {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 50px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #fe5407;
+    text-align: center;
+    background-color: #FFF;
+    z-index: 200;
+    display: none;
+}
+
 .card-product:hover  {
     opacity: 1;
     z-index: 1;
@@ -1032,9 +1036,10 @@ a {
 
 [data-tooltip]::after {
     content: attr(data-tooltip);
-    position: absolute; /
-    width: 300px;
-    left: 0; top: 0;
+    position: absolute;
+    width: 150px;
+    left: 0;
+    top: 0;
     background: #fe5407;
     color: #fff;
     padding: 0.5em;
@@ -1043,12 +1048,14 @@ a {
     opacity: 0;
     transition: 0.5s;
     font-family: "Oswald", sans-serif;
-    font-size: 12px;
+    font-size: 14px;
+    z-index: 100;
 }
 
 [data-tooltip]:hover::after {
     opacity: 1; /* Показываем подсказку */
-    top: 2em; /* Положение подсказки */
+    top: 30px; /* Положение подсказки */
+    z-index: 100;
 }
 
 .popular-product__category {

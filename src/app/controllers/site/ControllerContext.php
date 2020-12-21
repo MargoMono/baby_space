@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Site;
 
+use App\Components\Cart;
 use App\Components\Currency;
 use App\Components\Language;
 use App\Repository\CategoryRepository;
@@ -62,6 +63,7 @@ class ControllerContext
         $categoryRepository = new CategoryRepository();
         $data['categoryList'] = $categoryRepository->getAllAvailable($data['language']['id']);
 
+        $data['productCountInCart'] = Cart::getProductCountInCart();
 
         return $data;
     }
