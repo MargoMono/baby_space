@@ -17,6 +17,16 @@ $_['footer_text']                              = 'Развивает логик�
 $_['main_page_title']                           = 'Main page';
 $_['rate_price']                                = 'The final price depends on the currency conversion of your bank';
 
+//Название разделов сайта
+$_['pages']                                     = 'Pages';
+$_['about_us']                                  = 'About us';
+$_['delivery_and_payment']                      = 'Delivery and payment';
+$_['blog']                                      = 'Blog';
+$_['new']                                       = 'News';
+$_['comment']                                   = 'Comments';
+$_['tracking']                                  = 'Tracking order';
+$_['contacts']                                  = 'Contacts';
+
 
 //Раздел каталога
 
@@ -32,3 +42,7 @@ $_['add_to_cart']                               = 'Add to cart';
 $_['go_to_cart']                                = 'Go to cart';
 
 
+//Продукт
+$_['category']                                  = 'Category';
+$_['size']                                      = 'Size';
+$_['type']                                      = 'Type';

@@ -94,7 +94,9 @@ class ProductRepository extends AbstractRepository implements Entity
             JOIN type_description td ON td.type_id = p.type_id
         WHERE p.id = :id
         AND pd.language_id = :language_id
-        AND cd.language_id = :language_id';
+        AND cd.language_id = :language_id
+        AND td.language_id = :language_id
+        AND sd.language_id = :language_id';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id);

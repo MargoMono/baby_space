@@ -33,9 +33,11 @@
                         <h2>{{ product.product_name|e }}</h2>
                         <p class="product_price">
                             {% if product.convert_sale %}
-                                &#8776;  {{ product.convert_sale }} {{ currency.alias }} <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                                &#8776;  {{ product.convert_sale }} {{ currency.alias }} <i
+                                    data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
                             {% elseif product.convert_price %}
-                                &#8776; {{ product.convert_price }} {{ currency.alias }} <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                                &#8776; {{ product.convert_price }} {{ currency.alias }} <i
+                                    data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
                             {% elseif product.sale_price %}
                                 {{ product.sale_price }} {{ currency.alias }}
                             {% else %}
@@ -43,20 +45,28 @@
                             {% endif %}
                         </p>
                         <ul class="list">
-                            <li><span>Категория</span>: {{ product.category_name|e }}</li>
-                            <li><span>Размер</span>: {{ product.size_name|e }}</li>
-                            <li><span>Вид</span>: {{ product.type_name|e }}</li>
+                            <li><span>{{ content.category }}</span>: {{ product.category_name|e }}</li>
+                            <li><span>{{ content.size }}</span>: {{ product.size_name|e }}</li>
+                            <li><span>{{ content.type }}</span>: {{ product.type_name|e }}</li>
                         </ul>
                         <br>
-                            <div class="stepper stepper--style-2 js-spinner">
-                                <input id="count_265" type="number" name="count" min="0" max="100" step="1" value="1" class="stepper__input " data-stepper-debounce="400">
-                                <div class="stepper__controls">
-                                    <button type="button" spinner-button="up">+</button>
-                                    <button type="button" spinner-button="down">-</button>
-                                </div>
+                        <div class="card-product__add">
+                            <p>Товар добавлен!</p>
+                            <p class="bold"><a href="/cart">{{ content.go_to_cart }}</a></p>
+                        </div>
+                        <div class="stepper stepper--style-2 js-spinner">
+                            <input id="count_{{ product.id }}" type="number" name="count" min="0" max="100" step="1"
+                                   value="1"
+                                   class="stepper__input " data-stepper-debounce="400">
+                            <div class="stepper__controls">
+                                <button type="button" spinner-button="up">+</button>
+                                <button type="button" spinner-button="down">-</button>
                             </div>
-                            <br><br>
-                            <a class="button primary-btn" href="#"><i class="fa fa-shopping-cart"></i>Add to Cart</a>
+                        </div>
+                        <br><br>
+                        <a class="button primary-btn add-to-cart" data-id="{{ product.id }}" href="#">
+                            <i class="fa fa-shopping-cart"></i>Add to Cart
+                        </a>
                     </div>
                 </div>
             </div>
@@ -73,32 +83,34 @@
         </div>
     </section>
     {% if productRecommendationsList %}
-    <section class="related-product-area section-margin--small mt-0">
-        <div class="container">
-            <div class="section-intro pb-60px">
-                <h2><img src="/assets/images/site/logo4.jpg" alt="">Рекомендованные <span class="section-intro__style">товары</span>
-                </h2>
-            </div>
-            <div class="row mt-30">
-                {% for product in productRecommendationsList %}
-                    <div class="col-md-4 col-lg-3">
-                        <div class="card text-center card-product">
-                            <div class="card-product__img">
-                                <a href="/product/{{ product.alias|e }}/{{ product.id|e }}">
-                                    <img class="card-img" src="/upload/images/product/{{ product.file_alias|e }}" alt="">
-                                </a>
-                            </div>
-                            <div class="card-body">
-                                <p>{{ product.category_name }}</p>
-                                <h4 class="card-product__title"><a href="#">{{ product.product_name }}</a></h4>
-                                <p class="card-product__price">{{ product.price }}</p>
+        <section class="related-product-area section-margin--small mt-0">
+            <div class="container">
+                <div class="section-intro pb-60px">
+                    <h2><img src="/assets/images/site/logo4.jpg" alt="">Рекомендованные
+                        <span class="section-intro__style">товары</span>
+                    </h2>
+                </div>
+                <div class="row mt-30">
+                    {% for product in productRecommendationsList %}
+                        <div class="col-md-4 col-lg-3">
+                            <div class="card text-center card-product">
+                                <div class="card-product__img">
+                                    <a href="/product/{{ product.alias|e }}/{{ product.id|e }}">
+                                        <img class="card-img" src="/upload/images/product/{{ product.file_alias|e }}"
+                                             alt="">
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <p>{{ product.category_name }}</p>
+                                    <h4 class="card-product__title"><a href="#">{{ product.product_name }}</a></h4>
+                                    <p class="card-product__price">{{ product.price }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
     {% endif %}
     <section class="subscribe-position">
         <div class="container">
@@ -128,4 +140,48 @@
 
 {% block scripts %}
     <script src="/assets/js/vendors/stepper.js"></script>
+    <script>
+        $('.add-to-cart').click(function (e) {
+            e.preventDefault();
+            let id = $(this).attr('data-id');
+            let count = $('#count_' + id).val();
+
+            $.ajax({
+                url: '/add-to-cart',
+                type: 'POST',
+                data: {
+                    id: id,
+                    count: count
+                },
+                success: function (res) {
+                    $('.product_in_cart_count').html(JSON.parse(res).count)
+                },
+                error: function (e) {
+                }
+            });
+
+            $(this).parent().find('.card-product__add').fadeIn();
+        });
+
+        $('body').click(function (e) {
+            let cardProductAddInfo = $('.card-product__add');
+            let addToCartButton = $('.add-to-cart');
+
+            let fadeOut = true;
+            $.each(addToCartButton, function (index, value) {
+                if (value === e.target){
+                    fadeOut = false;
+                }
+            });
+
+            if (fadeOut === false) {
+                return;
+            }
+
+            if (!cardProductAddInfo.is(e.target)) {
+                cardProductAddInfo.fadeOut();
+            }
+        });
+
+    </script>
 {% endblock %}

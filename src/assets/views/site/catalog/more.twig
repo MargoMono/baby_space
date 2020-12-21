@@ -40,8 +40,9 @@
                             <button type="button" spinner-button="down">-</button>
                         </div>
                     </div>
-                    <a class="button primary-btn add-to-cart" data-id="{{ product.id }}" href="#"><i
-                                class="fa fa-shopping-cart"></i> {{ content.add_to_cart }}</a>
+                    <a class="button primary-btn add-to-cart" data-id="{{ product.id }}" href="#">
+                        <i class="fa fa-shopping-cart"></i> {{ content.add_to_cart }}
+                    </a>
                 </div>
             </div>
         </div>
@@ -79,7 +80,20 @@
 
     $('body').click(function (e) {
         let cardProductAddInfo = $('.card-product__add');
-        if (!cardProductAddInfo.is(e.target) && cardProductAddInfo.has(e.target).length === 0) {
+        let addToCartButton = $('.add-to-cart');
+
+        let fadeOut = true;
+        $.each(addToCartButton, function (index, value) {
+            if (value === e.target){
+                fadeOut = false;
+            }
+        });
+
+        if (fadeOut === false) {
+            return;
+        }
+
+        if (!cardProductAddInfo.is(e.target)) {
             cardProductAddInfo.fadeOut();
         }
     });
