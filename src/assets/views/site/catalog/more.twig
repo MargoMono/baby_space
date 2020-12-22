@@ -17,11 +17,11 @@
                     <hr>
                     <p class="card-product__price">
                         {% if product.convert_sale %}
-                            &#8776;  {{ product.convert_sale }} {{ currency.alias }} <i
-                                data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                            &#8776;  {{ product.convert_sale }} {{ currency.alias }}
+                            <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
                         {% elseif product.convert_price %}
-                            &#8776; {{ product.convert_price }} {{ currency.alias }} <i
-                                data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                            &#8776; {{ product.convert_price }} {{ currency.alias }}
+                            <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
                         {% elseif product.sale_price %}
                             {{ product.sale_price }} {{ currency.alias }}
                         {% else %}

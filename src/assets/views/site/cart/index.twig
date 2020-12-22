@@ -1,0 +1,94 @@
+{% extends "site/layout.twig" %}
+
+{% block content %}
+    <section class="blog-banner-area" id="category">
+        <div class="container h-100">
+            <div class="blog-banner">
+                <div class="text-center">
+                    <h1>{{ content.catalog_title }}</h1>
+                    <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">{{ content.main_page_title }}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ content.catalog_title }}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="cart_area">
+        <div class="container">
+            <p id="cart__table" class="table-two ">
+                <table class="table">
+                    <thead>
+                    <tr class="footable-header">
+                        <th data-type="html" data-breakpoints="mobile">Товар</th>
+                        <th data-type="html" data-breakpoints="mobile tablet">Цена</th>
+                        <th data-type="html" data-breakpoints="mobile tablet">Количество</th>
+                        <th data-type="html" data-breakpoints="mobile tablet">Всего</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for product in productList %}
+                        <tr data-expanded="true">
+                            <td class="cart__table-image">
+                                <div class="d-flex">
+                                    <img src="/upload/images/product/{{ product.file_alias|e }}" alt="" class="article-image"/>
+                                </div>
+                                <div class="cart__table_image_text">
+                                    <p>{{ product.product_name }}</p>
+                                 </div>
+                            </td>
+                            <td>
+                                {% if product.convert_sale %}
+                                    &#8776;  {{ product.convert_sale }} {{ currency.alias }}
+                                    <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                                {% elseif product.convert_price %}
+                                    &#8776; {{ product.convert_price }} {{ currency.alias }}
+                                    <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                                {% elseif product.sale_price %}
+                                    {{ product.sale_price }} {{ currency.alias }}
+                                {% else %}
+                                    {{ product.price }} {{ currency.alias }}
+                                {% endif %}
+                            </td>
+                            <td>{{ product.count }}</td>
+                            <td>{% if product.total_convert_sale %}
+                                    &#8776; {{ product.total_convert_sale }} {{ currency.alias }}
+                                    <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                                {% elseif product.total_convert %}
+                                    &#8776; {{ product.total_convert }} {{ currency.alias }}
+                                    <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                                {% elseif product.total_sale %}
+                                    {{ product.total_sale }} {{ currency.alias }}
+                                {% else %}
+                                    {{ product.total }} {{ currency.alias }}
+                                {% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/3.0.6/footable.min.js"></script>
+    <script>
+        jQuery(function () {
+            jQuery('.table').footable({
+                calculateWidthOverride: function () {
+                    return {width: jQuery(window).width()};
+                },
+                breakpoints: {
+                    mobile: 480,
+                    tablet: 720,
+                    desktop: 1024
+                }
+            });
+        })
+    </script>
+
+
+{% endblock %}

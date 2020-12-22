@@ -5254,14 +5254,6 @@ table.text-center, table.text-center td, table.text-center th {
         float: left;
         width: 33.3333333%
     }
-
-    .table-responsive {
-        overflow: auto
-    }
-
-    .table-responsive > .table tr th, .table-responsive > .table tr td {
-        white-space: normal !important
-    }
 }
 
 .wight100 {

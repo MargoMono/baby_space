@@ -63,6 +63,10 @@ class Route
         $router->get('change-currency/{id}', [IndexController::class, 'actionChangeCurrency']);
         $router->post('add-to-cart', [IndexController::class, 'actionAddToCart']);
 
+        $router->get('o-nas', [Site\PageController::class, 'actionShowCompanyPage']);
+        $router->get('dostavka-i-oplata', [Site\PageController::class, 'actionShowDeliveryPage']);
+        $router->get('contacts', [ContactController::class, 'index']);
+
         // Страницы блога
         $router->get('blog', [BlogController::class, 'actionIndex']);
         $router->get('blog/show-more/{count}', [BlogController::class, 'actionShowMore']);
@@ -74,7 +78,6 @@ class Route
         $router->get('new/show-more/{count}', [NewController::class, 'actionShowMore']);
         $router->get('new/last-page/{count}', [NewController::class, 'actionLastPage']);
 
-        $router->get('contacts', [ContactController::class, 'index']);
 
         $router->get('catalog/{id}?', [CatalogController::class, 'actionIndex']);
         $router->post('catalog/show-more', [CatalogController::class, 'actionShowMore']);
@@ -83,8 +86,8 @@ class Route
 
         $router->get('product/{alias}/{id}', [ProductController::class, 'actionIndex']);
 
-        $router->get('o-nas', [Site\PageController::class, 'actionShowCompanyPage']);
-        $router->get('dostavka-i-oplata', [Site\PageController::class, 'actionShowDeliveryPage']);
+        $router->get('cart', [Site\CartController::class, 'actionIndex']);
+
 
         $router->get('comments', ['App\\Controllers\\Site\\CommentController', 'index']);
         $router->get('comments/show-more/{count}', ['App\\Controllers\\Site\\CommentController', 'showMore']);
