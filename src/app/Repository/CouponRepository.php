@@ -115,4 +115,19 @@ class CouponRepository extends AbstractRepository implements Entity
     {
         return null;
     }
+
+    public function getByCode($code)
+    {
+        $sql = '
+        SELECT *
+            FROM coupon 
+        WHERE code = :code';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':code', $code);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
 }

@@ -32,14 +32,9 @@
                     <div class="s_product_text">
                         <h2>{{ product.product_name|e }}</h2>
                         <p class="product_price">
-                            {% if product.convert_sale %}
-                                &#8776;  {{ product.convert_sale }} {{ currency.alias }} <i
-                                    data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
-                            {% elseif product.convert_price %}
-                                &#8776; {{ product.convert_price }} {{ currency.alias }} <i
-                                    data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
-                            {% elseif product.sale_price %}
-                                {{ product.sale_price }} {{ currency.alias }}
+                            {% if product.is_convert %}
+                                &#8776; {{ product.price }} {{ currency.alias }}
+                                <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
                             {% else %}
                                 {{ product.price }} {{ currency.alias }}
                             {% endif %}
@@ -147,7 +142,7 @@
             let count = $('#count_' + id).val();
 
             $.ajax({
-                url: '/add-to-cart',
+                url: '/cart/add',
                 type: 'POST',
                 data: {
                     id: id,

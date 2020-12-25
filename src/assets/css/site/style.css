@@ -4009,14 +4009,30 @@ a {
     object-fit: cover;
 }
 
-.d-flex {
-    display: flex;
+.cart__coupon, .cart__total_price {
+    text-align: right;
+}
+
+.cart__coupon input {
+    width: 200px;
+    border-radius: 30px;
+    border: 1px solid #eeeeee;
+    outline: none;
+    box-shadow: none;
+    margin: 0 25px 0;
+    font-weight: 500;
+    display: inline-block;
+    padding: 12px 50px;
 }
 
 .cart__table_image_text {
     vertical-align: middle;
     align-self: center;
     padding: 10px;
+}
+
+.d-flex {
+    display: flex;
 }
 
 .product_image_area {

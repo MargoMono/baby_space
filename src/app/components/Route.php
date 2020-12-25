@@ -87,6 +87,10 @@ class Route
         $router->get('product/{alias}/{id}', [ProductController::class, 'actionIndex']);
 
         $router->get('cart', [Site\CartController::class, 'actionIndex']);
+        $router->post('cart/add', [Site\CartController::class, 'actionAdd']);
+        $router->post('cart/update', [Site\CartController::class, 'actionUpdate']);
+        $router->post('cart/delete', [Site\CartController::class, 'actionDelete']);
+        $router->post('cart/coupon/add', [Site\CartController::class, 'actionCouponAdd']);
 
 
         $router->get('comments', ['App\\Controllers\\Site\\CommentController', 'index']);

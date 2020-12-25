@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Site;
 
+use App\Components\Cart;
 use App\Models\Site\CartModel;
 
 class CartController
@@ -20,5 +21,40 @@ class CartController
     {
         $data = $this->model->getIndexData();
         $this->controllerContext->render($data, 'index.twig');
+    }
+
+    public function actionAdd()
+    {
+        Cart::add($_POST);
+        $this->controllerContext->generateAjax([
+            'count' => Cart::getProductCountInCart()
+        ]);
+    }
+
+    public function actionUpdate()
+    {
+        Cart::update($_POST);
+
+        $data = $this->model->getUpdateData($_POST['id']);
+        $this->controllerContext->generateAjax($data);
+    }
+
+    public function actionDelete()
+    {
+        Cart::delete($_POST);
+
+        $data = $this->model->getUpdateData($_POST['id']);
+        $this->controllerContext->generateAjax($data);
+    }
+
+    public function actionCouponAdd()
+    {
+        $data = $this->model->getCouponData($_POST['coupon']);
+
+        if ($data) {
+            Cart::addCoupon($data['id']);
+        }
+
+        $this->controllerContext->generateAjax($data);
     }
 }

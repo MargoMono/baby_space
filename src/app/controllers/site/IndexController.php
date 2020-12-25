@@ -39,11 +39,4 @@ class IndexController
         header('Location: ' .$_SERVER['HTTP_REFERER']);
     }
 
-    public function actionAddToCart()
-    {
-        Cart::setCartData($_POST);
-        $this->controllerContext->generateAjax([
-            'count' => Cart::getProductCountInCart()
-        ]);
-    }
 }

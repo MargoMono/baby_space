@@ -46,3 +46,15 @@ $_['go_to_cart']                                = 'Go to cart';
 $_['category']                                  = 'Category';
 $_['size']                                      = 'Size';
 $_['type']                                      = 'Type';
+
+//Корзина
+$_['total_price']                                = 'Total price';
+$_['product']                                    = 'Product';
+$_['price']                                      = 'Price';
+$_['count']                                      = 'Count';
+$_['total']                                      = 'Total';
+$_['delete']                                     = 'Delete';
+$_['coupon_code']                                = 'Coupon code';
+$_['apply']                                      = 'Apply';
+$_['continue']                                   = 'Continue';
+$_['empty_cart']                                 = 'Cart is empty';

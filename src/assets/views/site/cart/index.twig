@@ -1,6 +1,7 @@
 {% extends "site/layout.twig" %}
 
 {% block content %}
+    <link rel="stylesheet" href="/assets/css/vendors/stepper.css">
     <section class="blog-banner-area" id="category">
         <div class="container h-100">
             <div class="blog-banner">
@@ -18,63 +19,99 @@
     </section>
     <section class="cart_area">
         <div class="container">
-            <p id="cart__table" class="table-two ">
-                <table class="table">
-                    <thead>
-                    <tr class="footable-header">
-                        <th data-type="html" data-breakpoints="mobile">Товар</th>
-                        <th data-type="html" data-breakpoints="mobile tablet">Цена</th>
-                        <th data-type="html" data-breakpoints="mobile tablet">Количество</th>
-                        <th data-type="html" data-breakpoints="mobile tablet">Всего</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for product in productList %}
-                        <tr data-expanded="true">
-                            <td class="cart__table-image">
-                                <div class="d-flex">
-                                    <img src="/upload/images/product/{{ product.file_alias|e }}" alt="" class="article-image"/>
+            {% if productList %}
+            <p id="cart__table">
+            <table class="table">
+                <thead>
+                <tr class="footable-header">
+                    <th data-type="html" data-breakpoints="mobile">{{ content.product }}</th>
+                    <th data-type="html" data-breakpoints="mobile tablet">{{ content.price }}</th>
+                    <th data-type="html" data-breakpoints="mobile tablet">{{ content.count }}</th>
+                    <th data-type="html" data-breakpoints="mobile tablet">{{ content.total }}</th>
+                    <th data-type="html" data-breakpoints="mobile tablet">{{ content.delete }}</th>
+                </tr>
+                </thead>
+                <tbody id="product__list">
+                {% for product in productList %}
+                    <tr data-expanded="true" id="product_{{ product.id }}">
+                        <td class="cart__table-image">
+                            <div class="d-flex">
+                                <img src="/upload/images/product/{{ product.file_alias|e }}" alt=""
+                                     class="article-image"/>
+                            </div>
+                            <div class="cart__table_image_text">
+                                {{ product.product_name }}
+                            </div>
+                        </td>
+                        <td>
+                            {% if is_convert %}
+                                &#8776; {{ product.price }} {{ currency.alias }}
+                                <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                            {% else %}
+                                {{ product.price }} {{ currency.alias }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="stepper stepper--style-2 js-spinner">
+                                <input id="count_{{ product.id }}" type="number" name="count" min="0" max="100" step="1"
+                                       value="{{ product.count }}" class="stepper__input " data-stepper-debounce="400">
+                                <div class="stepper__controls">
+                                    <button type="button" class="update_in_cart" data-id="{{ product.id }}"
+                                            spinner-button="up">+
+                                    </button>
+                                    <button type="button" class="update_in_cart" data-id="{{ product.id }}"
+                                            spinner-button="down">-
+                                    </button>
                                 </div>
-                                <div class="cart__table_image_text">
-                                    <p>{{ product.product_name }}</p>
-                                 </div>
-                            </td>
-                            <td>
-                                {% if product.convert_sale %}
-                                    &#8776;  {{ product.convert_sale }} {{ currency.alias }}
-                                    <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
-                                {% elseif product.convert_price %}
-                                    &#8776; {{ product.convert_price }} {{ currency.alias }}
-                                    <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
-                                {% elseif product.sale_price %}
-                                    {{ product.sale_price }} {{ currency.alias }}
-                                {% else %}
-                                    {{ product.price }} {{ currency.alias }}
-                                {% endif %}
-                            </td>
-                            <td>{{ product.count }}</td>
-                            <td>{% if product.total_convert_sale %}
-                                    &#8776; {{ product.total_convert_sale }} {{ currency.alias }}
-                                    <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
-                                {% elseif product.total_convert %}
-                                    &#8776; {{ product.total_convert }} {{ currency.alias }}
-                                    <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
-                                {% elseif product.total_sale %}
-                                    {{ product.total_sale }} {{ currency.alias }}
-                                {% else %}
-                                    {{ product.total }} {{ currency.alias }}
-                                {% endif %}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                            </div>
+                        </td>
+                        <td class="total_product_price">
+                            {% if is_convert %}
+                                &#8776;
+                                <span id="product_total_price_{{ product.id }}">{{ product.total_price }}</span>
+                                {{ currency.alias }}
+                                <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                            {% else %}
+                                <span id="product_total_price_{{ product.id }}">{{ product.total_price }}</span>
+                                {{ currency.alias }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <i class="fa fa-times delete_from_cart" data-id="{{ product.id }}"></i>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="cart__coupon">
+                <input name="coupon" type="text" placeholder="{{ content.coupon_code }}">
+                <a id="coupon_active" class="button" href="#">{{ content.apply }}</a>
             </div>
+            <div class="cart__total_price">
+                    {{ content.total_price }}
+                {% if is_convert %}
+                    &#8776;
+                    <span id="total_price">{{ total_price }}</span> {{ currency.alias }}
+                    <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
+                {% else %}
+                    <span id="total_price">{{ total_price }}</span> {{ currency.alias }}
+                {% endif %}
+            </div>
+            <div class="cart__coupon">
+                <a class="button" href="#">{{ content.continue }}</a>
+            </div>
+            {% else %}
+                <div class="col-md-12 col-lg-12 text-center">
+                    <p>{{ content.empty_cart }}</p>
+                </div>
+            {% endif %}
         </div>
     </section>
 {% endblock %}
 {% block scripts %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/3.0.6/footable.min.js"></script>
+    <script src="/assets/js/vendors/stepper.js"></script>
     <script>
         jQuery(function () {
             jQuery('.table').footable({
@@ -87,8 +124,75 @@
                     desktop: 1024
                 }
             });
-        })
+        });
+
+        $(document).ready(function () {
+            $(".update_in_cart").click(function () {
+                let id = $(this).attr("data-id");
+                let count = $("#count_" + id).val();
+                $.ajax({
+                    url: 'cart/update',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        count: count
+                    },
+                    success: function (res) {
+                        let responseData = JSON.parse(res);
+
+                        $('.product_in_cart_count').html(responseData.count);
+                        $('#product_total_price_' + id).html(responseData.product.total_price);
+                        $('#total_price').html(responseData.total_price);
+                    },
+                    error: function (e) {
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $(".delete_from_cart").click(function () {
+                let id = $(this).attr("data-id");
+                $.ajax({
+                    url: 'cart/delete',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                    },
+                    success: function (res) {
+                        let product = $('#product_' + id);
+                        product.empty();
+
+                        let responseData = JSON.parse(res);
+
+                        $('.product_in_cart_count').html(responseData.count);
+                        $('#total_price').html(responseData.total_price);
+                    },
+                    error: function (e) {
+                    }
+                });
+            });
+        });
+
+
+        $(document).ready(function () {
+            $("#coupon_active").click(function (e) {
+                e.preventDefault();
+                let coupon = $("input[name='coupon']").val();
+                $.ajax({
+                    url: 'cart/coupon/add',
+                    type: 'POST',
+                    data: {
+                        coupon: coupon,
+                    },
+                    success: function (res) {
+
+                    },
+                    error: function (e) {
+                    }
+                });
+            });
+        });
+
     </script>
-
-
 {% endblock %}
