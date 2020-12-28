@@ -1,5 +1,7 @@
 {% include 'admin/includes/header.twig' %}
 
+<link rel="stylesheet" href="/assets/css/admin/tabs.css">
+
 <div class="content-wrapper">
     <section class="content-header">
         <div class="pull-right">
@@ -10,90 +12,114 @@
                 <i class="fa fa-reply"></i>
             </a>
         </div>
-        <h1>Страны</h1>
+        <h1>Добавить страну</h1>
     </section>
     <section class="content">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-pencil"></i>Добавить страну</h3>
+        <form action="" method="post" enctype="multipart/form-data" id="form-country" class="form-horizontal">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab-general" data-toggle="tab">Основное</a></li>
+                <li><a href="#tab-data" data-toggle="tab">Данные</a></li>
+                <li><a href="#tab-image" data-toggle="tab">Изображения</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab-general">
+                    <ul class="nav nav-tabs" id="language">
+                        {% for language in languageList %}
+                            <li>
+                                <a href="#tab-language-{{ language.id }}" data-toggle="tab"> {{ language.name }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                        {% for language in languageList %}
+                            <div class="tab-pane" id="tab-language-{{ language.id }}">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label required" for="input-name-{{ language.id }}">Название</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" minlength="1" maxlength="255" name="name-{{ language.id }}"
+                                               value="{{ country.name }}" id="input-name-{{ language.id }}"
+                                               class="form-control"/>
+                                        <p class="prompt">от 1 до 255 символов</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tab-pane" id="tab-data">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label required" for="input-alpha2">Код alpha 2</label>
+                        <div class="col-sm-10">
+                            <input type="text" minlength="1" maxlength="2" name="alpha2" placeholder="Код alpha 2"
+                                   id="input-alpha2" class="form-control"/>
+                            <p class="prompt">от 1 до 2 символов</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label required" for="input-alpha3">Код alpha 3</label>
+                        <div class="col-sm-10">
+                            <input type="text" minlength="1" maxlength="3" name="alpha3" placeholder="Код alpha 3"
+                                   id="input-alpha3" class="form-control"/>
+                            <p class="prompt">от 1 до 3 символов</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-status">Статус</label>
+                        <div class="col-sm-10">
+                            <select name="status" id="input-status" class="form-control">
+                                <option value="1">Отображается</option>
+                                <option value="0">Скрыта</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-currency_id">Валюта по умолчанию</label>
+                        <div class="col-sm-10">
+                            <select name="currency_id" id="input-currency_id" class="form-control">
+                                {% for currency in currencyList %}
+                                    <option value="{{ currency.id }}">{{ currency.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tab-image">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label required" for="input-file">Изображение</label>
+                        <div class="col-sm-10">
+                            <input type="file" name="file" id="input-file">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="panel-body">
-                <form action="" method="post" enctype="multipart/form-data" id="form-country" class="form-horizontal">
-                    <fieldset>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="input-name">Название</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="128" name="name" placeholder="Название"
-                                       id="input-name" class="form-control"/>
-                                <p class="prompt">от 1 до 128 символов</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="input-alpha2">Код alpha 2</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="2" name="alpha2" placeholder="Код alpha 2"
-                                       id="input-alpha2" class="form-control"/>
-                                <p class="prompt">от 1 до 2 символов</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="input-alpha3">Код alpha 3</label>
-                            <div class="col-sm-10">
-                                <input type="text" minlength="1" maxlength="3" name="alpha3" placeholder="Код alpha 3"
-                                       id="input-alpha3" class="form-control"/>
-                                <p class="prompt">от 1 до 3 символов</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-status">Статус</label>
-                            <div class="col-sm-10">
-                                <select name="status" id="input-status" class="form-control">
-                                    <option value="1">Отображается</option>
-                                    <option value="0">Скрыта</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-currency_id">Валюта по умолчанию</label>
-                            <div class="col-sm-10">
-                                <select name="currency_id" id="input-currency_id" class="form-control">
-                                    {% for currency in currencyList %}
-                                        <option value="{{ currency.id }}">{{ currency.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="input-file">Изображение (рекомендуется
-                                загрузить с сайта по
-                                <a href="https://icon-icons.com/ru/pack/Flat-Europe-Flag-Icons/266">ссылке</a>)
-                            </label>
-                            <div class="col-sm-10">
-                                <input type="file" name="file" placeholder="Название файла страны" id="input-file"
-                                       class="form-control"/>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-        </div>
+        </form>
     </section>
 </div>
-
 {% include 'admin/includes/footer.twig' %}
 
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
+        //show first tab
+        $('#language a:first').tab('show');
+        $('#option a:first').tab('show');
 
+        // Validation
         $('#form-country').on('submit', function (e) {
-            if (!$('#input-name').val()) {
+
+            {% for language in languageList %}
+
+            if (!$('#input-name-{{ language.id }}').val()) {
                 validAlert(e);
                 return;
             }
+
+            {% endfor %}
+
             if (!$('#input-alpha2').val()) {
                 validAlert(e);
                 return;
             }
+
             if (!$('#input-alpha3').val()) {
                 validAlert(e);
                 return;
@@ -115,4 +141,7 @@
             $('.content').prepend(content);
         }
     });
+
 </script>
+
+

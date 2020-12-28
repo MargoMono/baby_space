@@ -76,7 +76,7 @@ class CategoryModel implements ModelStrategy
             $this->categoryDescriptionRepository->create($newEntityId, $description);
         }
 
-        return $this->categoryRepository->create($data);
+        return $newEntityId;
     }
 
     public function getShowUpdatePageData($id): array

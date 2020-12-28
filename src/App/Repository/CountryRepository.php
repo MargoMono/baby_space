@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Components\Language;
 use PDO;
 use PDOException;
 
@@ -17,15 +18,20 @@ class CountryRepository extends AbstractRepository implements Entity
             $sort['desc'] = 'ASC';
         }
 
+        $languageId = Language::DEFAUL_LANGUGE_ID;
+
         $sql = '
-        SELECT c.* , f.alias AS file_alias, cr.name as currency_name
-            FROM country c
+        SELECT 
+            c.* , f.alias AS file_alias, cr.name as currency_name, cd.name
+        FROM country c
             LEFT JOIN file f ON c.file_id = f.id
             LEFT JOIN currency cr ON c.currency_id = cr.id
+            LEFT JOIN country_description cd on c.id = cd.country_id
+        WHERE language_id = :language_id
         ORDER BY ' . $sort['order'] . ' ' . $sort['desc'];
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':order', $sort);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 
@@ -35,10 +41,13 @@ class CountryRepository extends AbstractRepository implements Entity
     public function getById($id)
     {
         $sql = '
-        SELECT c.*, f.alias AS file_alias, cr.name as currency_name
-            FROM country c
+        SELECT 
+            c.*, f.alias AS file_alias, cr.name as currency_name,
+            cd.name
+        FROM country c
             LEFT JOIN file f ON c.file_id = f.id
             LEFT JOIN currency cr ON c.currency_id = cr.id
+            LEFT JOIN country_description cd on c.id = cd.country_id
         WHERE c.id = :id';
 
         $result = $this->db->prepare($sql);
@@ -53,12 +62,11 @@ class CountryRepository extends AbstractRepository implements Entity
     {
         $sql = '
         INSERT INTO country
-            (name, alpha2, alpha3, status, file_id, currency_id) 
+            (alpha2, alpha3, status, file_id, currency_id) 
         VALUES 
-            (:name, :alpha2, :alpha3, :status, :file_id, :currency_id) ';
+            (:alpha2, :alpha3, :status, :file_id, :currency_id) ';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':name', $data['name']);
         $result->bindParam(':alpha2', $data['alpha2']);
         $result->bindParam(':alpha3', $data['alpha3']);
         $result->bindParam(':status', $data['status']);
@@ -79,7 +87,6 @@ class CountryRepository extends AbstractRepository implements Entity
         $sql = '
         UPDATE country
             SET
-            name = :name,
             alpha2 = :alpha2,
             alpha3 = :alpha3,
             status = :status,
@@ -88,7 +95,6 @@ class CountryRepository extends AbstractRepository implements Entity
         WHERE id = :id';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':name', $data['name']);
         $result->bindParam(':alpha2', $data['alpha2']);
         $result->bindParam(':alpha3', $data['alpha3']);
         $result->bindParam(':status', $data['status']);
