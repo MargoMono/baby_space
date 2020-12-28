@@ -2,13 +2,16 @@
 
 namespace App\Models\Site;
 
+use App\API\RussianPost;
 use App\Components\Cart;
 use App\Components\Currency;
 use App\Components\Language;
 use App\Helpers\CalculationHelper;
 use App\Helpers\ProductPriceHelper;
+use App\Repository\CountryRepository;
 use App\Repository\CouponRepository;
 use App\Repository\LanguageRepository;
+use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use Exception;
 
@@ -33,6 +36,16 @@ class CartModel
      */
     private $couponRepository;
 
+    /**
+     * @var OrderRepository
+     */
+    private $orderRepository;
+
+    /**
+     * @var CountryRepository
+     */
+    private $countryRepository;
+
     public function __construct()
     {
         $this->language = (new LanguageRepository())->getByAlias((new Language())->getLanguage());
@@ -40,6 +53,8 @@ class CartModel
         $this->productRepository = new ProductRepository();
         $this->couponRepository = new CouponRepository();
         $this->productPriceHelper = new ProductPriceHelper();
+        $this->orderRepository = new OrderRepository();
+        $this->countryRepository = new CountryRepository();
     }
 
     /**
@@ -63,6 +78,9 @@ class CartModel
         }
 
         return [
+            'paymentMethodList' => $this->orderRepository->getAllPaymentMethods(),
+            'shippingMethodList' => $this->orderRepository->getAllShippingMethods(),
+            'countryList' => $this->countryRepository->getAll(),
             'productList' => $productList,
             'total_price' => $this->productPriceHelper->getTotalPrice(),
             'is_convert' => empty($this->currency['rate']) ? false : true,
@@ -89,5 +107,15 @@ class CartModel
     public function getCouponData($couponCode)
     {
         return $this->couponRepository->getByCode($couponCode);
+    }
+
+    public function getCalculateDeliveryData($params)
+    {
+        $pussianPost = new RussianPost(141008, 1000, 100);
+        $pussianPost->getTariff();
+
+        return [
+
+        ];
     }
 }

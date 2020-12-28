@@ -91,6 +91,7 @@ class Route
         $router->post('cart/update', [Site\CartController::class, 'actionUpdate']);
         $router->post('cart/delete', [Site\CartController::class, 'actionDelete']);
         $router->post('cart/coupon/add', [Site\CartController::class, 'actionCouponAdd']);
+        $router->post('cart/calculate/delivery', [Site\CartController::class, 'actionCalculateDelivery']);
 
 
         $router->get('comments', ['App\\Controllers\\Site\\CommentController', 'index']);

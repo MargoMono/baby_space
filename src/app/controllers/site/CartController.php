@@ -57,4 +57,10 @@ class CartController
 
         $this->controllerContext->generateAjax($data);
     }
+
+    public function actionCalculateDelivery()
+    {
+        $data = $this->model->getCalculateDeliveryData($_POST);
+        $this->controllerContext->generateAjax($data);
+    }
 }
