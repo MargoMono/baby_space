@@ -111,11 +111,15 @@ class CartModel
 
     public function getCalculateDeliveryData($params)
     {
-        $pussianPost = new RussianPost(141008, 1000, 100);
-        $pussianPost->getTariff();
+        $russianPost = new RussianPost(141008, 1000, 100);
+        $tariff = $russianPost->getTariff() / 100;
+
+        if (!empty($this->currency['rate'])) {
+            $tariff = CalculationHelper::convert($tariff, $this->currency['rate']);
+        }
 
         return [
-
+            'tariff' => $tariff
         ];
     }
 }
