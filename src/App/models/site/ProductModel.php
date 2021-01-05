@@ -34,10 +34,14 @@ class ProductModel
             ['language_id' => $this->language['id']]
         );
 
-        $product['price'] = $this->productPriceHelper->getPrice($id);
-        $product['is_convert'] = empty($this->currency['rate']) ? false : true;
+        $price = $this->productPriceHelper->getPrice($product);
+        $convertPrice = $this->productPriceHelper->getConvertPrice($product);
+
+        $product['price'] = $price;
+        $product['convert_price'] = $convertPrice;
 
         return [
+            'is_convert' => empty($this->currency['rate']) ? false : true,
             'product' => $product,
             'productRecommendationsList' =>  $this->productRecommendationsRepository->getByProductId(
                 $product['id'],

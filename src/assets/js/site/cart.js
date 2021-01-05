@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(".update_in_cart").click(function () {
+    $('.update_in_cart').click(function () {
         let id = $(this).attr("data-id");
         let count = $("#count_" + id).val();
         $.ajax({
@@ -66,31 +66,99 @@ $(document).ready(function () {
     const deliveryCourier = 2;
     const deliveryPickEms = 3;
 
+    let inputPaymentPickUp = $('input[id=input-payment-pick-up]');
+    let inputPaymentYandex = $('input[id=input-payment-yandex]');
+
+    let addressFormDeliveryCourier = $('.address-form-delivery-courier');
+    let addressFormDeliveryEms = $('.address-form-delivery-ems');
+
     $(".delivery").click(function () {
-        let deliveryType = $('input[name="delivery"]:checked').val();
-        if (deliveryType == deliveryCourier){
-            $('.address-form').show();
-            $('#calculate-delivery').hide();
-        } else if(deliveryType == deliveryPickEms) {
-            $('.address-form').show();
-            $('#calculate-delivery').show();
-        } else {
-            $('.address-form').hide();
-            $('#calculate-delivery').hide();
+        let deliveryType = Number($('input[name="delivery"]:checked').val());
+        if (deliveryType === deliveryCourier) {
+            addressFormDeliveryCourier.show();
+            addressFormDeliveryEms.hide();
+            blockPaymentMethodForPickUp();
+        } else if (deliveryType === deliveryPickEms) {
+            addressFormDeliveryCourier.hide();
+            addressFormDeliveryEms.show();
+            blockPaymentMethodForPickUp();
+        } else if (deliveryType === deliveryPickUp) {
+            addressFormDeliveryCourier.hide();
+            addressFormDeliveryEms.hide();
+            unblockPaymentMethodForPickUp();
         }
     });
 
+    function blockPaymentMethodForPickUp() {
+        inputPaymentPickUp.attr("disabled", true);
+        inputPaymentYandex.prop("checked", true);
+    }
+
+    function unblockPaymentMethodForPickUp() {
+        inputPaymentPickUp.attr("disabled", false);
+        inputPaymentPickUp.prop("checked", true);
+    }
+
+    let deliveryEmsWarningMessage = $('.delivery-ems-warning');
+    let deliveryEmsDangerMessage = $('.delivery-ems-danger');
+    let deliveryEmsPrice = $('.delivery-ems-price');
+    let deliveryEmsPriceText = $('#delivery-ems-price-text');
+    let deliveryEmsPriceTextConvert = $('#delivery-ems-price-text-convert');
+
+    function showCalculateDeliveryWarningMessage() {
+        deliveryEmsWarningMessage.show();
+        deliveryEmsDangerMessage.hide();
+    }
+
+    function showCalculateDeliveryErrorMessage() {
+        deliveryEmsWarningMessage.hide();
+        deliveryEmsDangerMessage.show();
+    }
+
+    function hideWarningAndErrorMessage() {
+        deliveryEmsWarningMessage.hide();
+        deliveryEmsDangerMessage.hide();
+    }
+
     $("#calculate-delivery").click(function (e) {
         e.preventDefault();
-        let deliveryType = $('input[name="delivery"]:checked').val();
+        let country = $('select[name="country-ems"]').val();
+        let address = $('input[name="address-ems"]').val();
+        let postcode = $('input[name="postcode-ems"]').val();
+        let weight = $('input[name="weight-ems"]').val();
+
+        if (country === "") {
+            showCalculateDeliveryWarningMessage();
+            return;
+        }
+
+        if (address === "") {
+            showCalculateDeliveryWarningMessage();
+            return;
+        }
+
+        if (postcode === "") {
+            showCalculateDeliveryWarningMessage();
+            return;
+        }
+
+        hideWarningAndErrorMessage();
+
+
         $.ajax({
             url: 'cart/calculate/delivery',
             type: 'POST',
             data: {
-                id: deliveryType,
+                country: country,
+                address: address,
+                postcode: postcode,
+                weight: weight,
             },
             success: function (res) {
-
+                deliveryEmsPrice.show();
+                let responseData = JSON.parse(res);
+                deliveryEmsPriceText.html(responseData.tariff);
+                deliveryEmsPriceTextConvert.html(responseData.tariff_convert);
             },
             error: function (e) {
             }

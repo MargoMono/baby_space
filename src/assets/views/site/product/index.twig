@@ -32,12 +32,12 @@
                     <div class="s_product_text">
                         <h2>{{ product.product_name|e }}</h2>
                         <p class="product_price">
-                            {% if product.is_convert %}
-                                &#8776; {{ product.price }} {{ currency.alias }}
+                            {% if is_convert %}
+                                &#8776; {{ product.convert_price }} {{ currency.alias }}
                                 <i data-tooltip="{{ content.rate_price }}" class="fa fa-info-circle"></i>
-                            {% else %}
-                                {{ product.price }} {{ currency.alias }}
+                                <br>
                             {% endif %}
+                            {{ product.price }} {{ content.rub }}
                         </p>
                         <ul class="list">
                             <li><span>{{ content.category }}</span>: {{ product.category_name|e }}</li>

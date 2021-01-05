@@ -60,7 +60,7 @@ class Route
         // Общие
         $router->get('/', [IndexController::class, 'showHomePage']);
         $router->get('change-language/{id}', [IndexController::class, 'actionChangeLanguage']);
-        $router->get('change-currency/{id}', [IndexController::class, 'actionChangeCurrency']);
+        $router->get('change-country/{id}', [IndexController::class, 'actionChangeCountry']);
         $router->post('add-to-cart', [IndexController::class, 'actionAddToCart']);
 
         $router->get('o-nas', [Site\PageController::class, 'actionShowCompanyPage']);

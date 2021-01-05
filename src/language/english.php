@@ -16,6 +16,7 @@ $_['footer_text']                              = 'Развивает логик�
 
 $_['main_page_title']                           = 'Main page';
 $_['rate_price']                                = 'The final price depends on the currency conversion of your bank';
+$_['rub']                                       = 'RUB';
 
 //Название разделов сайта
 $_['pages']                                     = 'Pages';
@@ -58,3 +59,12 @@ $_['coupon_code']                                = 'Coupon code';
 $_['apply']                                      = 'Apply';
 $_['continue']                                   = 'Continue';
 $_['empty_cart']                                 = 'Cart is empty';
+
+$_['payment']                                    = 'Payment methods';
+$_['delivery']                                   = 'Delivery methods';
+$_['common_data']                                = 'Common data';
+$_['name']                                       = 'Name';
+$_['surname']                                    = 'Surname';
+$_['email']                                      = 'Email';
+$_['phone']                                      = 'Phone number';
+$_['comment']                                    = 'Comment';

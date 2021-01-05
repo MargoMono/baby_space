@@ -3,9 +3,11 @@
 namespace App\Controllers\Site;
 
 use App\Components\Cart;
+use App\Components\Country;
 use App\Components\Currency;
 use App\Components\Language;
 use App\Repository\CategoryRepository;
+use App\Repository\CountryRepository;
 use App\Repository\CurrencyRepository;
 use App\Repository\LanguageRepository;
 use App\View\View;
@@ -56,6 +58,14 @@ class ControllerContext
         $language->setContent();
         $data['language'] = $languagesRepository->getByAlias($language->getLanguage());
         $data['content'] = $language->getContent();
+
+        $countryRepository = new CountryRepository();
+        $data['countryList'] = $countryRepository->getAllByParams([
+            'language_id' => $data['language']['id']
+        ]);
+
+        $country = new Country();
+        $data['country'] = $country->getCountry();
 
         $currency = new Currency();
         $data['currency'] = $currency->getCurrency();

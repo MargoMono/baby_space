@@ -120,7 +120,7 @@ a {
 /* Links inside the dropdown */
 .dropdown-content a {
     color: black;
-    padding: 2px 0 2px 25px;
+    padding: 2px 0 2px 5px;
     text-decoration: none;
     display: block;
 }

@@ -140,4 +140,54 @@ class CountryRepository extends AbstractRepository implements Entity
 
         return $result->fetch();
     }
+
+    public function getAllByParams($params = null)
+    {
+        $languageId = $params['language_id'] ?? Language::DEFAUL_LANGUGE_ID;
+
+        $sql = '
+        SELECT 
+            c.* , f.alias AS file_alias, cr.name as currency_name, cd.name
+        FROM country c
+            LEFT JOIN file f ON c.file_id = f.id
+            LEFT JOIN currency cr ON c.currency_id = cr.id
+            LEFT JOIN country_description cd on c.id = cd.country_id
+        WHERE language_id = :language_id';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getByParams($params = null)
+    {
+        $where = '';
+
+        $languageId = $params['language_id'] ?? Language::DEFAUL_LANGUGE_ID;
+
+        if (!empty($params['alpha2'])) {
+            $where .= " AND c.alpha2 = '{$params['alpha2']}'";
+        } else {
+            $where .= " AND c.alpha2 = 'RU'";
+        }
+
+        $sql = "
+        SELECT 
+            c.* , f.alias AS file_alias, cr.name as currency_name, cd.name
+        FROM country c
+            LEFT JOIN file f ON c.file_id = f.id
+            LEFT JOIN currency cr ON c.currency_id = cr.id
+            LEFT JOIN country_description cd on c.id = cd.country_id
+        WHERE language_id = :language_id {$where}";
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetch();
+    }
 }

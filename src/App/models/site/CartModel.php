@@ -13,7 +13,12 @@ use App\Repository\CouponRepository;
 use App\Repository\LanguageRepository;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
+use DateTime;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
+use LapayGroup\RussianPost\Exceptions\RussianPostException;
+use LapayGroup\RussianPost\Exceptions\RussianPostTarrificatorException;
+use LapayGroup\RussianPost\TariffCalculation;
 
 class CartModel
 {
@@ -58,31 +63,46 @@ class CartModel
     }
 
     /**
-     * @return array|void
+     * @return array|null
      * @throws Exception
      */
-    public function getIndexData(): array
+    public function getIndexData(): ?array
     {
         $productList = [];
         $cartData = Cart::getAllCartData();
 
-        if (!empty($cartData)) {
-            foreach ($cartData as $id => $count) {
-                $product = $this->productRepository->getById($id, ['language_id' => $this->language['id']]);
-                $product['price'] = $this->productPriceHelper->getPrice($id);
-                $product['count'] = $count;
-                $product['total_price'] = $product['price'] * $count;
+        if (empty($cartData)) {
+            return null;
+        }
 
-                $productList[$id] = $product;
-            }
+        $totalProductsWeight = 0;
+
+        foreach ($cartData as $id => $count) {
+            $product = $this->productRepository->getById($id, ['language_id' => $this->language['id']]);
+
+            $price = $this->productPriceHelper->getPrice($product);
+            $convertPrice = $this->productPriceHelper->getConvertPrice($product);
+
+            $product['count'] = $count;
+            $product['price'] = $price;
+            $product['convert_price'] = $convertPrice;
+
+            $product['total_price'] = $product['price'] * $count;
+            $product['convert_total_price'] = $product['convert_price'] * $count;
+
+            $productList[$id] = $product;
+
+            $totalProductsWeight += $product['weight'];
         }
 
         return [
             'paymentMethodList' => $this->orderRepository->getAllPaymentMethods(),
             'shippingMethodList' => $this->orderRepository->getAllShippingMethods(),
-            'countryList' => $this->countryRepository->getAll(),
+            'countryList' => $this->countryRepository->getAllByParams($this->language['id']),
             'productList' => $productList,
             'total_price' => $this->productPriceHelper->getTotalPrice(),
+            'convert_total_price' => $this->productPriceHelper->getTotalConvertPrice(),
+            'total_weight' => $totalProductsWeight,
             'is_convert' => empty($this->currency['rate']) ? false : true,
         ];
     }
@@ -111,15 +131,36 @@ class CartModel
 
     public function getCalculateDeliveryData($params)
     {
-        $russianPost = new RussianPost(141008, 1000, 100);
-        $tariff = $russianPost->getTariff() / 100;
+        try {
+            $objectId = 7020; // https://tariff.pochta.ru/#/108
+            $date = new DateTime();
+
+            $params = [
+                'weight' => $params['weight'],
+                'sumoc' => 7020,
+                'from' => 420076,
+                'to' => $params['postcode'],
+                'group' => 0,
+                'date' => $date->format('Ymd'),
+                'time' => $date->format('Hi'),
+            ];
+
+            $services = [41];
+
+            $TariffCalculation = new TariffCalculation();
+            $calcInfo = $TariffCalculation->calculate($objectId, $params, $services);
+            $tariff = $calcInfo->getPayNds();
+        } catch (RussianPostTarrificatorException | RussianPostException $e) {
+            $errors = $e->getErrors(); // Массив вида [['msg' => 'текст ошибки', 'code' => код ошибки]]
+        }
 
         if (!empty($this->currency['rate'])) {
-            $tariff = CalculationHelper::convert($tariff, $this->currency['rate']);
+            $tariffConvert = CalculationHelper::convert($tariff, $this->currency['rate']);
         }
 
         return [
-            'tariff' => $tariff
+            'tariff' => $tariff,
+            'tariff_convert' => $tariffConvert ?? null
         ];
     }
 }

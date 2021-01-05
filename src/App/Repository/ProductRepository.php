@@ -116,15 +116,16 @@ class ProductRepository extends AbstractRepository implements Entity
     {
         $sql = '
         INSERT INTO product 
-            (category_id, size_id, type_id, price, sale, file_id, status, popular, alias, sort) 
+            (category_id, size_id, type_id, price, weight, sale, file_id, status, popular, alias, sort) 
         VALUES 
-            (:category_id, :size_id, :type_id, :price, :sale, :file_id, :status, :popular, :alias, :sort)';
+            (:category_id, :size_id, :type_id, :price, :weight, :sale, :file_id, :status, :popular, :alias, :sort)';
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':category_id', $data['category_id']);
         $result->bindParam(':size_id', $data['size_id']);
         $result->bindParam(':type_id', $data['type_id']);
         $result->bindParam(':price', $data['price']);
+        $result->bindParam(':weight', $data['weight']);
         $result->bindParam(':sale', $data['sale']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);
@@ -150,6 +151,7 @@ class ProductRepository extends AbstractRepository implements Entity
             size_id = :size_id,
             type_id = :type_id,
             price = :price,
+            weight = :weight,
             sale = :sale,
             file_id = :file_id,
             status = :status,
@@ -163,6 +165,7 @@ class ProductRepository extends AbstractRepository implements Entity
         $result->bindParam(':size_id', $data['size_id']);
         $result->bindParam(':type_id', $data['type_id']);
         $result->bindParam(':price', $data['price']);
+        $result->bindParam(':weight', $data['weight']);
         $result->bindParam(':sale', $data['sale']);
         $result->bindParam(':file_id', $data['file_id']);
         $result->bindParam(':status', $data['status']);

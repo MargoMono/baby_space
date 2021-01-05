@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Components\Language;
 use PDO;
 use PDOException;
 
@@ -123,17 +124,23 @@ class CurrencyRepository extends AbstractRepository
         return $result->fetchAll();
     }
 
-    public function getByCode($code)
+    public function getByParams($params = null)
     {
-        $sql = '
-        SELECT 
+        $where = '';
+
+        if (!empty($params['id'])) {
+            $where .= " c.id = '{$params['id']}'";
+        }
+
+        $sql = "
+          SELECT 
             c.*, r.rate
         FROM currency c 
             LEFT JOIN rate r on c.id = r.currency_id
-        WHERE code = :code';
+        WHERE {$where}";
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':code', $code);
+        $result->bindParam(':language_id', $languageId);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

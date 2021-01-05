@@ -25,53 +25,74 @@ class ProductPriceHelper
         $this->productRepository = new ProductRepository();
     }
 
-    public function getTotalPrice(){
+    public function getTotalPrice()
+    {
         $cartData = Cart::getAllCartData();
         $totalPrice = 0;
 
-        if (empty($cartData)){
+        if (empty($cartData)) {
             return $totalPrice;
         }
 
         foreach ($cartData as $id => $count) {
-            $product['price'] = $this->getPrice($id);
-            $totalPrice += $product['price'] * $count;
+            $product = $this->productRepository->getById($id, ['language_id' => $this->language['id']]);
+            $price = $this->getPrice($product);
+            $totalPrice += $price * $count;
         }
 
         return $totalPrice;
     }
 
-    public function getPrice($id)
+    public function getPrice($product)
     {
-        $convert = false;
-        $sale = false;
-
-        $product = $this->productRepository->getById($id, ['language_id' => $this->language['id']]);
-        $product['convert_price'] = CalculationHelper::convert($product['price'], $this->currency['rate']);
-
-        if (!empty($this->currency['rate'])){
-            $convert = true;
+        if (!empty($product['sale'])) {
+            $price = CalculationHelper::sale($product['price'], $product['sale']);
+        } else {
+            $price = $product['price'];
         }
 
-        if (!empty($product['sale'])){
+        return $price;
+    }
+
+    public function getTotalConvertPrice()
+    {
+        $cartData = Cart::getAllCartData();
+        $totalPrice = 0;
+
+        if (empty($this->currency['rate'])) {
+            return false;
+        }
+
+        if (empty($cartData)) {
+            return $totalPrice;
+        }
+
+        foreach ($cartData as $id => $count) {
+            $product = $this->productRepository->getById($id, ['language_id' => $this->language['id']]);
+            $price = $this->getConvertPrice($product);
+            $totalPrice += $price * $count;
+        }
+
+        return $totalPrice;
+    }
+
+    public function getConvertPrice($product)
+    {
+        $sale = false;
+
+        if (empty($this->currency['rate'])) {
+            return false;
+        }
+
+        if (!empty($product['sale'])) {
             $sale = true;
         }
 
-        if ($convert && $sale){
+        if ($sale) {
             $salePrice = CalculationHelper::sale($product['price'], $product['sale']);
-            $price =  CalculationHelper::convert($salePrice, $this->currency['rate']);
-        }
-
-        if ($convert && !$sale) {
-            $price =  CalculationHelper::convert($product['price'], $this->currency['rate']);
-        }
-
-        if (!$convert && $sale) {
-            $price = CalculationHelper::sale($product['price'], $product['sale']);
-        }
-
-        if (!$convert && !$sale) {
-            $price = $product['price'];
+            $price = CalculationHelper::convert($salePrice, $this->currency['rate']);
+        } else {
+            $price = CalculationHelper::convert($product['price'], $this->currency['rate']);
         }
 
         return $price;

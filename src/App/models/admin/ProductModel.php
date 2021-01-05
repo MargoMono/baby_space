@@ -243,6 +243,7 @@ class ProductModel implements ModelStrategy
             'size_id' => $params['size_id'],
             'type_id' => $params['type_id'],
             'price' => $params['price'],
+            'weight' => $params['weight'],
             'sale' => $params['sale'],
             'status' => $params['status'],
             'popular' => $params['popular'],

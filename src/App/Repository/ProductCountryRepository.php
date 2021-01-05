@@ -14,11 +14,12 @@ class ProductCountryRepository extends AbstractRepository
 
         $sql = '
         SELECT 
-             c.name, c.id
+             cd.name, c.id
         FROM product_country pc
             JOIN product p ON pc.product_id = p.id
             JOIN product_description pd ON p.id = pd.product_id
             JOIN country c ON pc.country_id = c.id
+            JOIN country_description cd ON c.id = cd.country_id
         WHERE pc.product_id = :id
         AND  pd.language_id = :language_id';
 

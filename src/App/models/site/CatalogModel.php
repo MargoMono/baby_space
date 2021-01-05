@@ -52,7 +52,8 @@ class CatalogModel
 
         return [
             'category_id' => $id ?? null,
-            'productList' => $this->getProductConvertAndSalePrice($productList),
+            'is_convert' => empty($this->currency['rate']) ? false : true,
+            'productList' => $this->getProductPrice($productList),
             'sizeList' => $this->sizeRepository->getAllByParams(['language_id' => $this->language['id']]),
             'typeList' => $this->typeRepository->getAllByParams(['language_id' => $this->language['id']]),
             'max' => max($priceList),
@@ -72,7 +73,8 @@ class CatalogModel
         );
 
         return [
-            'productList' => $this->getProductConvertAndSalePrice($productList),
+            'is_convert' => empty($this->currency['rate']) ? false : true,
+            'productList' => $this->getProductPrice($productList),
         ];
     }
 
@@ -87,7 +89,8 @@ class CatalogModel
         );
 
         return [
-            'productList' => $this->getProductConvertAndSalePrice($productList),
+            'is_convert' => empty($this->currency['rate']) ? false : true,
+            'productList' => $this->getProductPrice($productList),
         ];
     }
 
@@ -109,11 +112,11 @@ class CatalogModel
     }
 
 
-    private function getProductConvertAndSalePrice($productList)
+    private function getProductPrice($productList)
     {
         foreach ($productList as $key => $product) {
-            $productList[$key]['price'] = $this->productPriceHelper->getPrice($product['id']);
-            $productList[$key]['is_convert'] = empty($this->currency['rate']) ? false : true;
+            $productList[$key]['price'] = $this->productPriceHelper->getPrice($product);
+            $productList[$key]['convert_price'] = $this->productPriceHelper->getConvertPrice($product);
         }
 
         return $productList;

@@ -6,7 +6,6 @@ use App\Components\Rates;
 use App\Components\Route;
 
 session_start();
-
 $rates = new Rates();
 $rates->getRates();
 

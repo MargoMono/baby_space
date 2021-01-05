@@ -81,11 +81,11 @@
                         <li class="nav-item">
                             <div class="dropdown" >
                                 <div class="dropbtn">
-                                    <p class="dropbtn-text"><b>{{currency.code }}</b></p>
+                                    <p class="dropbtn-text"><b>{{country.name }}</b></p>
                                 </div>
                                 <div class="dropdown-content">
-                                    {% for currency in currencyList %}
-                                        <a href="/change-currency/{{ currency.code }}"><b>{{ currency.code }}</b></a>
+                                    {% for country in countryList %}
+                                        <a href="/change-country/{{ country.alpha2 }}"><img class="dropbtn-img" src="/upload/images/country/{{ country.file_alias }}" alt="">{{ country.name }}</a>
                                     {% endfor %}
                                 </div>
                             </div>

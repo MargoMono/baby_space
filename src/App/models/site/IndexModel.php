@@ -5,6 +5,7 @@ namespace App\Models\Site;
 use App\Components\Currency;
 use App\Components\Language;
 use App\Helpers\CalculationHelper;
+use App\Helpers\ProductPriceHelper;
 use App\Repository\BlogRepository;
 use App\Repository\LanguageRepository;
 use App\Repository\ProductRepository;
@@ -18,6 +19,10 @@ class IndexModel
     private $productRepository;
     private $saleRepository;
     private $currency;
+    /**
+     * @var ProductPriceHelper
+     */
+    private $productPriceHelper;
 
     public function __construct()
     {
@@ -26,6 +31,7 @@ class IndexModel
         $this->blogRepository = new BlogRepository();
         $this->productRepository = new ProductRepository();
         $this->saleRepository = new SaleRepository();
+        $this->productPriceHelper = new ProductPriceHelper();
     }
 
     /**
@@ -38,21 +44,11 @@ class IndexModel
             ['popular' => 1]
         );
 
+        $data['is_convert'] = empty($this->currency['rate']) ? false : true;
+
         foreach ($productList as $key => $product) {
-            $salePrice = null;
-
-            if (!empty($product['sale'])) {
-                $salePrice = CalculationHelper::sale($product['price'], $product['sale']);
-            }
-
-            $productList[$key]['convert_price'] = CalculationHelper::convert($product['price'], $this->currency['rate']);
-
-            if (empty($salePrice)) {
-                continue;
-            }
-
-            $productList[$key]['convert_sale'] = CalculationHelper::convert($salePrice, $this->currency['rate']);
-            $productList[$key]['sale_price'] = $salePrice;
+            $productList[$key]['price'] = $this->productPriceHelper->getPrice($product);
+            $productList[$key]['convert_price'] = $this->productPriceHelper->getConvertPrice($product);
         }
 
         $data['productList'] = $productList;
