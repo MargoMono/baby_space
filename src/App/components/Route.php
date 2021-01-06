@@ -93,13 +93,11 @@ class Route
         $router->post('cart/coupon/add', [Site\CartController::class, 'actionCouponAdd']);
         $router->post('cart/calculate/delivery', [Site\CartController::class, 'actionCalculateDelivery']);
 
-
-        $router->get('comments', ['App\\Controllers\\Site\\CommentController', 'index']);
-        $router->get('comments/show-more/{count}', ['App\\Controllers\\Site\\CommentController', 'showMore']);
-        $router->post('comments/create-comment', ['App\\Controllers\\Site\\CommentController', 'createComment']);
+        $router->get('comments', [Site\CommentController::class, 'index']);
+        $router->get('comments/show-more/{count}', [Site\CommentController::class, 'showMore']);
+        $router->post('comments/create-comment', [Site\CommentController::class, 'createComment']);
 
         $router->post('search', ['App\\Controllers\\Site\\SearchController', 'actionIndex']);
-
 
         $router->get('user/login', [UserController::class, 'showLoginPage']);
         $router->post('user/login', [UserController::class, 'actionLogin']);

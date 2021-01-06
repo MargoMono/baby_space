@@ -13,7 +13,7 @@ class CommentAnswerDescriptionRepository extends AbstractRepository
         SELECT 
            *
         FROM comment_answer_description
-        WHERE comment_answer_id = :comment_answer_id
+            WHERE comment_answer_id = :comment_answer_id
         AND language_id = :language_id
         ';
 

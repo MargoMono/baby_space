@@ -3,49 +3,61 @@
 namespace App\Controllers\Site;
 
 use App\Controllers\Controller;
+use App\Exceptions\AdminException;
+use App\Exceptions\SiteException;
 use App\Helpers\MailerHelper;
+use App\Models\Site\BlogModel;
 use App\Models\Site\CommentModel;
 
-class CommentController extends Controller
+class CommentController
 {
-    function __construct()
+    private $directory = 'comment';
+    private $controllerContext;
+    private $model;
+
+    public function __construct()
     {
-        parent::__construct();
+        $this->controllerContext = new ControllerContext($this->directory);
         $this->model = new CommentModel();
     }
 
     public function index()
     {
         $data = $this->model->getIndexData();
-        $data['page'] = 'company';
-        $this->view->generate('/site/comment/index.twig', $data);
+        $this->controllerContext->render($data, 'index.twig');
     }
 
     public function showMore($count)
     {
         $data = $this->model->getShowMoreData($count);
-        $this->view->generate('site/comment/showMore.twig', $data);
+        $this->controllerContext->render($data, 'more.twig');
     }
 
     public function createComment()
     {
-        $data = $this->model->createComment($_FILES, $_POST);
-
-        if (empty($data['errors'])) {
-            $emailParams = [
-                'user_name' => $_POST['user_name'],
-                'base_url' => $_SERVER['HTTP_HOST'],
-            ];
-
-            $mailModel = new MailController();
-            $body = $mailModel->getTemplate('newComment.twig', $emailParams);
-            $subject = 'Новый отзыв сайте Кдф-трейдинг.рф';
-
-            $mailer = new MailerHelper($subject, $body, 'kdf_16@mail.ru', 'КДФ');
-            $mailer->send();
+        try {
+            $this->model->createComment($_FILES, $_POST);
+        } catch (SiteException | AdminException $e) {
+            $this->controllerContext->generateAjax([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
 
-        $this->view->generateAjax($data);
-        return;
+        $this->controllerContext->generateAjax([
+            'status' => true
+        ]);
+
+//        $emailParams = [
+//            'user_name' => $_POST['user_name'],
+//            'base_url' => $_SERVER['HTTP_HOST'],
+//        ];
+//
+//        $mailModel = new MailController();
+//        $body = $mailModel->getTemplate('newComment.twig', $emailParams);
+//        $subject = 'Новый отзыв сайте baby-space.store';
+//
+//        $mailer = new MailerHelper($subject, $body, 'margomonogarova@gmail.ru', 'Baby\'s Space');
+//        $mailer->send();
     }
 }

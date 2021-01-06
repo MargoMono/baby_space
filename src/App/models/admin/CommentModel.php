@@ -98,7 +98,9 @@ class CommentModel implements ModelStrategy
                 $description['language_id']);
 
             if (empty($productDescriptionExist)) {
-                $this->commentDescriptionRepository->create($data['comment']['id'], $description);
+                if (!empty($description)){
+                    $this->commentDescriptionRepository->create($data['comment']['id'], $description);
+                }
             } else {
                 $this->commentDescriptionRepository->updateById($description);
             }
@@ -115,7 +117,9 @@ class CommentModel implements ModelStrategy
                 $description['language_id']);
 
             if (empty($productDescriptionExist)) {
-                $this->commentAnswerDescriptionRepository->create($data['comment_answer']['id'], $description);
+                if (!empty($description)){
+                    $this->commentAnswerDescriptionRepository->create($data['comment_answer']['id'], $description);
+                }
             } else {
                 $this->commentAnswerDescriptionRepository->updateById($description);
             }

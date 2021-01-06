@@ -255,4 +255,66 @@ class CommentRepository extends AbstractRepository
             throw new \RuntimeException('Unable to delete product-file connection');
         }
     }
+
+    public function getAllByParams($params = null, $limit = null, $offset = null)
+    {
+        $where = '';
+
+        $languageId = $params['language_id'] ?? Language::DEFAUL_LANGUGE_ID;
+
+        $limitAndOffset = '';
+
+        if (!empty($limit)) {
+            $limitAndOffset .= ' LIMIT ' . $limit;
+
+            if (!empty($offset)) {
+                $limitAndOffset .= ' OFFSET ' . $offset;
+            }
+        }
+
+        $sql = '
+        SELECT 
+               c.*, cd.description
+        FROM comment c
+            JOIN comment_description cd ON c.id = cd.comment_id
+        WHERE cd.language_id = :language_id
+            ' . $where . '
+            AND status = 1
+        ORDER BY c.created_at DESC' .$limitAndOffset;
+
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    public function getByParams($params = null)
+    {
+        $where = '';
+
+        $languageId = $params['language_id'] ?? Language::DEFAUL_LANGUGE_ID;
+
+        if (!empty($params['user_email'])) {
+            $where .= " AND c.user_email = '{$params['user_email']}'";
+        }
+
+        $sql = '
+        SELECT 
+            c.*, cd.description
+        FROM comment c
+            JOIN comment_description cd ON c.id = cd.comment_id
+        WHERE cd.language_id = :language_id
+            ' . $where . '
+        ORDER BY c.created_at DESC';
+
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':language_id', $languageId);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
 }

@@ -86,6 +86,9 @@
                                             {{ product.price }} {{ content.rub }}
                                         </p>
                                     </div>
+                                    {% if product.sale %}
+                                        <p class="card-product__sale">Скидка {{ product.sale }} %</p>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endif %}

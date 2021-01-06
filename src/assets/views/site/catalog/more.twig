@@ -23,6 +23,9 @@
                         {% endif %}
                         {{ product.price }} {{ content.rub }}
                     </p>
+                    {% if product.sale %}
+                        <p class="card-product__sale">Скидка {{ product.sale }} %</p>
+                    {% endif %}
                     <div class="card-product__add">
                         <p>Товар добавлен!</p>
                         <p class="bold"><a href="/cart">{{ content.go_to_cart }}</a></p>

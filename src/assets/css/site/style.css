@@ -704,11 +704,11 @@ a {
         padding-top: 0px
     }
 
-    .footer-bottom {
+    .footer-rights {
         text-align: center
     }
 
-    .footer-bottom .footer-social {
+    .footer-rights .footer-social {
         text-align: center;
         margin-top: 15px
     }
@@ -992,6 +992,19 @@ a {
 .card-product__price {
     font-size: 18px;
     font-weight: 500
+}
+
+.card-product__sale {
+    position: absolute;
+    top: 10%;
+    color: red;
+    font-weight: 700;
+    transform: rotate(-45deg);
+    background-color: #ffffffe3;
+    width: 100%;
+    padding: 3px 0;
+    left: -20%;
+    z-index: 20;
 }
 
 .card-product__add {
@@ -2306,177 +2319,6 @@ a {
     }
 }
 
-.comments-area {
-    background: #fafaff;
-    border: 1px solid #eee;
-    padding: 50px 30px;
-    margin-top: 50px
-}
-
-@media (max-width: 414px) {
-    .comments-area {
-        padding: 50px 8px
-    }
-}
-
-.comments-area h4 {
-    text-align: center;
-    margin-bottom: 50px;
-    color: #222;
-    font-size: 18px
-}
-
-.comments-area h5 {
-    font-size: 16px;
-    margin-bottom: 0px
-}
-
-.comments-area a {
-    color: #222
-}
-
-.comments-area .comment-list {
-    padding-bottom: 48px
-}
-
-.comments-area .comment-list:last-child {
-    padding-bottom: 0px
-}
-
-.comments-area .comment-list.left-padding {
-    padding-left: 25px
-}
-
-@media (max-width: 413px) {
-    .comments-area .comment-list .single-comment h5 {
-        font-size: 12px
-    }
-
-    .comments-area .comment-list .single-comment .date {
-        font-size: 11px
-    }
-
-    .comments-area .comment-list .single-comment .comment {
-        font-size: 10px
-    }
-}
-
-.comments-area .thumb {
-    margin-right: 20px
-}
-
-.comments-area .date {
-    font-size: 13px;
-    color: #cccccc;
-    margin-bottom: 13px
-}
-
-.comments-area .comment {
-    color: #777777;
-    margin-bottom: 0px
-}
-
-.comments-area .btn-reply {
-    background-color: #fff;
-    color: #222;
-    padding: 5px 18px;
-    font-size: 12px;
-    display: block;
-    font-weight: 400;
-    -webkit-transition: all 0.3s ease 0s;
-    -moz-transition: all 0.3s ease 0s;
-    -o-transition: all 0.3s ease 0s;
-    transition: all 0.3s ease 0s
-}
-
-.comments-area .btn-reply:hover {
-    background-color: #fe5407;
-    color: #fff;
-    font-weight: 700
-}
-
-.comment-form {
-    background: #fafaff;
-    text-align: center;
-    border: 1px solid #eee;
-    padding: 47px 30px 43px;
-    margin-top: 50px;
-    margin-bottom: 20px
-}
-
-.comment-form h4 {
-    text-align: center;
-    margin-bottom: 50px;
-    font-size: 18px;
-    line-height: 22px;
-    color: #222
-}
-
-.comment-form .name {
-    padding-left: 0px
-}
-
-@media (max-width: 767px) {
-    .comment-form .name {
-        padding-right: 0px;
-        margin-bottom: 1rem
-    }
-}
-
-.comment-form .email {
-    padding-right: 0px
-}
-
-@media (max-width: 991px) {
-    .comment-form .email {
-        padding-left: 0px
-    }
-}
-
-.comment-form .form-control {
-    padding: 8px 20px;
-    background: #fff;
-    border: none;
-    border-radius: 0px;
-    width: 100%;
-    font-size: 14px;
-    color: #777777;
-    border: 1px solid transparent
-}
-
-.comment-form .form-control:focus {
-    box-shadow: none;
-    border: 1px solid #eee
-}
-
-.comment-form .form-control::placeholder {
-    color: #777777
-}
-
-.comment-form textarea.form-control {
-    height: 140px;
-    resize: none
-}
-
-.comment-form ::-webkit-input-placeholder {
-    font-size: 13px;
-    color: #777
-}
-
-.comment-form ::-moz-placeholder {
-    font-size: 13px;
-    color: #777
-}
-
-.comment-form :-ms-input-placeholder {
-    font-size: 13px;
-    color: #777
-}
-
-.comment-form :-moz-placeholder {
-    font-size: 13px;
-    color: #777
-}
 
 .contact-banner {
     position: relative
@@ -4039,6 +3881,10 @@ a {
     padding-top: 50px
 }
 
+.delete_from_cart {
+    cursor: pointer;
+}
+
 @media (min-width: 1000px) {
     .product_image_area {
         padding-top: 100px
@@ -4365,6 +4211,181 @@ a {
     color: #999999
 }
 
+
+
+
+
+
+.logo_h {
+    font-family: "Oswald", sans-serif;
+    text-transform: capitalize;
+    color: #000000;
+    font-size: 36px;
+    font-weight: 600;
+}
+
+/* Комментарии */
+
+.comments-area {
+    padding-bottom: 80px
+}
+
+.comment-form {
+    background: #f6f6f6;
+    text-align: center;
+    border: 1px solid #eee;
+    padding: 40px 30px 40px;
+    margin-top: 50px;
+    margin-bottom: 50px
+}
+
+.comment-form h4 {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 18px;
+    line-height: 22px;
+    color: #222
+}
+
+.comment-form .form-control {
+    padding: 8px 20px;
+    background: #fff;
+    border-radius: 0;
+    width: 100%;
+    font-size: 14px;
+    color: #777777;
+    border: 1px solid transparent
+}
+
+.comment-form .form-control:focus {
+    box-shadow: none;
+    border: 1px solid #eee
+}
+
+.comment-form .form-control::placeholder {
+    color: #777777
+}
+
+.comment-form textarea.form-control {
+    height: 150px;
+    resize: none
+}
+
+.comment-form ::-webkit-input-placeholder,
+.comment-form ::-moz-placeholder,
+.comment-form :-ms-input-placeholder,
+.comment-form :-moz-placeholder {
+    font-size: 13px;
+    color: #777
+}
+
+.comment_item {
+    margin: 40px 0 0 0;
+}
+
+.comment_details {
+    padding-top: 20px
+}
+
+.comment_image img {
+    width: 100%;
+}
+
+.comment_details h2 {
+    font-size: 24px;
+    line-height: 36px;
+    color: #222;
+    font-weight: 600;
+    transition: all 0.3s linear
+}
+
+.comment_details h2:hover {
+    color: #fe5407
+}
+
+.comment_details p {
+    margin-bottom: 26px
+}
+
+.comment-form__files {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background: #fe5407;
+    border: 1px solid #fe5407;
+    color: #fff;
+    text-align: center;
+    transition: all .4s ease;
+    border-radius: 30px;
+}
+
+.comment-form__files:hover {
+    background: #fff;
+    color: #222;
+}
+
+.comment-form__files label {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.comment-form__files input {
+    width: 30%;
+    padding: 5px 10px;
+    background-color: #F8F8F8;
+    color: #000000;
+    height: 40px;
+    border: none;
+    display: none;
+}
+
+.file-upload span {
+    line-height: 40px;
+}
+
+#file-preview-table {
+    width: calc(100% + 20px);
+    margin: 15px -10px 0 -10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+#file-preview-table span {
+    width: 25%;
+    padding: 0 10px 10px 10px;
+}
+
+#file-preview-table span img {
+    width: 100%;
+    height: auto;
+}
+
+.comment-message-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    border: 1px solid #a5131d;
+    border-top-color: rgb(165, 19, 29);
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top: 30px solid #a5131d;
+    background-color: #FFFFFF;
+    display: none;
+    z-index: 9999;
+}
+
+/* Подвал сайта */
+
 .footer-area {
     background: #fcebe2f7;
     padding: 50px 0px 50px
@@ -4417,7 +4438,6 @@ a {
     margin: 2px;
 }
 
-
 .single-footer-widget .sm-head span {
     position: relative;
     margin-left: -40px;
@@ -4430,27 +4450,6 @@ a {
     background: #fe5407;
     color: #ffffff;
     border-radius: 20px
-}
-
-.tp_widgets .list li {
-    margin-bottom: 12px
-}
-
-.tp_widgets .list li a {
-    color: #7b838a;
-    font-family: "Roboto", sans-serif
-}
-
-.tp_widgets .list li a:hover {
-    color: #fe5407
-}
-
-.tp_widgets .list li:last-child {
-    margin-bottom: 0px
-}
-
-.tp_widgets p {
-    color: #7b838a
 }
 
 .footer_title {
@@ -4480,37 +4479,39 @@ a {
     }
 }
 
-.footer-bottom {
+.footer_item .list li {
+    margin-bottom: 12px
+}
+
+.footer_item .list li a {
+    color: #7b838a;
+    font-family: "Roboto", sans-serif
+}
+
+.footer_item .list li a:hover {
+    color: #fe5407
+}
+
+.footer_item .list li:last-child {
+    margin-bottom: 0px
+}
+
+.footer_item p {
+    color: #7b838a
+}
+
+.footer-rights {
     background: #fe5407;
     padding: 32px
 }
 
-.footer-bottom .footer-text {
+.footer-rights .footer-text {
     color: #fff;
     margin-bottom: 0
 }
 
-.footer-bottom .footer-text a {
+.footer-rights .footer-text a {
     color: #fff;
     opacity: 1
 }
 
-.footer-only {
-    padding-top: 60px !important;
-    padding-bottom: 60px !important
-}
-
-@media (min-width: 1000px) {
-    .footer-only {
-        padding-top: 115px !important;
-        padding-bottom: 115px !important
-    }
-}
-
-.logo_h {
-    font-family: "Oswald", sans-serif;
-    text-transform: capitalize;
-    color: #000000;
-    font-size: 36px;
-    font-weight: 600;
-}

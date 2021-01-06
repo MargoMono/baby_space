@@ -2,17 +2,46 @@
 
 namespace App\Models\Site;
 
-use App\Models\Models;
+use App\Components\Language;
+use App\Exceptions\AdminException;
+use App\Exceptions\SiteException;
 use App\Helpers\FileUploaderHelper;
+use App\Repository\CommentAnswerDescriptionRepository;
+use App\Repository\CommentDescriptionRepository;
 use App\Repository\CommentRepository;
 use App\Repository\FileRepository;
+use App\Repository\LanguageRepository;
 use DateTime;
 use Exception;
 use RuntimeException;
 
-class CommentModel extends Model
+class CommentModel
 {
     const COMMENTS_COUNT = 5;
+    /**
+     * @var mixed
+     */
+    private $language;
+    /**
+     * @var CommentRepository
+     */
+    private $commentRepository;
+    /**
+     * @var CommentDescriptionRepository
+     */
+    private $commentDescriptionRepository;
+    /**
+     * @var CommentAnswerDescriptionRepository
+     */
+    private $commentAnswerDescriptionRepository;
+
+    public function __construct()
+    {
+        $this->language = (new LanguageRepository())->getByAlias((new Language())->getLanguage());
+        $this->commentRepository = new CommentRepository();
+        $this->commentDescriptionRepository = new CommentDescriptionRepository();
+        $this->commentAnswerDescriptionRepository = new CommentAnswerDescriptionRepository();
+    }
 
     /**
      * @return array|void
@@ -20,39 +49,28 @@ class CommentModel extends Model
      */
     public function getIndexData()
     {
-        $lastPage = 0;
-
-        $commentRepository = new CommentRepository();
-        $comments = $commentRepository->getLastAllowedComments(self::COMMENTS_COUNT);
-        $allComments = $commentRepository->getAllAllowedComments();
+        $comments = $this->commentRepository->getAllByParams([
+            'language_id' => $this->language['id'],
+        ], self::COMMENTS_COUNT);
 
         foreach ($comments as $key => $comment) {
             $date = new DateTime($comment['date']);
             $comments[$key]['created_at'] = $date->format('d/m/Y');
-            $comments[$key]['photos'] = $commentRepository->getCommentPhotos($comment['id']);
+            $comments[$key]['images'] = $this->commentRepository->getFilesByCommentId($comment['id']);
+            $answer = $this->commentRepository->getAnswerByCommentId($comment['id']);
+            $answerDate = new DateTime($comment['date']);
+            $comments[$key]['answer'] = $answer;
+            $comments[$key]['answer']['images'] = $this->commentRepository->getAnswerFilesByAnswerCommentId($answer['id']);
+            $comments[$key]['answer']['created_at'] = $answerDate->format('d/m/Y');
+            $comments[$key]['answer']['description'] = $this->commentAnswerDescriptionRepository->getByIdAndLanguageId(
+                $answer['id'],
+                $this->language['id']
+            );
         }
 
-        if (count($allComments) <= self::COMMENTS_COUNT) {
-            $lastPage = 1;
-        }
-
-        $comments = $commentRepository->getArrayWithIdAsKey($comments);
-
-        $commentList = [];
-        foreach ($comments as $key => &$comment) {
-            if (empty($comment['parent_id'])) {
-                $commentList[$key] = &$comment;
-            } else {
-                $comments[$comment['parent_id']]['children'][$key] = &$comment;
-            }
-        }
-
-        $params = [
-            'commentList' => $commentList,
-            'lastPage' => $lastPage,
+        return [
+            'commentList' => $comments
         ];
-
-        return $params;
     }
 
 
@@ -88,36 +106,33 @@ class CommentModel extends Model
 
     public function createComment($files, $params)
     {
-        $res['result'] = false;
-
         $fileUploader = new FileUploaderHelper();
 
-        try {
-            $imagesName = $fileUploader->uploadSeveral($files['files'], 'comment');
-        } catch (RuntimeException $e) {
-            $res['errors'][] = $e->getMessage();
-            return $res;
-        }
+        $previousComment = $this->commentRepository->getByParams([
+            'user_email' => $params['user_email']
+        ]);
 
-        $commentRepository = new CommentRepository();
-        $previousOrder = $commentRepository->getClientByEmail($params['user_email']);
-
-        if ($previousOrder) {
+        if ($previousComment) {
             $now = new DateTime();
-            $previousOrderDate = new DateTime($previousOrder['created_at']);
+            $previousOrderDate = new DateTime($previousComment['created_at']);
             $interval = $now->diff($previousOrderDate);
             if ($interval->h < 1) {
-                $res['errors'][] = 'Отзыв можно оставлять с частотой не более 1 раза в час';
-                return $res;
+                throw new SiteException(SiteException::TOO_FREQUENT_COMMENT);
             }
         }
 
-        $newCommentId = $commentRepository->createComment($params);
+        $newCommentId = $this->commentRepository->create([
+            'user_name' => $params['user_name'],
+            'user_email' => $params['user_email'],
+            'status' => 0
+        ]);
 
-        if (empty($newCommentId)) {
-            $res['errors'][] = 'Не удалось создать комментарий';
-            return $res;
-        }
+        $this->commentDescriptionRepository->create($newCommentId, [
+            'language_id' => $this->language['id'],
+            'description' => $params['description']
+        ]);
+
+        $imagesName = $fileUploader->uploadSeveral($files['files'], 'comment');
 
         if (!empty($imagesName)) {
 
@@ -125,24 +140,8 @@ class CommentModel extends Model
 
                 $fileRepository = new FileRepository();
                 $fileId = $fileRepository->createFile($imageName);
-
-                if (empty($fileId)) {
-                    $res['errors'][] = 'Не удалось создать файл';
-                    return $res;
-                }
-
-                $fileCommentConnection = $commentRepository->createFileCommentConnection($newCommentId, $fileId);
-
-                if (empty($fileCommentConnection)) {
-                    ;
-                    $res['errors'][] = 'Не удалось создать связь между фото и комментарием';
-                    return $res;
-                }
+                $this->commentRepository->createFilesConnection($newCommentId, $fileId);
             }
-
         }
-
-        $res['result'] = true;
-        return $res;
     }
 }
