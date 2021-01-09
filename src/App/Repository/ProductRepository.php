@@ -371,6 +371,40 @@ class ProductRepository extends AbstractRepository implements Entity
             $where .= " AND p.price BETWEEN {$params['min']} AND {$params['max']}";
         }
 
+        if (!empty($params['like'])) {
+
+            $where .= ' AND ';
+            $count = count($params['like']) - 1;
+
+            foreach ($params['like'] as $key => $value) {
+                if ($key == 0) {
+                    $where .= '(';
+                }
+
+                if ($key != 0) {
+                    $where .= ' OR';
+                }
+
+                $where .= " {$value} LIKE '%{$params[$value]}%'";
+
+                if ($key == $count) {
+                    $where .= ')';
+                }
+            }
+        }
+
+        if (!empty($params['name']) && !in_array('name', $params['like'])) {
+            $where .= " AND pd.name = '{$params['name']}'";
+        }
+
+        if (!empty($params['description']) && !in_array('description', $params['like'])) {
+            if (in_array('description', $params['like'])) {
+                $where .= " OR pd.description LIKE '%{$params['description']}%'";
+            } else {
+                $where .= " AND pd.description = '{$params['description']}'";
+            }
+        }
+
         $limitAndOffset = '';
 
         if (!empty($limit)) {
@@ -398,7 +432,6 @@ class ProductRepository extends AbstractRepository implements Entity
             AND c.status = 1
             AND p.status = 1
         ORDER BY p.sort' . $limitAndOffset;
-
 
         $result = $this->db->prepare($sql);
         $result->bindParam(':language_id', $languageId);

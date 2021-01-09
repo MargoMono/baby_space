@@ -1,0 +1,90 @@
+{% extends "site/layout.twig" %}
+
+{% block content %}
+
+    <section class="blog-banner-area" id="blog">
+        <div class="container h-100">
+            <div class="blog-banner">
+                <div class="text-center">
+                    <h1>{{ content.search }}</h1>
+                    <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">{{ content.main_page_title }}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ content.search }}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="search_area">
+        <div class="container">
+            <div class="col-12 text-center">
+                <h3>{{ content.search_text }}</h3>
+                <div>
+                    <form target="_blank" action="/search" method="post" class="subscribe-form form-inline mt-5 pt-1">
+                        <div class="form-group ml-sm-auto">
+                            <input class="form-control mb-1" type="text" name="query"
+                                   placeholder="{{ content.search_query }}">
+                            <div class="info"></div>
+                        </div>
+                        <button class="button search-button mr-auto mb-1"
+                                type="submit">{{ content.search_button }}</button>
+                        <div style="position: absolute; left: -5000px;">
+                            <input name="" tabindex="-1" value="" type="text">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="query-result" class="col-12">
+            </div>
+        </div>
+    </section>
+
+    <section class="subscribe-position">
+        <div class="container">
+            <div class="subscribe text-center">
+                <h3 class="subscribe__title">{{ content.subscribe_title }}</h3>
+                <p>{{ content.subscribe_description }}</p>
+                <div id="mc_embed_signup">
+                    <form target="_blank" action="" method="get" class="subscribe-form form-inline mt-5 pt-1">
+                        <div class="form-group ml-sm-auto">
+                            <input class="form-control mb-1" type="email" name="email"
+                                   placeholder="{{ content.your_email }}">
+                            <div class="info"></div>
+                        </div>
+                        <button class="button button-subscribe mr-auto mb-1"
+                                type="submit">{{ content.subscribe_now }}</button>
+                        <div style="position: absolute; left: -5000px;">
+                            <input name="" tabindex="-1" value="" type="text">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        $('.search-button').click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/search' ,
+                type: 'POST',
+                data: {
+                    query: document.querySelector('input[name="query"]').value,
+                },
+                success: function(res) {
+                    $('#query-result').html(res);
+                },
+                error: function() {
+                },
+            });
+        });
+    </script>
+
+{% endblock %}

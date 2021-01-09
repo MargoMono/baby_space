@@ -2,20 +2,28 @@
 
 namespace App\Controllers\Site;
 
-use App\Controllers\Controller;
 use App\Models\Site\SearchModel;
 
-class SearchController extends Controller
+class SearchController
 {
-    function __construct()
+    private $directory = 'search';
+    private $controllerContext;
+    private $model;
+
+    public function __construct()
     {
-        parent::__construct();
+        $this->controllerContext = new ControllerContext($this->directory);
         $this->model = new SearchModel();
     }
 
     public function actionIndex()
     {
-        $data = $this->model->getIndexData($_POST);
-        $this->view->generate('/site/search.twig', $data);
+        $this->controllerContext->render( [], 'index.twig');
+    }
+
+    public function actionSearch()
+    {
+        $data = $this->model->getSearchData($_POST);
+        $this->controllerContext->render($data, 'search.twig');
     }
 }

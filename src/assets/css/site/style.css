@@ -4523,3 +4523,12 @@ a {
     opacity: 1
 }
 
+/* Поиск */
+
+.search_area {
+    margin: 80px 0 40px 0;
+}
+
+#query-result {
+    margin: 80px 0;
+}
