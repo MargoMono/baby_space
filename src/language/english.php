@@ -27,6 +27,7 @@ $_['new']                                       = 'News';
 $_['comment']                                   = 'Comments';
 $_['tracking']                                  = 'Tracking order';
 $_['contacts']                                  = 'Contacts';
+$_['search']                                    = 'Search';
 
 
 //Раздел каталога
@@ -75,3 +76,10 @@ $_['unknown_error']                              = 'Unknown error';
 
 // Отзывы
 $_['admin']                                      = 'Administator';
+
+// Поиск
+$_['search_text']                                = 'Enter a search query';
+$_['search_result_text']                         = 'Search result for the query:';
+$_['search_query']                               = 'Search query';
+$_['search_button']                              = 'Search';
+$_['empty_search']                               = 'Nothing found';

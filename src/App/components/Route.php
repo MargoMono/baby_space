@@ -100,7 +100,8 @@ class Route
         $router->post('comments/show-more', [Site\CommentController::class, 'actionShowMore']);
         $router->post('comments/last-page', [Site\CommentController::class, 'actionLastPage']);
 
-        $router->post('search', ['App\\Controllers\\Site\\SearchController', 'actionIndex']);
+        $router->get('search', [Site\SearchController::class, 'actionIndex']);
+        $router->post('search', [Site\SearchController::class, 'actionSearch']);
 
         $router->get('user/login', [UserController::class, 'showLoginPage']);
         $router->post('user/login', [UserController::class, 'actionLogin']);
