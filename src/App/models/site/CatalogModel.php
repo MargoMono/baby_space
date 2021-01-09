@@ -48,12 +48,14 @@ class CatalogModel
             self::PRODUCT_COUNT
         );
 
-        $priceList = array_column($this->productRepository->getAll(), 'price');
+        $productList = $this->getProductPrice($productList);
+
+        $priceList = array_column($productList, 'price');
 
         return [
             'category_id' => $id ?? null,
             'is_convert' => empty($this->currency['rate']) ? false : true,
-            'productList' => $this->getProductPrice($productList),
+            'productList' => $productList,
             'sizeList' => $this->sizeRepository->getAllByParams(['language_id' => $this->language['id']]),
             'typeList' => $this->typeRepository->getAllByParams(['language_id' => $this->language['id']]),
             'max' => max($priceList),
