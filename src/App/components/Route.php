@@ -113,6 +113,7 @@ class Route
 
         // Страница уведомелний о cookie
         $router->get('cookie', ['App\\Controllers\\site\\CookieController', 'show1CookiePage']);
+        $router->get('cooki', ['App\\Controllers\\site\\CookieController', 'show12CookiePage']);
 
 
         // Главная страница админки
