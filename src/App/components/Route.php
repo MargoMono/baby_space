@@ -93,9 +93,12 @@ class Route
         $router->post('cart/coupon/add', [Site\CartController::class, 'actionCouponAdd']);
         $router->post('cart/calculate/delivery', [Site\CartController::class, 'actionCalculateDelivery']);
 
+        // Страница блога
         $router->get('comments', [Site\CommentController::class, 'index']);
         $router->get('comments/show-more/{count}', [Site\CommentController::class, 'showMore']);
         $router->post('comments/create-comment', [Site\CommentController::class, 'createComment']);
+        $router->post('comments/show-more', [Site\CommentController::class, 'actionShowMore']);
+        $router->post('comments/last-page', [Site\CommentController::class, 'actionLastPage']);
 
         $router->post('search', ['App\\Controllers\\Site\\SearchController', 'actionIndex']);
 

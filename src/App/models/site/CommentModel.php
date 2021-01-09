@@ -3,7 +3,6 @@
 namespace App\Models\Site;
 
 use App\Components\Language;
-use App\Exceptions\AdminException;
 use App\Exceptions\SiteException;
 use App\Helpers\FileUploaderHelper;
 use App\Repository\CommentAnswerDescriptionRepository;
@@ -13,11 +12,10 @@ use App\Repository\FileRepository;
 use App\Repository\LanguageRepository;
 use DateTime;
 use Exception;
-use RuntimeException;
 
 class CommentModel
 {
-    const COMMENTS_COUNT = 5;
+    const COMMENTS_COUNT = 1;
     /**
      * @var mixed
      */
@@ -59,13 +57,13 @@ class CommentModel
             $comments[$key]['images'] = $this->commentRepository->getFilesByCommentId($comment['id']);
             $answer = $this->commentRepository->getAnswerByCommentId($comment['id']);
             $answerDate = new DateTime($comment['date']);
-            $comments[$key]['answer'] = $answer;
             $comments[$key]['answer']['images'] = $this->commentRepository->getAnswerFilesByAnswerCommentId($answer['id']);
             $comments[$key]['answer']['created_at'] = $answerDate->format('d/m/Y');
-            $comments[$key]['answer']['description'] = $this->commentAnswerDescriptionRepository->getByIdAndLanguageId(
+            $description = $this->commentAnswerDescriptionRepository->getByIdAndLanguageId(
                 $answer['id'],
                 $this->language['id']
             );
+            $comments[$key]['answer']['description'] = $description['description'];
         }
 
         return [
@@ -73,35 +71,49 @@ class CommentModel
         ];
     }
 
-
-    /**
-     * @param $count
-     * @return array
-     * @throws Exception
-     */
-    public function getShowMoreData($count)
+    public function checkLastPage($params)
     {
-        $lastPage = 0;
+        $lastPage = false;
 
-        $commentRepository = new CommentRepository();
-        $comments = $commentRepository->getMoreAllowedComments($count, self::COMMENTS_COUNT);
+        $allComments = $this->commentRepository->getAllByParams([
+            'language_id' => $this->language['id'],
+        ]);
+
+        if (count($allComments) == $params['count']) {
+            $lastPage = true;
+        }
+
+        return $lastPage;
+    }
+
+    public function getShowMoreData($params)
+    {
+        $params['language_id'] = $this->language['id'];
+
+        $comments = $this->commentRepository->getAllByParams(
+            $params,
+            self::COMMENTS_COUNT,
+            $params['count']
+        );
 
         foreach ($comments as $key => $comment) {
             $date = new DateTime($comment['date']);
             $comments[$key]['created_at'] = $date->format('d/m/Y');
-            $comments[$key]['photos'] = $commentRepository->getCommentPhotos($comment['id']);
+            $comments[$key]['images'] = $this->commentRepository->getFilesByCommentId($comment['id']);
+            $answer = $this->commentRepository->getAnswerByCommentId($comment['id']);
+            $answerDate = new DateTime($comment['date']);
+            $comments[$key]['answer']['images'] = $this->commentRepository->getAnswerFilesByAnswerCommentId($answer['id']);
+            $comments[$key]['answer']['created_at'] = $answerDate->format('d/m/Y');
+            $description = $this->commentAnswerDescriptionRepository->getByIdAndLanguageId(
+                $answer['id'],
+                $this->language['id']
+            );
+            $comments[$key]['answer']['description'] = $description['description'];
         }
 
-        if (count($comments) !== self::COMMENTS_COUNT) {
-            $lastPage = 1;
-        }
-
-        $params = [
-            'commentList' => $comments,
-            'lastPage' => $lastPage,
+        return [
+            'commentList' => $comments
         ];
-
-        return $params;
     }
 
     public function createComment($files, $params)

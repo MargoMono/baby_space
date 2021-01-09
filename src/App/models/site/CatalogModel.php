@@ -111,7 +111,6 @@ class CatalogModel
         return $lastPage;
     }
 
-
     private function getProductPrice($productList)
     {
         foreach ($productList as $key => $product) {

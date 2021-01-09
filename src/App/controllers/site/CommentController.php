@@ -27,10 +27,16 @@ class CommentController
         $this->controllerContext->render($data, 'index.twig');
     }
 
-    public function showMore($count)
+    public function actionShowMore()
     {
-        $data = $this->model->getShowMoreData($count);
+        $data = $this->model->getShowMoreData($_POST);
         $this->controllerContext->render($data, 'more.twig');
+    }
+
+    public function actionLastPage()
+    {
+        $data = $this->model->checkLastPage($_POST);
+        $this->controllerContext->generateAjax($data);
     }
 
     public function createComment()

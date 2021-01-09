@@ -18,65 +18,66 @@
     </section>
     <section class="comment_area">
         <div class="container">
-            {% for comment in commentList %}
-                <article class="row comment_item">
-                    <div class="col-sm-12">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="comment_details">
-                                    <h2>{{ comment.user_name }}</h2>
-                                    <p><b>{{ comment.created_at }}</b></p>
-                                    <p>{{ comment.description }}</p>
-                                </div>
-                            </div>
-                            {% if comment.images %}
+            <div id="comment__list">
+                {% for comment in commentList %}
+                    <article class="row comment_item">
+                        <div class="col-sm-12">
+                            <div class="row">
                                 <div class="col-12">
-                                    <div class="row">
-                                        {% for image in comment.images %}
-                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 comment_image">
-                                                <img src="/upload/images/comment/{{ image.file_alias }}" alt=""/>
+                                    <div class="comment_details">
+                                        <h2>{{ comment.user_name }}</h2>
+                                        <p><b>{{ comment.created_at }}</b></p>
+                                        <p>{{ comment.description }}</p>
+                                    </div>
+                                </div>
+                                {% if comment.images %}
+                                    <div class="col-12">
+                                        <div class="row">
+                                            {% for image in comment.images %}
+                                                <div class="col-6 col-sm-4 col-md-3 col-lg-2 comment_image">
+                                                    <img src="/upload/images/comment/{{ image.file_alias }}" alt=""/>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% if comment.answer.description %}
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                    </div>
+                                    <div class="col-12 col-lg-9">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="comment_details">
+                                                    <h2>{{ content.admin }}</h2>
+                                                    <p><b>{{ comment.answer.created_at }}</b></p>
+                                                    <p>{{ comment.answer.description }}</p>
+                                                </div>
                                             </div>
-                                        {% endfor %}
+                                            {% if comment.answer.images %}
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        {% for image in comment.answer.images %}
+                                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 comment_image">
+                                                                <img src="/upload/images/comment/{{ image.file_alias }}"
+                                                                     alt=""/>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             {% endif %}
                         </div>
-                        {% if comment.answer.description %}
-                            <div class="row">
-                                <div class="col-lg-3">
-                                </div>
-                                <div class="col-12 col-lg-9">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="comment_details">
-                                                <h2>{{ content.admin }}</h2>
-                                                <p><b>{{ comment.answer.created_at }}</b></p>
-                                                <p>{{ comment.answer.description }}</p>
-                                            </div>
-                                        </div>
-                                        {% if comment.answer.images %}
-                                            <div class="col-12">
-                                                <div class="row">
-                                                    {% for image in comment.answer.images %}
-                                                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 comment_image">
-                                                            <img src="/upload/images/comment/{{ image.file_alias }}"
-                                                                 alt=""/>
-                                                        </div>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <hr>
-                </article>
-            {% endfor %}
-
+                        <hr>
+                    </article>
+                {% endfor %}
+            </div>
             <div class="justify-content-center d-flex">
-                <a href="#" class="button show-more">Показать ещё</a>
+                <a href="#" class="button show-more" style="display: none;">Показать ещё</a>
             </div>
             <div class="comment-form">
                 <div class="alert alert-warning comment-form__alert" role="alert" style="display: none;">
@@ -116,6 +117,8 @@
             </div>
         </div>
     </section>
+    <section class="comment_area">
+    </section>
     <div class="comment-message-box">
         <div class="content">
             <p class="text"></p>
@@ -130,32 +133,48 @@
 {% endblock %}
 {% block scripts %}
     <script src="/assets/js/site/comment.js"></script>
-
-
     <script>
+        function checkIfLastPage() {
+            $.ajax({
+                url: '/comments/last-page/',
+                type: 'POST',
+                data: {
+                    count: document.getElementsByClassName('comment_item').length,
+                },
+                success: function (res) {
+                    let response = JSON.parse(res);
+                    if (response) {
+                        $('.show-more').hide();
+                    } else {
+                        $('.show-more').show();
+                    }
+                },
+                error: function () {
+                },
+            });
+        }
+
         $(document).ready(function () {
-            $('.article-image').click(function () {
-                $('.big-image-image').attr('src', $(this).attr('src'));
-                $('body').css({"overflow": "hidden"});
-                $('.big-image').show('slow');
+            checkIfLastPage();
+        });
 
-
-            });
-
-            $('.big-image .close').click(function () {
-                $('.big-image').hide('slow');
-                $('body').css({"overflow": "auto"});
-            });
-
-            $(document).mouseup(function (e) {
-                var div = $(".big-image .content");
-                if (!div.is(e.target)
-                    && div.has(e.target).length === 0) {
-                    $('.big-image').hide('slow');
-                    $('body').css({"overflow": "auto"});
-                }
+        $('.show-more').click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/comments/show-more/',
+                type: 'POST',
+                data: {
+                    count: document.getElementsByClassName('comment_item').length,
+                },
+                success: function (res) {
+                    $('#comment__list').append(res);
+                    checkIfLastPage()
+                },
+                error: function () {
+                },
             });
         });
+
     </script>
 
 {% endblock %}
