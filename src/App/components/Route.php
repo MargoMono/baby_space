@@ -112,7 +112,7 @@ class Route
         $router->post('user/update-password', [UserController::class, 'updatePassword']);
 
         // Страница уведомелний о cookie
-        $router->get('cookie', ['App\\Controllers\\site\\CookieController', 'show1CookiePage']);
+        $router->get('cookie', ['App\\Controllers\\site\\CookieController', 'showCookiePage']);
 
         // Главная страница админки
         $router->get('admin', [Admin\IndexController::class, 'actionIndex']);
