@@ -4283,6 +4283,14 @@ a {
     margin: 40px 0 0 0;
 }
 
+.comment_item hr {
+    color: #fe5407;
+    width: 90%;
+    border: 1px solid #fe5407;
+    text-align: center;
+    padding: 0;
+}
+
 .comment_details {
     padding-top: 20px
 }

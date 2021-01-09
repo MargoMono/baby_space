@@ -18,26 +18,63 @@
     </section>
     <section class="comment_area">
         <div class="container">
-            <div class="row">
-                <div class="col">
-                    {% for comment in commentList %}
-                        <article class="row comment_item">
-                            <div class="col-md-12">
+            {% for comment in commentList %}
+                <article class="row comment_item">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-12">
                                 <div class="comment_details">
                                     <h2>{{ comment.user_name }}</h2>
                                     <p><b>{{ comment.created_at }}</b></p>
                                     <p>{{ comment.description }}</p>
                                 </div>
                             </div>
-                            {% for image in comment.images %}
-                                <div class="col-6 col-sm-4 col-md-3 col-lg-2 comment_image">
-                                    <img src="/upload/images/comment/{{ image.file_alias }}" alt=""/>
+                            {% if comment.images %}
+                                <div class="col-12">
+                                    <div class="row">
+                                        {% for image in comment.images %}
+                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 comment_image">
+                                                <img src="/upload/images/comment/{{ image.file_alias }}" alt=""/>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
-                            {% endfor %}
-                        </article>
-                    {% endfor %}
-                </div>
-            </div>
+                            {% endif %}
+                        </div>
+                        {% if comment.answer.description %}
+                            <div class="row">
+                                <div class="col-lg-3">
+                                </div>
+                                <div class="col-12 col-lg-9">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="comment_details">
+                                                <h2>{{ content.admin }}</h2>
+                                                <p><b>{{ comment.answer.created_at }}</b></p>
+                                                <p>{{ comment.answer.description }}</p>
+                                            </div>
+                                        </div>
+                                        {% if comment.answer.images %}
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    {% for image in comment.answer.images %}
+                                                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 comment_image">
+                                                            <img src="/upload/images/comment/{{ image.file_alias }}"
+                                                                 alt=""/>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <hr>
+                </article>
+            {% endfor %}
+
             <div class="justify-content-center d-flex">
                 <a href="#" class="button show-more">Показать ещё</a>
             </div>

@@ -72,3 +72,6 @@ $_['comment']                                    = 'Comment';
 //Ошибки
 $_['too_frequent_comment']                       = 'You can leave a review with a frequency of no more than 1 time per hour';
 $_['unknown_error']                              = 'Unknown error';
+
+// Отзывы
+$_['admin']                                      = 'Administator';
