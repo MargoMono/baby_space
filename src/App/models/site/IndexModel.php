@@ -10,10 +10,17 @@ use App\Repository\BlogRepository;
 use App\Repository\LanguageRepository;
 use App\Repository\ProductRepository;
 use App\Repository\SaleRepository;
+use App\Exceptions\SiteException;
+use App\Helpers\FileUploaderHelper;
+use App\Repository\CommentDescriptionRepository;
+use App\Repository\CommentRepository;
+use App\Repository\FileRepository;
 use Exception;
+use DateTime;
 
 class IndexModel
 {
+    const COMMENTS_COUNT = 3;
     private $language;
     private $blogRepository;
     private $productRepository;
@@ -23,6 +30,14 @@ class IndexModel
      * @var ProductPriceHelper
      */
     private $productPriceHelper;
+    /**
+     * @var CommentRepository
+     */
+    private $commentRepository;
+    /**
+     * @var CommentDescriptionRepository
+     */
+    private $commentDescriptionRepository;
 
     public function __construct()
     {
@@ -32,6 +47,8 @@ class IndexModel
         $this->productRepository = new ProductRepository();
         $this->saleRepository = new SaleRepository();
         $this->productPriceHelper = new ProductPriceHelper();
+        $this->commentRepository = new CommentRepository();
+        $this->commentDescriptionRepository = new CommentDescriptionRepository();
     }
 
     /**
@@ -54,6 +71,9 @@ class IndexModel
         $data['productList'] = $productList;
         $data['articleList'] =  $this->blogRepository->getLastByLanguageId($this->language['id'], 3);
         $data['sale'] =  $this->saleRepository->getByLanguageId($this->language['id']);
+        $data['commentList'] =  $this->commentRepository->getAllByParams([
+            'language_id' => $this->language['id'],
+        ], self::COMMENTS_COUNT);
 
         return $data;
     }
