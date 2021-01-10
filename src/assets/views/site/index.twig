@@ -130,20 +130,20 @@
                             <p>Отзывы о наших товарах</p>
                             <h2><span class="section-intro__style">Отзывы</span><img src="/assets/images/site/logo3.jpg"
                                                                                      alt=""></h2>
-                            <div class="row">
-                                <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
-                                    <div class="card card-blog">
-                                        <div class="card-body">
-                                            <h4 class="card-blog__title"><a href="single-blog.html">Настя Павленко</a>
-                                            </h4>
-                                            <p>Какой хороший отыв, какой хороший я и песенка моя. Какой хороший отыв,
-                                                какой хороший я и песенка моя.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
+                            {% for comment in commentList %}
+                              <div class="row">
+                                  <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
+                                      <div class="card card-blog">
+                                          <div class="card-body">
+                                              <h4 class="card-blog__title"><a href="single-blog.html">{{ comment.user_name }}</a>
+                                              </h4>
+                                              <p>{{ comment.description }}</p>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                            {% endfor %}
+                            {# <div class="row">
                                 <div class="col-md-12 col-lg-12 mb-4 mb-lg-0">
                                     <div class="card card-blog">
                                         <div class="card-body">
@@ -168,8 +168,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <a class="button button--active mt-3 mt-xl-4" href="#">Читать все отзывы</a>
+                            </div> #}
+                            <a class="button button--active mt-3 mt-xl-4" href="comments">Читать все отзывы</a>
                         </div>
                     </div>
                 </div>
