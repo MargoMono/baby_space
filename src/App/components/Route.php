@@ -111,6 +111,9 @@ class Route
         $router->get('user/update-password/{activeHex}', [UserController::class, 'showUpdatePasswordPage']);
         $router->post('user/update-password', [UserController::class, 'updatePassword']);
 
+        // Подписка
+        $router->post('subscribe', [SubscribeController::class, 'createSubscribe']);
+
         // Страница уведомелний о cookie
         $router->get('cookie', ['App\\Controllers\\site\\CookieController', 'showCookiePage']);
 
@@ -265,4 +268,3 @@ class Route
         $router->post('admin/user/delete', [Admin\UserController::class, 'delete']);
     }
 }
-

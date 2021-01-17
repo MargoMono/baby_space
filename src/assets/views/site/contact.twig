@@ -84,26 +84,7 @@
         </div>
     </section>
 
-    <section class="subscribe-position">
-        <div class="container">
-            <div class="subscribe text-center">
-                <h3 class="subscribe__title">{{ content.subscribe_title }}</h3>
-                <p>{{ content.subscribe_description }}</p>
-                <div id="mc_embed_signup">
-                    <form target="_blank" action="" method="get" class="subscribe-form form-inline mt-5 pt-1" novalidate="true">
-                        <div class="form-group ml-sm-auto">
-                            <input class="form-control mb-1" type="email" name="email" placeholder="{{ content.your_email }}">
-                            <div class="info"></div>
-                        </div>
-                        <button class="button button-subscribe mr-auto mb-1" type="submit">{{ content.subscribe_now }}</button>
-                        <div style="position: absolute; left: -5000px;">
-                            <input name="" tabindex="-1" value="" type="text">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+    {% include 'site/includes/subscribe.twig' %}
 
 {% endblock %}
 

@@ -1211,6 +1211,29 @@ VALUES (1, 'Маргарита Моногарова', 'margomonogarova@gmail.com
         'c9b07bf4beefedaabcf3828a3675b99a', 1),
        (5, 'Динара', 'h.d.n@list.ru', '19024cb8d4cf5d570e4c975bef94f88b', '87001643',
         'f11c913118785d448940343ebe06c457', 2);
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comment`
+--
+
+CREATE TABLE IF NOT EXISTS `subscribe`
+(
+    `id`         int(11)      NOT NULL AUTO_INCREMENT,
+    `user_email` varchar(255) NOT NULL,
+    `status`     tinyint(1)   NOT NULL DEFAULT '1',
+    `created_at` datetime              DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 2
+  DEFAULT CHARSET = utf8mb4;
+
+--
+-- Dumping data for table `comment`
+--
+
+INSERT INTO `subscribe` (`id`, `user_email`, `status`, `created_at`)
+VALUES (1, 'margomonogarova@gmail.com', 1, '2020-12-08 23:08:25');
 
 --
 -- Constraints for dumped tables
@@ -1377,4 +1400,3 @@ ALTER TABLE `type_description`
 --
 ALTER TABLE `user`
     ADD CONSTRAINT `user_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`);
-
