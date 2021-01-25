@@ -27,7 +27,7 @@ class SubscribeModel
     public function createSubscribe($params)
     {
         $newSubscribeId = $this->subscribeRepository->create([
-            'user_email' => $params['user_email'],
+            'email' => $params['email'],
             'status' => 1
         ]);
 

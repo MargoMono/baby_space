@@ -1,4 +1,5 @@
 <?php
+// var_dump (1); die();
 
 namespace App\Controllers\Site;
 
@@ -7,9 +8,9 @@ use App\Exceptions\AdminException;
 use App\Exceptions\SiteException;
 use App\Helpers\MailerHelper;
 
-class CommentController
+class SubscribeController
 {
-    private $directory = 'subscribe';
+    private $directory = 'includes';
     private $controllerContext;
     private $model;
 
@@ -22,7 +23,7 @@ class CommentController
     public function createSubscribe()
     {
         try {
-            $this->model->createSubscribe($_FILES, $_POST);
+            $this->model->createSubscribe($_POST);
         } catch (SiteException | AdminException $e) {
             $this->controllerContext->generateAjax([
                 'status' => false,

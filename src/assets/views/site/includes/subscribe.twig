@@ -4,20 +4,29 @@
             <h3 class="subscribe__title">{{ content.subscribe_title }}</h3>
             <p>{{ content.subscribe_description }}</p>
             <div id="mc_embed_signup">
-                <form target="_self" action="" method="post" class="subscribe-form form-inline mt-5 pt-1"
-                      novalidate="true">
+                <form id="subscribe"class="subscribe-form form-inline mt-5 pt-1">
                     <div class="form-group ml-sm-auto">
-                        <input class="form-control mb-1" type="email" name="user_email" id="user_email"
+                        <input class="form-control mb-1" type="email" name="email" id="email"
                                placeholder="{{ content.your_email }}">
                         <div class="info"></div>
                     </div>
-                    <button class="button button-subscribe mr-auto mb-1"
-                            type="submit">{{ content.subscribe_now }}</button>
+                    <a href="#" class="button button-subscribe mr-auto mb-1">{{ content.subscribe_now }}</a>
                     <div style="position: absolute; left: -5000px;">
                         <input name="" tabindex="-1" value="" type="text">
                     </div>
                 </form>
             </div>
         </div>
+        <div class="comment-message-box">
+            <div class="content">
+                <p class="text"></p>
+                <div class="close">&#10006;</div>
+            </div>
+        </div>
+        <style>
+            .footer-area {
+                padding: 120px 0 120px;
+            }
+        </style>
     </div>
 </section>

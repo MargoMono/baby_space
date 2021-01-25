@@ -6,18 +6,18 @@ use App\Components\Language;
 use PDO;
 use PDOException;
 
-class CommentRepository extends AbstractRepository
+class SubscribeRepository extends AbstractRepository
 {
     public function create($data): ?string
     {
         $sql = '
         INSERT INTO subscribe
-            (user_name, user_email, status)
+            (user_name, email, status)
         VALUES
-            ( :user_email, :status) ';
+            ( :email, :status) ';
 
         $result = $this->db->prepare($sql);
-        $result->bindParam(':user_email', $data['user_email']);
+        $result->bindParam(':email', $data['email']);
         $result->bindParam(':status', $data['status']);
 
         try {

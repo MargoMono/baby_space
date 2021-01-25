@@ -1220,7 +1220,7 @@ VALUES (1, 'Маргарита Моногарова', 'margomonogarova@gmail.com
 CREATE TABLE IF NOT EXISTS `subscribe`
 (
     `id`         int(11)      NOT NULL AUTO_INCREMENT,
-    `user_email` varchar(255) NOT NULL,
+    `email` varchar(255) NOT NULL,
     `status`     tinyint(1)   NOT NULL DEFAULT '1',
     `created_at` datetime              DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
@@ -1232,7 +1232,7 @@ CREATE TABLE IF NOT EXISTS `subscribe`
 -- Dumping data for table `comment`
 --
 
-INSERT INTO `subscribe` (`id`, `user_email`, `status`, `created_at`)
+INSERT INTO `subscribe` (`id`, `email`, `status`, `created_at`)
 VALUES (1, 'margomonogarova@gmail.com', 1, '2020-12-08 23:08:25');
 
 --
